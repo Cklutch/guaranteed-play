@@ -1,0 +1,13 @@
+season,wayback_url,archive_datetime_utc,season_start_datetime_utc,safety_status,include_in_main_validation,safety_notes
+2014,https://web.archive.org/web/20140902155927/https://www.fantasypros.com/nfl/projections/leaders.php,2014-09-02T15:59:27Z,2014-09-05T00:30:00Z,preseason_safe,true,Capture is before the 2014 NFL opener.
+2015,https://web.archive.org/web/20150904103106/https://www.fantasypros.com/nfl/projections/leaders.php,2015-09-04T10:31:06Z,2015-09-11T00:30:00Z,preseason_safe,true,Capture is before the 2015 NFL opener.
+2016,https://web.archive.org/web/20160708123645/https://www.fantasypros.com/nfl/projections/leaders.php,2016-07-08T12:36:45Z,2016-09-09T00:30:00Z,preseason_safe,true,Capture is before the 2016 NFL opener.
+2017,https://web.archive.org/web/20170830084404/https://www.fantasypros.com/nfl/projections/leaders.php,2017-08-30T08:44:04Z,2017-09-08T00:30:00Z,preseason_safe,true,Capture is before the 2017 NFL opener.
+2018,https://web.archive.org/web/20180906130423/https://www.fantasypros.com/nfl/projections/leaders.php,2018-09-06T13:04:23Z,2018-09-07T00:20:00Z,same_day_pre_kickoff_verify,true,"Same US calendar day as opener, but Wayback timestamp is before kickoff in UTC."
+2019,https://web.archive.org/web/20190715211021/https://www.fantasypros.com/nfl/projections/leaders.php,2019-07-15T21:10:21Z,2019-09-06T00:20:00Z,preseason_safe,true,Capture is before the 2019 NFL opener.
+2020,https://web.archive.org/web/20200624095638/https://www.fantasypros.com/nfl/projections/leaders.php,2020-06-24T09:56:38Z,2020-09-11T00:20:00Z,preseason_safe,true,Replacement capture is before the 2020 NFL opener.
+2021,https://web.archive.org/web/20210813234359/https://www.fantasypros.com/nfl/projections/leaders.php,2021-08-13T23:43:59Z,2021-09-10T00:20:00Z,preseason_safe,true,Capture is before the 2021 NFL opener.
+2022,https://web.archive.org/web/20220708084008/https://www.fantasypros.com/nfl/projections/leaders.php,2022-07-08T08:40:08Z,2022-09-09T00:20:00Z,preseason_safe,true,Capture is before the 2022 NFL opener.
+2023,https://web.archive.org/web/20230801135615/https://www.fantasypros.com/nfl/projections/leaders.php,2023-08-01T13:56:15Z,2023-09-08T00:20:00Z,preseason_safe,true,Capture is before the 2023 NFL opener.
+2024,https://web.archive.org/web/20240810045542/https://www.fantasypros.com/nfl/projections/leaders.php,2024-08-10T04:55:42Z,2024-09-06T00:20:00Z,preseason_safe,true,Capture is before the 2024 NFL opener.
+2025,,,2025-09-05T00:20:00Z,unknown_exclude,false,"No preseason-safe August 16, 2025 capture for the exact leaders URL was found by the tiny CDX check; September 15 captures must be excluded."

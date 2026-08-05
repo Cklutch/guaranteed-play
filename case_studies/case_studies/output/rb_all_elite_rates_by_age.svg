@@ -1,0 +1,463 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="640" viewBox="0 0 1100 640">
+<style>
+text { font-family: Arial, sans-serif; fill: #1f2937; }
+.title { font-size: 28px; font-weight: 700; }
+.label { font-size: 15px; font-weight: 700; }
+.tick { font-size: 12px; fill: #4b5563; }
+.legend { font-size: 14px; font-weight: 700; }
+.grid { stroke: #e5e7eb; stroke-width: 1; }
+.axis { stroke: #111827; stroke-width: 1.4; }
+.rate-line { fill: none; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+.dot { stroke: #ffffff; stroke-width: 1.4; }
+</style>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text class="title" x="78" y="42">RB Elite Season Rates by Age</text>
+<line class="grid" x1="78" y1="570.00" x2="910" y2="570.00"/>
+<text class="tick" x="66" y="574.00" text-anchor="end">0.0%</text>
+<line class="grid" x1="78" y1="446.00" x2="910" y2="446.00"/>
+<text class="tick" x="66" y="450.00" text-anchor="end">10.3%</text>
+<line class="grid" x1="78" y1="322.00" x2="910" y2="322.00"/>
+<text class="tick" x="66" y="326.00" text-anchor="end">20.6%</text>
+<line class="grid" x1="78" y1="198.00" x2="910" y2="198.00"/>
+<text class="tick" x="66" y="202.00" text-anchor="end">30.9%</text>
+<line class="grid" x1="78" y1="74.00" x2="910" y2="74.00"/>
+<text class="tick" x="66" y="78.00" text-anchor="end">41.3%</text>
+<line class="grid" x1="78.00" y1="74" x2="78.00" y2="570"/>
+<text class="tick" x="78.00" y="598" text-anchor="middle">21</text>
+<line class="grid" x1="147.33" y1="74" x2="147.33" y2="570"/>
+<text class="tick" x="147.33" y="598" text-anchor="middle">22</text>
+<line class="grid" x1="216.67" y1="74" x2="216.67" y2="570"/>
+<text class="tick" x="216.67" y="598" text-anchor="middle">23</text>
+<line class="grid" x1="286.00" y1="74" x2="286.00" y2="570"/>
+<text class="tick" x="286.00" y="598" text-anchor="middle">24</text>
+<line class="grid" x1="355.33" y1="74" x2="355.33" y2="570"/>
+<text class="tick" x="355.33" y="598" text-anchor="middle">25</text>
+<line class="grid" x1="424.67" y1="74" x2="424.67" y2="570"/>
+<text class="tick" x="424.67" y="598" text-anchor="middle">26</text>
+<line class="grid" x1="494.00" y1="74" x2="494.00" y2="570"/>
+<text class="tick" x="494.00" y="598" text-anchor="middle">27</text>
+<line class="grid" x1="563.33" y1="74" x2="563.33" y2="570"/>
+<text class="tick" x="563.33" y="598" text-anchor="middle">28</text>
+<line class="grid" x1="632.67" y1="74" x2="632.67" y2="570"/>
+<text class="tick" x="632.67" y="598" text-anchor="middle">29</text>
+<line class="grid" x1="702.00" y1="74" x2="702.00" y2="570"/>
+<text class="tick" x="702.00" y="598" text-anchor="middle">30</text>
+<line class="grid" x1="771.33" y1="74" x2="771.33" y2="570"/>
+<text class="tick" x="771.33" y="598" text-anchor="middle">31</text>
+<line class="grid" x1="840.67" y1="74" x2="840.67" y2="570"/>
+<text class="tick" x="840.67" y="598" text-anchor="middle">32</text>
+<line class="grid" x1="910.00" y1="74" x2="910.00" y2="570"/>
+<text class="tick" x="910.00" y="598" text-anchor="middle">33</text>
+<line class="axis" x1="78" y1="570" x2="910" y2="570"/>
+<line class="axis" x1="78" y1="74" x2="78" y2="570"/>
+<text class="label" x="494.00" y="628" text-anchor="middle">Age</text>
+<text class="label" transform="translate(22 320.00) rotate(-90)" text-anchor="middle">Rate (%)</text>
+<path class="rate-line" stroke="#2563eb" d="M 78.00 127.14 L 147.33 258.05 L 216.67 322.97 L 286.00 301.21 L 355.33 304.21 L 424.67 267.67 L 494.00 255.53 L 563.33 231.97 L 632.67 240.26 L 702.00 245.79 L 771.33 187.97 L 840.67 231.37 L 910.00 359.63"/>
+<circle class="dot" fill="#2563eb" cx="78.00" cy="127.14" r="4.5"><title>Top 36
+Age: 21
+Total Seasons: 76
+Hit Seasons: 28
+Rate: 36.84%</title></circle>
+<circle class="dot" fill="#2563eb" cx="147.33" cy="258.05" r="4.5"><title>Top 36
+Age: 22
+Total Seasons: 289
+Hit Seasons: 75
+Rate: 25.95%</title></circle>
+<circle class="dot" fill="#2563eb" cx="216.67" cy="322.97" r="4.5"><title>Top 36
+Age: 23
+Total Seasons: 545
+Hit Seasons: 112
+Rate: 20.55%</title></circle>
+<circle class="dot" fill="#2563eb" cx="286.00" cy="301.21" r="4.5"><title>Top 36
+Age: 24
+Total Seasons: 653
+Hit Seasons: 146
+Rate: 22.36%</title></circle>
+<circle class="dot" fill="#2563eb" cx="355.33" cy="304.21" r="4.5"><title>Top 36
+Age: 25
+Total Seasons: 588
+Hit Seasons: 130
+Rate: 22.11%</title></circle>
+<circle class="dot" fill="#2563eb" cx="424.67" cy="267.67" r="4.5"><title>Top 36
+Age: 26
+Total Seasons: 501
+Hit Seasons: 126
+Rate: 25.15%</title></circle>
+<circle class="dot" fill="#2563eb" cx="494.00" cy="255.53" r="4.5"><title>Top 36
+Age: 27
+Total Seasons: 409
+Hit Seasons: 107
+Rate: 26.16%</title></circle>
+<circle class="dot" fill="#2563eb" cx="563.33" cy="231.97" r="4.5"><title>Top 36
+Age: 28
+Total Seasons: 288
+Hit Seasons: 81
+Rate: 28.12%</title></circle>
+<circle class="dot" fill="#2563eb" cx="632.67" cy="240.26" r="4.5"><title>Top 36
+Age: 29
+Total Seasons: 226
+Hit Seasons: 62
+Rate: 27.43%</title></circle>
+<circle class="dot" fill="#2563eb" cx="702.00" cy="245.79" r="4.5"><title>Top 36
+Age: 30
+Total Seasons: 152
+Hit Seasons: 41
+Rate: 26.97%</title></circle>
+<circle class="dot" fill="#2563eb" cx="771.33" cy="187.97" r="4.5"><title>Top 36
+Age: 31
+Total Seasons: 107
+Hit Seasons: 34
+Rate: 31.78%</title></circle>
+<circle class="dot" fill="#2563eb" cx="840.67" cy="231.37" r="4.5"><title>Top 36
+Age: 32
+Total Seasons: 71
+Hit Seasons: 20
+Rate: 28.17%</title></circle>
+<circle class="dot" fill="#2563eb" cx="910.00" cy="359.63" r="4.5"><title>Top 36
+Age: 33
+Total Seasons: 40
+Hit Seasons: 7
+Rate: 17.50%</title></circle>
+<path class="rate-line" stroke="#0891b2" d="M 78.00 269.47 L 147.33 366.12 L 216.67 413.37 L 286.00 404.35 L 355.33 392.09 L 424.67 354.10 L 494.00 320.20 L 563.33 332.10 L 632.67 367.93 L 702.00 332.70 L 771.33 356.51 L 840.67 434.52 L 910.00 449.79"/>
+<circle class="dot" fill="#0891b2" cx="78.00" cy="269.47" r="4.5"><title>Top 24
+Age: 21
+Total Seasons: 76
+Hit Seasons: 19
+Rate: 25.00%</title></circle>
+<circle class="dot" fill="#0891b2" cx="147.33" cy="366.12" r="4.5"><title>Top 24
+Age: 22
+Total Seasons: 289
+Hit Seasons: 49
+Rate: 16.96%</title></circle>
+<circle class="dot" fill="#0891b2" cx="216.67" cy="413.37" r="4.5"><title>Top 24
+Age: 23
+Total Seasons: 545
+Hit Seasons: 71
+Rate: 13.03%</title></circle>
+<circle class="dot" fill="#0891b2" cx="286.00" cy="404.35" r="4.5"><title>Top 24
+Age: 24
+Total Seasons: 653
+Hit Seasons: 90
+Rate: 13.78%</title></circle>
+<circle class="dot" fill="#0891b2" cx="355.33" cy="392.09" r="4.5"><title>Top 24
+Age: 25
+Total Seasons: 588
+Hit Seasons: 87
+Rate: 14.80%</title></circle>
+<circle class="dot" fill="#0891b2" cx="424.67" cy="354.10" r="4.5"><title>Top 24
+Age: 26
+Total Seasons: 501
+Hit Seasons: 90
+Rate: 17.96%</title></circle>
+<circle class="dot" fill="#0891b2" cx="494.00" cy="320.20" r="4.5"><title>Top 24
+Age: 27
+Total Seasons: 409
+Hit Seasons: 85
+Rate: 20.78%</title></circle>
+<circle class="dot" fill="#0891b2" cx="563.33" cy="332.10" r="4.5"><title>Top 24
+Age: 28
+Total Seasons: 288
+Hit Seasons: 57
+Rate: 19.79%</title></circle>
+<circle class="dot" fill="#0891b2" cx="632.67" cy="367.93" r="4.5"><title>Top 24
+Age: 29
+Total Seasons: 226
+Hit Seasons: 38
+Rate: 16.81%</title></circle>
+<circle class="dot" fill="#0891b2" cx="702.00" cy="332.70" r="4.5"><title>Top 24
+Age: 30
+Total Seasons: 152
+Hit Seasons: 30
+Rate: 19.74%</title></circle>
+<circle class="dot" fill="#0891b2" cx="771.33" cy="356.51" r="4.5"><title>Top 24
+Age: 31
+Total Seasons: 107
+Hit Seasons: 19
+Rate: 17.76%</title></circle>
+<circle class="dot" fill="#0891b2" cx="840.67" cy="434.52" r="4.5"><title>Top 24
+Age: 32
+Total Seasons: 71
+Hit Seasons: 8
+Rate: 11.27%</title></circle>
+<circle class="dot" fill="#0891b2" cx="910.00" cy="449.79" r="4.5"><title>Top 24
+Age: 33
+Total Seasons: 40
+Hit Seasons: 4
+Rate: 10.00%</title></circle>
+<path class="rate-line" stroke="#16a34a" d="M 78.00 411.80 L 147.33 453.52 L 216.67 483.93 L 286.00 487.17 L 355.33 486.21 L 424.67 459.65 L 494.00 443.66 L 563.33 457.24 L 632.67 453.03 L 702.00 459.29 L 771.33 502.56 L 840.67 536.10 L 910.00 539.95"/>
+<circle class="dot" fill="#16a34a" cx="78.00" cy="411.80" r="4.5"><title>Top 12
+Age: 21
+Total Seasons: 76
+Hit Seasons: 10
+Rate: 13.16%</title></circle>
+<circle class="dot" fill="#16a34a" cx="147.33" cy="453.52" r="4.5"><title>Top 12
+Age: 22
+Total Seasons: 289
+Hit Seasons: 28
+Rate: 9.69%</title></circle>
+<circle class="dot" fill="#16a34a" cx="216.67" cy="483.93" r="4.5"><title>Top 12
+Age: 23
+Total Seasons: 545
+Hit Seasons: 39
+Rate: 7.16%</title></circle>
+<circle class="dot" fill="#16a34a" cx="286.00" cy="487.17" r="4.5"><title>Top 12
+Age: 24
+Total Seasons: 653
+Hit Seasons: 45
+Rate: 6.89%</title></circle>
+<circle class="dot" fill="#16a34a" cx="355.33" cy="486.21" r="4.5"><title>Top 12
+Age: 25
+Total Seasons: 588
+Hit Seasons: 41
+Rate: 6.97%</title></circle>
+<circle class="dot" fill="#16a34a" cx="424.67" cy="459.65" r="4.5"><title>Top 12
+Age: 26
+Total Seasons: 501
+Hit Seasons: 46
+Rate: 9.18%</title></circle>
+<circle class="dot" fill="#16a34a" cx="494.00" cy="443.66" r="4.5"><title>Top 12
+Age: 27
+Total Seasons: 409
+Hit Seasons: 43
+Rate: 10.51%</title></circle>
+<circle class="dot" fill="#16a34a" cx="563.33" cy="457.24" r="4.5"><title>Top 12
+Age: 28
+Total Seasons: 288
+Hit Seasons: 27
+Rate: 9.38%</title></circle>
+<circle class="dot" fill="#16a34a" cx="632.67" cy="453.03" r="4.5"><title>Top 12
+Age: 29
+Total Seasons: 226
+Hit Seasons: 22
+Rate: 9.73%</title></circle>
+<circle class="dot" fill="#16a34a" cx="702.00" cy="459.29" r="4.5"><title>Top 12
+Age: 30
+Total Seasons: 152
+Hit Seasons: 14
+Rate: 9.21%</title></circle>
+<circle class="dot" fill="#16a34a" cx="771.33" cy="502.56" r="4.5"><title>Top 12
+Age: 31
+Total Seasons: 107
+Hit Seasons: 6
+Rate: 5.61%</title></circle>
+<circle class="dot" fill="#16a34a" cx="840.67" cy="536.10" r="4.5"><title>Top 12
+Age: 32
+Total Seasons: 71
+Hit Seasons: 2
+Rate: 2.82%</title></circle>
+<circle class="dot" fill="#16a34a" cx="910.00" cy="539.95" r="4.5"><title>Top 12
+Age: 33
+Total Seasons: 40
+Hit Seasons: 1
+Rate: 2.50%</title></circle>
+<path class="rate-line" stroke="#ca8a04" d="M 78.00 522.52 L 147.33 520.11 L 216.67 528.05 L 286.00 525.76 L 355.33 537.30 L 424.67 522.04 L 494.00 525.88 L 563.33 515.78 L 632.67 538.14 L 702.00 530.45 L 771.33 547.52 L 840.67 570.00 L 910.00 570.00"/>
+<circle class="dot" fill="#ca8a04" cx="78.00" cy="522.52" r="4.5"><title>Top 5
+Age: 21
+Total Seasons: 76
+Hit Seasons: 3
+Rate: 3.95%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="147.33" cy="520.11" r="4.5"><title>Top 5
+Age: 22
+Total Seasons: 289
+Hit Seasons: 12
+Rate: 4.15%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="216.67" cy="528.05" r="4.5"><title>Top 5
+Age: 23
+Total Seasons: 545
+Hit Seasons: 19
+Rate: 3.49%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="286.00" cy="525.76" r="4.5"><title>Top 5
+Age: 24
+Total Seasons: 653
+Hit Seasons: 24
+Rate: 3.68%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="355.33" cy="537.30" r="4.5"><title>Top 5
+Age: 25
+Total Seasons: 588
+Hit Seasons: 16
+Rate: 2.72%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="424.67" cy="522.04" r="4.5"><title>Top 5
+Age: 26
+Total Seasons: 501
+Hit Seasons: 20
+Rate: 3.99%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="494.00" cy="525.88" r="4.5"><title>Top 5
+Age: 27
+Total Seasons: 409
+Hit Seasons: 15
+Rate: 3.67%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="563.33" cy="515.78" r="4.5"><title>Top 5
+Age: 28
+Total Seasons: 288
+Hit Seasons: 13
+Rate: 4.51%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="632.67" cy="538.14" r="4.5"><title>Top 5
+Age: 29
+Total Seasons: 226
+Hit Seasons: 6
+Rate: 2.65%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="702.00" cy="530.45" r="4.5"><title>Top 5
+Age: 30
+Total Seasons: 152
+Hit Seasons: 5
+Rate: 3.29%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="771.33" cy="547.52" r="4.5"><title>Top 5
+Age: 31
+Total Seasons: 107
+Hit Seasons: 2
+Rate: 1.87%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="840.67" cy="570.00" r="4.5"><title>Top 5
+Age: 32
+Total Seasons: 71
+Hit Seasons: 0
+Rate: 0.00%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="910.00" cy="570.00" r="4.5"><title>Top 5
+Age: 33
+Total Seasons: 40
+Hit Seasons: 0
+Rate: 0.00%</title></circle>
+<path class="rate-line" stroke="#ea580c" d="M 78.00 522.52 L 147.33 528.41 L 216.67 543.55 L 286.00 546.08 L 355.33 551.61 L 424.67 543.55 L 494.00 540.67 L 563.33 545.00 L 632.67 548.72 L 702.00 546.32 L 771.33 570.00 L 840.67 570.00 L 910.00 570.00"/>
+<circle class="dot" fill="#ea580c" cx="78.00" cy="522.52" r="4.5"><title>Top 3
+Age: 21
+Total Seasons: 76
+Hit Seasons: 3
+Rate: 3.95%</title></circle>
+<circle class="dot" fill="#ea580c" cx="147.33" cy="528.41" r="4.5"><title>Top 3
+Age: 22
+Total Seasons: 289
+Hit Seasons: 10
+Rate: 3.46%</title></circle>
+<circle class="dot" fill="#ea580c" cx="216.67" cy="543.55" r="4.5"><title>Top 3
+Age: 23
+Total Seasons: 545
+Hit Seasons: 12
+Rate: 2.20%</title></circle>
+<circle class="dot" fill="#ea580c" cx="286.00" cy="546.08" r="4.5"><title>Top 3
+Age: 24
+Total Seasons: 653
+Hit Seasons: 13
+Rate: 1.99%</title></circle>
+<circle class="dot" fill="#ea580c" cx="355.33" cy="551.61" r="4.5"><title>Top 3
+Age: 25
+Total Seasons: 588
+Hit Seasons: 9
+Rate: 1.53%</title></circle>
+<circle class="dot" fill="#ea580c" cx="424.67" cy="543.55" r="4.5"><title>Top 3
+Age: 26
+Total Seasons: 501
+Hit Seasons: 11
+Rate: 2.20%</title></circle>
+<circle class="dot" fill="#ea580c" cx="494.00" cy="540.67" r="4.5"><title>Top 3
+Age: 27
+Total Seasons: 409
+Hit Seasons: 10
+Rate: 2.44%</title></circle>
+<circle class="dot" fill="#ea580c" cx="563.33" cy="545.00" r="4.5"><title>Top 3
+Age: 28
+Total Seasons: 288
+Hit Seasons: 6
+Rate: 2.08%</title></circle>
+<circle class="dot" fill="#ea580c" cx="632.67" cy="548.72" r="4.5"><title>Top 3
+Age: 29
+Total Seasons: 226
+Hit Seasons: 4
+Rate: 1.77%</title></circle>
+<circle class="dot" fill="#ea580c" cx="702.00" cy="546.32" r="4.5"><title>Top 3
+Age: 30
+Total Seasons: 152
+Hit Seasons: 3
+Rate: 1.97%</title></circle>
+<circle class="dot" fill="#ea580c" cx="771.33" cy="570.00" r="4.5"><title>Top 3
+Age: 31
+Total Seasons: 107
+Hit Seasons: 0
+Rate: 0.00%</title></circle>
+<circle class="dot" fill="#ea580c" cx="840.67" cy="570.00" r="4.5"><title>Top 3
+Age: 32
+Total Seasons: 71
+Hit Seasons: 0
+Rate: 0.00%</title></circle>
+<circle class="dot" fill="#ea580c" cx="910.00" cy="570.00" r="4.5"><title>Top 3
+Age: 33
+Total Seasons: 40
+Hit Seasons: 0
+Rate: 0.00%</title></circle>
+<path class="rate-line" stroke="#dc2626" d="M 78.00 554.13 L 147.33 557.50 L 216.67 563.39 L 286.00 564.47 L 355.33 563.87 L 424.67 567.60 L 494.00 552.33 L 563.33 557.50 L 632.67 554.01 L 702.00 562.07 L 771.33 570.00 L 840.67 570.00 L 910.00 570.00"/>
+<circle class="dot" fill="#dc2626" cx="78.00" cy="554.13" r="4.5"><title>#1 Overall
+Age: 21
+Total Seasons: 76
+Hit Seasons: 1
+Rate: 1.32%</title></circle>
+<circle class="dot" fill="#dc2626" cx="147.33" cy="557.50" r="4.5"><title>#1 Overall
+Age: 22
+Total Seasons: 289
+Hit Seasons: 3
+Rate: 1.04%</title></circle>
+<circle class="dot" fill="#dc2626" cx="216.67" cy="563.39" r="4.5"><title>#1 Overall
+Age: 23
+Total Seasons: 545
+Hit Seasons: 3
+Rate: 0.55%</title></circle>
+<circle class="dot" fill="#dc2626" cx="286.00" cy="564.47" r="4.5"><title>#1 Overall
+Age: 24
+Total Seasons: 653
+Hit Seasons: 3
+Rate: 0.46%</title></circle>
+<circle class="dot" fill="#dc2626" cx="355.33" cy="563.87" r="4.5"><title>#1 Overall
+Age: 25
+Total Seasons: 588
+Hit Seasons: 3
+Rate: 0.51%</title></circle>
+<circle class="dot" fill="#dc2626" cx="424.67" cy="567.60" r="4.5"><title>#1 Overall
+Age: 26
+Total Seasons: 501
+Hit Seasons: 1
+Rate: 0.20%</title></circle>
+<circle class="dot" fill="#dc2626" cx="494.00" cy="552.33" r="4.5"><title>#1 Overall
+Age: 27
+Total Seasons: 409
+Hit Seasons: 6
+Rate: 1.47%</title></circle>
+<circle class="dot" fill="#dc2626" cx="563.33" cy="557.50" r="4.5"><title>#1 Overall
+Age: 28
+Total Seasons: 288
+Hit Seasons: 3
+Rate: 1.04%</title></circle>
+<circle class="dot" fill="#dc2626" cx="632.67" cy="554.01" r="4.5"><title>#1 Overall
+Age: 29
+Total Seasons: 226
+Hit Seasons: 3
+Rate: 1.33%</title></circle>
+<circle class="dot" fill="#dc2626" cx="702.00" cy="562.07" r="4.5"><title>#1 Overall
+Age: 30
+Total Seasons: 152
+Hit Seasons: 1
+Rate: 0.66%</title></circle>
+<circle class="dot" fill="#dc2626" cx="771.33" cy="570.00" r="4.5"><title>#1 Overall
+Age: 31
+Total Seasons: 107
+Hit Seasons: 0
+Rate: 0.00%</title></circle>
+<circle class="dot" fill="#dc2626" cx="840.67" cy="570.00" r="4.5"><title>#1 Overall
+Age: 32
+Total Seasons: 71
+Hit Seasons: 0
+Rate: 0.00%</title></circle>
+<circle class="dot" fill="#dc2626" cx="910.00" cy="570.00" r="4.5"><title>#1 Overall
+Age: 33
+Total Seasons: 40
+Hit Seasons: 0
+Rate: 0.00%</title></circle>
+<line x1="944" y1="82" x2="972" y2="82" stroke="#2563eb" stroke-width="4" stroke-linecap="round"/>
+<text class="legend" x="982" y="87">Top 36</text>
+<line x1="944" y1="112" x2="972" y2="112" stroke="#0891b2" stroke-width="4" stroke-linecap="round"/>
+<text class="legend" x="982" y="117">Top 24</text>
+<line x1="944" y1="142" x2="972" y2="142" stroke="#16a34a" stroke-width="4" stroke-linecap="round"/>
+<text class="legend" x="982" y="147">Top 12</text>
+<line x1="944" y1="172" x2="972" y2="172" stroke="#ca8a04" stroke-width="4" stroke-linecap="round"/>
+<text class="legend" x="982" y="177">Top 5</text>
+<line x1="944" y1="202" x2="972" y2="202" stroke="#ea580c" stroke-width="4" stroke-linecap="round"/>
+<text class="legend" x="982" y="207">Top 3</text>
+<line x1="944" y1="232" x2="972" y2="232" stroke="#dc2626" stroke-width="4" stroke-linecap="round"/>
+<text class="legend" x="982" y="237">#1 Overall</text>
+</svg>

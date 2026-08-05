@@ -1,0 +1,1114 @@
+result_type,target,position,bucket,rows,positives,positive_rate,baseline_positive_rate,lift_over_baseline,status,test_season,reason,draft_window,model_name,auc,top_decile_hit_rate,baseline_hit_rate,improvement_over_adp_only,seasons_tested,seasons_where_model_beat_adp_only,average_yearly_lift,median_yearly_lift,final_classification
+bucket,WR_Beat_ADP_By_12,WR,Major Negative Market Disagreement,6.0,0.0,0.0,0.16229348882410108,-0.16229348882410108,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,WR_Beat_ADP_By_12,WR,Negative Market Disagreement,219.0,24.0,0.1095890410958904,0.16229348882410108,-0.052704447728210674,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,WR_Beat_ADP_By_12,WR,Neutral / Fairly Priced,778.0,135.0,0.17352185089974292,0.16229348882410108,0.011228362075641846,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,WR_Beat_ADP_By_12,WR,Positive Market Disagreement,26.0,8.0,0.3076923076923077,0.16229348882410108,0.14539881886820663,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,RB_Beat_ADP_By_12,RB,Negative Market Disagreement,225.0,19.0,0.08444444444444445,0.16991963260619977,-0.08547518816175532,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,RB_Beat_ADP_By_12,RB,Neutral / Fairly Priced,623.0,123.0,0.19743178170144463,0.16991963260619977,0.027512149095244853,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,RB_Beat_ADP_By_12,RB,Positive Market Disagreement,23.0,6.0,0.2608695652173913,0.16991963260619977,0.09094993261119153,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,WR_Underpriced_Top24,WR,Major Negative Market Disagreement,6.0,0.0,0.0,0.10204081632653061,-0.10204081632653061,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,WR_Underpriced_Top24,WR,Negative Market Disagreement,219.0,14.0,0.0639269406392694,0.10204081632653061,-0.03811387568726121,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,WR_Underpriced_Top24,WR,Neutral / Fairly Priced,778.0,86.0,0.11053984575835475,0.10204081632653061,0.008499029431824137,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,WR_Underpriced_Top24,WR,Positive Market Disagreement,26.0,5.0,0.19230769230769232,0.10204081632653061,0.0902668759811617,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,RB_Underpriced_Top24,RB,Negative Market Disagreement,225.0,15.0,0.06666666666666667,0.1148105625717566,-0.04814389590508994,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,RB_Underpriced_Top24,RB,Neutral / Fairly Priced,623.0,84.0,0.1348314606741573,0.1148105625717566,0.020020898102400694,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,RB_Underpriced_Top24,RB,Positive Market Disagreement,23.0,1.0,0.043478260869565216,0.1148105625717566,-0.07133230170219139,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,WR_Underpriced_Top12,WR,Major Negative Market Disagreement,6.0,0.0,0.0,0.07774538386783285,-0.07774538386783285,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,WR_Underpriced_Top12,WR,Negative Market Disagreement,219.0,20.0,0.091324200913242,0.07774538386783285,0.013578817045409156,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,WR_Underpriced_Top12,WR,Neutral / Fairly Priced,778.0,60.0,0.07712082262210797,0.07774538386783285,-0.0006245612457248806,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,WR_Underpriced_Top12,WR,Positive Market Disagreement,26.0,0.0,0.0,0.07774538386783285,-0.07774538386783285,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,RB_Underpriced_Top12,RB,Negative Market Disagreement,225.0,20.0,0.08888888888888889,0.07921928817451206,0.009669600714376836,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,RB_Underpriced_Top12,RB,Neutral / Fairly Priced,623.0,48.0,0.07704654895666131,0.07921928817451206,-0.0021727392178507443,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,RB_Underpriced_Top12,RB,Positive Market Disagreement,23.0,1.0,0.043478260869565216,0.07921928817451206,-0.03574102730494684,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,Underpriced_Top24,ALL,Major Negative Market Disagreement,6.0,0.0,0.0,0.10789473684210527,-0.10789473684210527,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,Underpriced_Top24,ALL,Negative Market Disagreement,444.0,29.0,0.06531531531531531,0.10789473684210527,-0.04257942152678995,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,Underpriced_Top24,ALL,Neutral / Fairly Priced,1401.0,170.0,0.12134189864382584,0.10789473684210527,0.013447161801720578,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,Underpriced_Top24,ALL,Positive Market Disagreement,49.0,6.0,0.12244897959183673,0.10789473684210527,0.014554242749731466,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,Underpriced_Top12,ALL,Major Negative Market Disagreement,6.0,0.0,0.0,0.07842105263157895,-0.07842105263157895,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,Underpriced_Top12,ALL,Negative Market Disagreement,444.0,40.0,0.09009009009009009,0.07842105263157895,0.011669037458511139,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,Underpriced_Top12,ALL,Neutral / Fairly Priced,1401.0,108.0,0.07708779443254818,0.07842105263157895,-0.001333258199030768,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,Underpriced_Top12,ALL,Positive Market Disagreement,49.0,1.0,0.02040816326530612,0.07842105263157895,-0.05801288936627283,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,Beat_ADP_By_12,ALL,Major Negative Market Disagreement,6.0,0.0,0.0,0.16578947368421051,-0.16578947368421051,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,Beat_ADP_By_12,ALL,Negative Market Disagreement,444.0,43.0,0.09684684684684684,0.16578947368421051,-0.06894262683736367,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,Beat_ADP_By_12,ALL,Neutral / Fairly Priced,1401.0,258.0,0.1841541755888651,0.16578947368421051,0.018364701904654585,evaluated,,,,,,,,,,,,,Weak Research Signal
+bucket,Beat_ADP_By_12,ALL,Positive Market Disagreement,49.0,14.0,0.2857142857142857,0.16578947368421051,0.11992481203007518,evaluated,,,,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,,,,,,,,,,,Weak Research Signal
+full_pool,WR_Beat_ADP_By_12,WR,,957.0,,0.15987460815047022,,0.0,evaluated,,,,ADP-only,0.7113045881702598,0.25,0.25,0.0,14.0,0.0,0.0,0.0,Weak Research Signal
+full_pool,WR_Beat_ADP_By_12,WR,,957.0,,0.15987460815047022,,0.010416666666666685,evaluated,,,,market disagreement only,0.6092657626898189,0.2604166666666667,0.25,0.010416666666666685,14.0,6.0,0.07993197278911565,0.0,Weak Research Signal
+full_pool,WR_Beat_ADP_By_12,WR,,957.0,,0.15987460815047022,,-0.010416666666666657,evaluated,,,,ADP + market disagreement,0.713133678015153,0.23958333333333334,0.25,-0.010416666666666657,14.0,2.0,0.0012755102040816321,0.0,Weak Research Signal
+full_pool,WR_Beat_ADP_By_12,WR,,957.0,,0.15987460815047022,,-0.020833333333333343,evaluated,,,,ADP + age,0.709812863785647,0.22916666666666666,0.25,-0.020833333333333343,14.0,3.0,0.008928571428571428,0.0,Weak Research Signal
+full_pool,WR_Beat_ADP_By_12,WR,,957.0,,0.15987460815047022,,-0.010416666666666657,evaluated,,,,ADP + age + market disagreement,0.7103006210776185,0.23958333333333334,0.25,-0.010416666666666657,14.0,3.0,0.02040816326530612,0.0,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2012.0,insufficient_test_rows_or_positives,,,,,,,,,,,Weak Research Signal
+full_pool,RB_Beat_ADP_By_12,RB,,773.0,,0.17723156532988357,,0.0,evaluated,,,,ADP-only,0.7212619932975255,0.3333333333333333,0.3333333333333333,0.0,13.0,0.0,0.0,0.0,Weak Research Signal
+full_pool,RB_Beat_ADP_By_12,RB,,773.0,,0.17723156532988357,,-0.15384615384615383,evaluated,,,,market disagreement only,0.6685546068034706,0.1794871794871795,0.3333333333333333,-0.15384615384615383,13.0,1.0,-0.06043956043956043,0.0,Weak Research Signal
+full_pool,RB_Beat_ADP_By_12,RB,,773.0,,0.17723156532988357,,-0.012820512820512775,evaluated,,,,ADP + market disagreement,0.7185132901804159,0.32051282051282054,0.3333333333333333,-0.012820512820512775,13.0,0.0,-0.012820512820512822,0.0,Weak Research Signal
+full_pool,RB_Beat_ADP_By_12,RB,,773.0,,0.17723156532988357,,-0.012820512820512775,evaluated,,,,ADP + age,0.717268053068907,0.32051282051282054,0.3333333333333333,-0.012820512820512775,13.0,1.0,-0.012820512820512815,0.0,Weak Research Signal
+full_pool,RB_Beat_ADP_By_12,RB,,773.0,,0.17723156532988357,,0.0,evaluated,,,,ADP + age + market disagreement,0.7148005325253638,0.3333333333333333,0.3333333333333333,0.0,13.0,2.0,-0.012820512820512815,0.0,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,,,,,,,,,,,Weak Research Signal
+full_pool,WR_Underpriced_Top24,WR,,957.0,,0.10031347962382445,,0.0,evaluated,,,,ADP-only,0.6481743612078977,0.052083333333333336,0.052083333333333336,0.0,14.0,0.0,0.0,0.0,Weak Research Signal
+full_pool,WR_Underpriced_Top24,WR,,957.0,,0.10031347962382445,,0.13541666666666666,evaluated,,,,market disagreement only,0.6233909214092141,0.1875,0.052083333333333336,0.13541666666666666,14.0,8.0,0.11692176870748298,0.125,Weak Research Signal
+full_pool,WR_Underpriced_Top24,WR,,957.0,,0.10031347962382445,,0.020833333333333336,evaluated,,,,ADP + market disagreement,0.668892760356175,0.07291666666666667,0.052083333333333336,0.020833333333333336,14.0,2.0,0.02040816326530612,0.0,Weak Research Signal
+full_pool,WR_Underpriced_Top24,WR,,957.0,,0.10031347962382445,,-0.010416666666666671,evaluated,,,,ADP + age,0.6472669860627178,0.041666666666666664,0.052083333333333336,-0.010416666666666671,14.0,2.0,0.007908163265306122,0.0,Weak Research Signal
+full_pool,WR_Underpriced_Top24,WR,,957.0,,0.10031347962382445,,0.031249999999999993,evaluated,,,,ADP + age + market disagreement,0.6646039005032908,0.08333333333333333,0.052083333333333336,0.031249999999999993,14.0,5.0,0.05425170068027211,0.0,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2012.0,insufficient_test_rows_or_positives,,,,,,,,,,,Weak Research Signal
+full_pool,RB_Underpriced_Top24,RB,,773.0,,0.1203104786545925,,0.0,evaluated,,,,ADP-only,0.6218848829854522,0.07692307692307693,0.07692307692307693,0.0,13.0,0.0,0.0,0.0,Weak Research Signal
+full_pool,RB_Underpriced_Top24,RB,,773.0,,0.1203104786545925,,0.038461538461538464,evaluated,,,,market disagreement only,0.5800521821631879,0.11538461538461539,0.07692307692307693,0.038461538461538464,13.0,2.0,-0.0018315018315018315,0.0,Weak Research Signal
+full_pool,RB_Underpriced_Top24,RB,,773.0,,0.1203104786545925,,0.0,evaluated,,,,ADP + market disagreement,0.6176391524351676,0.07692307692307693,0.07692307692307693,0.0,13.0,2.0,0.02380952380952381,0.0,Weak Research Signal
+full_pool,RB_Underpriced_Top24,RB,,773.0,,0.1203104786545925,,0.012820512820512817,evaluated,,,,ADP + age,0.6156388361796332,0.08974358974358974,0.07692307692307693,0.012820512820512817,13.0,1.0,-0.0018315018315018315,0.0,Weak Research Signal
+full_pool,RB_Underpriced_Top24,RB,,773.0,,0.1203104786545925,,0.0,evaluated,,,,ADP + age + market disagreement,0.6140891840607211,0.07692307692307693,0.07692307692307693,0.0,13.0,2.0,-0.0018315018315018315,0.0,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,,,,,,,,,,,Weak Research Signal
+full_pool,WR_Underpriced_Top12,WR,,957.0,,0.07836990595611286,,0.0,evaluated,,,,ADP-only,0.5565154950869237,0.020833333333333332,0.020833333333333332,0.0,14.0,0.0,0.0,0.0,Weak Research Signal
+full_pool,WR_Underpriced_Top12,WR,,957.0,,0.07836990595611286,,0.0625,evaluated,,,,market disagreement only,0.481307634164777,0.08333333333333333,0.020833333333333332,0.0625,14.0,7.0,0.08333333333333333,0.0625,Weak Research Signal
+full_pool,WR_Underpriced_Top12,WR,,957.0,,0.07836990595611286,,-0.010416666666666666,evaluated,,,,ADP + market disagreement,0.5838624338624339,0.010416666666666666,0.020833333333333332,-0.010416666666666666,14.0,0.0,0.0,0.0,Weak Research Signal
+full_pool,WR_Underpriced_Top12,WR,,957.0,,0.07836990595611286,,0.0,evaluated,,,,ADP + age,0.548291761148904,0.020833333333333332,0.020833333333333332,0.0,14.0,0.0,0.0,0.0,Weak Research Signal
+full_pool,WR_Underpriced_Top12,WR,,957.0,,0.07836990595611286,,-0.020833333333333332,evaluated,,,,ADP + age + market disagreement,0.578843537414966,0.0,0.020833333333333332,-0.020833333333333332,14.0,0.0,0.0,0.0,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,,,,,,,,,,,Weak Research Signal
+full_pool,RB_Underpriced_Top12,RB,,807.0,,0.07806691449814127,,0.0,evaluated,,,,ADP-only,0.5753434886499402,0.024691358024691357,0.024691358024691357,0.0,14.0,0.0,0.0,0.0,Weak Research Signal
+full_pool,RB_Underpriced_Top12,RB,,807.0,,0.07806691449814127,,0.024691358024691357,evaluated,,,,market disagreement only,0.45317033623485237,0.04938271604938271,0.024691358024691357,0.024691358024691357,14.0,3.0,0.04251700680272108,0.0,Weak Research Signal
+full_pool,RB_Underpriced_Top12,RB,,807.0,,0.07806691449814127,,0.04938271604938271,evaluated,,,,ADP + market disagreement,0.5946620583717358,0.07407407407407407,0.024691358024691357,0.04938271604938271,14.0,6.0,0.1096938775510204,0.0,Weak Research Signal
+full_pool,RB_Underpriced_Top12,RB,,807.0,,0.07806691449814127,,0.012345679012345678,evaluated,,,,ADP + age,0.5357782898105479,0.037037037037037035,0.024691358024691357,0.012345679012345678,14.0,2.0,0.022108843537414966,0.0,Weak Research Signal
+full_pool,RB_Underpriced_Top12,RB,,807.0,,0.07806691449814127,,0.07407407407407407,evaluated,,,,ADP + age + market disagreement,0.5614439324116743,0.09876543209876543,0.024691358024691357,0.07407407407407407,14.0,7.0,0.10076530612244898,0.0625,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,,,,,,,,,,,Weak Research Signal
+full_pool,Underpriced_Top24,ALL,,1764.0,,0.10770975056689343,,0.0,evaluated,,,,ADP-only,0.6393081655855013,0.06779661016949153,0.06779661016949153,0.0,14.0,0.0,0.0,0.0,Weak Research Signal
+full_pool,Underpriced_Top24,ALL,,1764.0,,0.10770975056689343,,0.06779661016949153,evaluated,,,,market disagreement only,0.6044455962014311,0.13559322033898305,0.06779661016949153,0.06779661016949153,14.0,8.0,0.07107178535749965,0.06904761904761905,Weak Research Signal
+full_pool,Underpriced_Top24,ALL,,1764.0,,0.10770975056689343,,0.016949152542372878,evaluated,,,,ADP + market disagreement,0.6408663813281615,0.0847457627118644,0.06779661016949153,0.016949152542372878,14.0,2.0,0.005834641548927264,0.0,Weak Research Signal
+full_pool,Underpriced_Top24,ALL,,1764.0,,0.10770975056689343,,-0.00564971751412429,evaluated,,,,ADP + age,0.6385491205778104,0.062146892655367235,0.06779661016949153,-0.00564971751412429,14.0,2.0,-0.006037414965986394,0.0,Weak Research Signal
+full_pool,Underpriced_Top24,ALL,,1764.0,,0.10770975056689343,,0.016949152542372878,evaluated,,,,ADP + age + market disagreement,0.637231659198823,0.0847457627118644,0.06779661016949153,0.016949152542372878,14.0,4.0,0.015762213976499694,0.0,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,,,,,,,,,,,Weak Research Signal
+full_pool,Underpriced_Top12,ALL,,1764.0,,0.0782312925170068,,0.0,evaluated,,,,ADP-only,0.568189921029645,0.02824858757062147,0.02824858757062147,0.0,14.0,0.0,0.0,0.0,Weak Research Signal
+full_pool,Underpriced_Top12,ALL,,1764.0,,0.0782312925170068,,0.04519774011299435,evaluated,,,,market disagreement only,0.4809236679323315,0.07344632768361582,0.02824858757062147,0.04519774011299435,14.0,7.0,0.04848722705865564,0.03571428571428571,Weak Research Signal
+full_pool,Underpriced_Top12,ALL,,1764.0,,0.0782312925170068,,0.05084745762711865,evaluated,,,,ADP + market disagreement,0.6015138955737382,0.07909604519774012,0.02824858757062147,0.05084745762711865,14.0,7.0,0.07647649969078539,0.03333333333333333,Weak Research Signal
+full_pool,Underpriced_Top12,ALL,,1764.0,,0.0782312925170068,,0.005649717514124294,evaluated,,,,ADP + age,0.5609680553327272,0.03389830508474576,0.02824858757062147,0.005649717514124294,14.0,2.0,0.009863945578231293,0.0,Weak Research Signal
+full_pool,Underpriced_Top12,ALL,,1764.0,,0.0782312925170068,,0.03954802259887005,evaluated,,,,ADP + age + market disagreement,0.5915980355455729,0.06779661016949153,0.02824858757062147,0.03954802259887005,14.0,7.0,0.08455473098330239,0.03333333333333333,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,,,,,,,,,,,Weak Research Signal
+full_pool,Beat_ADP_By_12,ALL,,1764.0,,0.1649659863945578,,0.0,evaluated,,,,ADP-only,0.7191975606740341,0.2937853107344633,0.2937853107344633,0.0,14.0,0.0,0.0,0.0,Weak Research Signal
+full_pool,Beat_ADP_By_12,ALL,,1764.0,,0.1649659863945578,,-0.056497175141242945,evaluated,,,,market disagreement only,0.6401480952680902,0.23728813559322035,0.2937853107344633,-0.056497175141242945,14.0,7.0,0.05340730697873556,0.0357142857142857,Weak Research Signal
+full_pool,Beat_ADP_By_12,ALL,,1764.0,,0.1649659863945578,,-0.01694915254237289,evaluated,,,,ADP + market disagreement,0.7119596027463414,0.2768361581920904,0.2937853107344633,-0.01694915254237289,14.0,4.0,0.023042433756719473,0.0,Weak Research Signal
+full_pool,Beat_ADP_By_12,ALL,,1764.0,,0.1649659863945578,,-0.011299435028248594,evaluated,,,,ADP + age,0.7183891956709896,0.2824858757062147,0.2937853107344633,-0.011299435028248594,14.0,4.0,0.014625850340136057,0.0,Weak Research Signal
+full_pool,Beat_ADP_By_12,ALL,,1764.0,,0.1649659863945578,,-0.02259887005649719,evaluated,,,,ADP + age + market disagreement,0.7110240923099176,0.2711864406779661,0.2937853107344633,-0.02259887005649719,14.0,3.0,0.011595547309833023,0.0,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2017.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2018.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2019.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2020.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2021.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2022.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2023.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2024.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+draft_window,WR_Beat_ADP_By_12,WR,,157.0,,,,,skipped_no_walk_forward_predictions,,,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2017.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2018.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2019.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2020.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2021.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2022.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2023.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2024.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+draft_window,RB_Beat_ADP_By_12,RB,,184.0,,,,,skipped_no_walk_forward_predictions,,,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2017.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2018.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2019.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2020.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2021.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2022.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2023.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2024.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+draft_window,WR_Underpriced_Top24,WR,,157.0,,,,,skipped_no_walk_forward_predictions,,,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2017.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2018.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2019.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2020.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2021.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2022.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2023.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2024.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+draft_window,RB_Underpriced_Top24,RB,,184.0,,,,,skipped_no_walk_forward_predictions,,,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2017.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2018.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2019.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2020.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2021.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2022.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2023.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2024.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+draft_window,WR_Underpriced_Top12,WR,,157.0,,,,,skipped_no_walk_forward_predictions,,,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2017.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2018.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2019.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2020.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,1-24,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,1-24,,,,,,,,,,Weak Research Signal
+draft_window,RB_Underpriced_Top12,RB,,184.0,,,,,skipped_no_walk_forward_predictions,,,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2017.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2018.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2019.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2020.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2021.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2022.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2023.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2024.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+draft_window,Underpriced_Top24,ALL,,341.0,,,,,skipped_no_walk_forward_predictions,,,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2017.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2018.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,1-24,,,,,,,,,,Weak Research Signal
+draft_window,Underpriced_Top12,ALL,,24.0,,0.08333333333333333,,0.0,evaluated,,,1-24,ADP-only,0.8636363636363636,0.0,0.0,0.0,1.0,0.0,0.0,0.0,Weak Research Signal
+draft_window,Underpriced_Top12,ALL,,24.0,,0.08333333333333333,,0.6666666666666666,evaluated,,,1-24,market disagreement only,1.0,0.6666666666666666,0.0,0.6666666666666666,1.0,1.0,0.6666666666666666,0.6666666666666666,Weak Research Signal
+draft_window,Underpriced_Top12,ALL,,24.0,,0.08333333333333333,,0.0,evaluated,,,1-24,ADP + market disagreement,0.8409090909090908,0.0,0.0,0.0,1.0,0.0,0.0,0.0,Weak Research Signal
+draft_window,Underpriced_Top12,ALL,,24.0,,0.08333333333333333,,0.0,evaluated,,,1-24,ADP + age,0.8181818181818181,0.0,0.0,0.0,1.0,0.0,0.0,0.0,Weak Research Signal
+draft_window,Underpriced_Top12,ALL,,24.0,,0.08333333333333333,,0.0,evaluated,,,1-24,ADP + age + market disagreement,0.7954545454545454,0.0,0.0,0.0,1.0,0.0,0.0,0.0,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2017.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2018.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2019.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2020.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2021.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2022.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2023.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2024.0,insufficient_training_rows_or_classes,1-24,,,,,,,,,,Weak Research Signal
+draft_window,Beat_ADP_By_12,ALL,,341.0,,,,,skipped_no_walk_forward_predictions,,,1-24,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2017.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+draft_window,WR_Beat_ADP_By_12,WR,,193.0,,,,,skipped_no_walk_forward_predictions,,,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+draft_window,RB_Beat_ADP_By_12,RB,,121.0,,,,,skipped_no_walk_forward_predictions,,,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2017.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2018.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2019.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2020.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2021.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2022.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2023.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2024.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+draft_window,WR_Underpriced_Top24,WR,,193.0,,,,,skipped_no_walk_forward_predictions,,,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2017.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2018.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2019.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2020.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2021.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2022.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2023.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2024.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+draft_window,RB_Underpriced_Top24,RB,,121.0,,,,,skipped_no_walk_forward_predictions,,,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2016.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+draft_window,WR_Underpriced_Top12,WR,,25.0,,0.16,,0.0,evaluated,,,25-48,ADP-only,0.7500000000000001,0.0,0.0,0.0,1.0,0.0,0.0,0.0,Weak Research Signal
+draft_window,WR_Underpriced_Top12,WR,,25.0,,0.16,,0.0,evaluated,,,25-48,market disagreement only,0.6309523809523809,0.0,0.0,0.0,1.0,0.0,0.0,0.0,Weak Research Signal
+draft_window,WR_Underpriced_Top12,WR,,25.0,,0.16,,0.0,evaluated,,,25-48,ADP + market disagreement,0.6190476190476191,0.0,0.0,0.0,1.0,0.0,0.0,0.0,Weak Research Signal
+draft_window,WR_Underpriced_Top12,WR,,25.0,,0.16,,0.0,evaluated,,,25-48,ADP + age,0.8095238095238095,0.0,0.0,0.0,1.0,0.0,0.0,0.0,Weak Research Signal
+draft_window,WR_Underpriced_Top12,WR,,25.0,,0.16,,0.0,evaluated,,,25-48,ADP + age + market disagreement,0.7023809523809524,0.0,0.0,0.0,1.0,0.0,0.0,0.0,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+draft_window,RB_Underpriced_Top12,RB,,121.0,,,,,skipped_no_walk_forward_predictions,,,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2017.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2018.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2019.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2020.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2021.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2022.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2023.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2024.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+draft_window,Underpriced_Top24,ALL,,314.0,,,,,skipped_no_walk_forward_predictions,,,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2015.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+draft_window,Underpriced_Top12,ALL,,167.0,,0.15568862275449102,,0.0,evaluated,,,25-48,ADP-only,0.5467812329514458,0.0,0.0,0.0,7.0,0.0,0.0,0.0,Weak Research Signal
+draft_window,Underpriced_Top12,ALL,,167.0,,0.15568862275449102,,0.11764705882352941,evaluated,,,25-48,market disagreement only,0.5244135297326786,0.11764705882352941,0.0,0.11764705882352941,7.0,0.0,-0.09523809523809523,0.0,Weak Research Signal
+draft_window,Underpriced_Top12,ALL,,167.0,,0.15568862275449102,,0.11764705882352941,evaluated,,,25-48,ADP + market disagreement,0.5317785051827605,0.11764705882352941,0.0,0.11764705882352941,7.0,1.0,-0.05952380952380952,0.0,Weak Research Signal
+draft_window,Underpriced_Top12,ALL,,167.0,,0.15568862275449102,,0.0,evaluated,,,25-48,ADP + age,0.5602836879432624,0.0,0.0,0.0,7.0,1.0,0.02380952380952381,0.0,Weak Research Signal
+draft_window,Underpriced_Top12,ALL,,167.0,,0.15568862275449102,,0.058823529411764705,evaluated,,,25-48,ADP + age + market disagreement,0.5941080196399346,0.058823529411764705,0.0,0.058823529411764705,7.0,2.0,-0.035714285714285705,0.0,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2015.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2016.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,25-48,,,,,,,,,,Weak Research Signal
+draft_window,Beat_ADP_By_12,ALL,,103.0,,0.10679611650485436,,0.0,evaluated,,,25-48,ADP-only,0.5064229249011858,0.09090909090909091,0.09090909090909091,0.0,4.0,0.0,0.0,0.0,Weak Research Signal
+draft_window,Beat_ADP_By_12,ALL,,103.0,,0.10679611650485436,,0.09090909090909091,evaluated,,,25-48,market disagreement only,0.4451581027667984,0.18181818181818182,0.09090909090909091,0.09090909090909091,4.0,1.0,0.0,0.0,Weak Research Signal
+draft_window,Beat_ADP_By_12,ALL,,103.0,,0.10679611650485436,,0.09090909090909091,evaluated,,,25-48,ADP + market disagreement,0.5143280632411067,0.18181818181818182,0.09090909090909091,0.09090909090909091,4.0,0.0,0.0,0.0,Weak Research Signal
+draft_window,Beat_ADP_By_12,ALL,,103.0,,0.10679611650485436,,0.09090909090909091,evaluated,,,25-48,ADP + age,0.5770750988142292,0.18181818181818182,0.09090909090909091,0.09090909090909091,4.0,1.0,0.08333333333333333,0.0,Weak Research Signal
+draft_window,Beat_ADP_By_12,ALL,,103.0,,0.10679611650485436,,0.09090909090909091,evaluated,,,25-48,ADP + age + market disagreement,0.5918972332015809,0.18181818181818182,0.09090909090909091,0.09090909090909091,4.0,1.0,0.08333333333333333,0.0,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2016.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+draft_window,WR_Beat_ADP_By_12,WR,,142.0,,,,,skipped_no_walk_forward_predictions,,,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+draft_window,RB_Beat_ADP_By_12,RB,,109.0,,,,,skipped_no_walk_forward_predictions,,,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2016.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+draft_window,WR_Underpriced_Top24,WR,,142.0,,,,,skipped_no_walk_forward_predictions,,,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+draft_window,RB_Underpriced_Top24,RB,,109.0,,,,,skipped_no_walk_forward_predictions,,,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2016.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+draft_window,WR_Underpriced_Top12,WR,,142.0,,,,,skipped_no_walk_forward_predictions,,,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2017.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2018.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2019.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+draft_window,RB_Underpriced_Top12,RB,,109.0,,,,,skipped_no_walk_forward_predictions,,,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2013.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2014.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2015.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2016.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+draft_window,Underpriced_Top24,ALL,,251.0,,,,,skipped_no_walk_forward_predictions,,,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2013.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2014.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2015.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2016.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+draft_window,Underpriced_Top12,ALL,,251.0,,,,,skipped_no_walk_forward_predictions,,,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2013.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2014.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2015.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2016.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,49-72,,,,,,,,,,Weak Research Signal
+draft_window,Beat_ADP_By_12,ALL,,251.0,,,,,skipped_no_walk_forward_predictions,,,49-72,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+draft_window,WR_Beat_ADP_By_12,WR,,123.0,,,,,skipped_no_walk_forward_predictions,,,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+draft_window,RB_Beat_ADP_By_12,RB,,121.0,,,,,skipped_no_walk_forward_predictions,,,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+draft_window,WR_Underpriced_Top24,WR,,123.0,,,,,skipped_no_walk_forward_predictions,,,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+draft_window,RB_Underpriced_Top24,RB,,121.0,,,,,skipped_no_walk_forward_predictions,,,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+draft_window,WR_Underpriced_Top12,WR,,123.0,,,,,skipped_no_walk_forward_predictions,,,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+draft_window,RB_Underpriced_Top12,RB,,121.0,,,,,skipped_no_walk_forward_predictions,,,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2014.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2015.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+draft_window,Underpriced_Top24,ALL,,41.0,,0.14634146341463414,,0.0,evaluated,,,73-96,ADP-only,0.4238095238095238,0.2,0.2,0.0,2.0,0.0,0.0,0.0,Weak Research Signal
+draft_window,Underpriced_Top24,ALL,,41.0,,0.14634146341463414,,0.2,evaluated,,,73-96,market disagreement only,0.7476190476190476,0.4,0.2,0.2,2.0,1.0,0.16666666666666666,0.16666666666666666,Weak Research Signal
+draft_window,Underpriced_Top24,ALL,,41.0,,0.14634146341463414,,0.2,evaluated,,,73-96,ADP + market disagreement,0.738095238095238,0.4,0.2,0.2,2.0,1.0,0.16666666666666666,0.16666666666666666,Weak Research Signal
+draft_window,Underpriced_Top24,ALL,,41.0,,0.14634146341463414,,0.0,evaluated,,,73-96,ADP + age,0.4714285714285714,0.2,0.2,0.0,2.0,0.0,0.0,0.0,Weak Research Signal
+draft_window,Underpriced_Top24,ALL,,41.0,,0.14634146341463414,,0.39999999999999997,evaluated,,,73-96,ADP + age + market disagreement,0.7285714285714285,0.6,0.2,0.39999999999999997,2.0,1.0,0.33333333333333337,0.33333333333333337,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2014.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2015.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+draft_window,Underpriced_Top12,ALL,,41.0,,0.12195121951219512,,0.0,evaluated,,,73-96,ADP-only,0.40555555555555556,0.2,0.2,0.0,2.0,0.0,0.0,0.0,Weak Research Signal
+draft_window,Underpriced_Top12,ALL,,41.0,,0.12195121951219512,,0.2,evaluated,,,73-96,market disagreement only,0.7,0.4,0.2,0.2,2.0,1.0,0.16666666666666666,0.16666666666666666,Weak Research Signal
+draft_window,Underpriced_Top12,ALL,,41.0,,0.12195121951219512,,0.39999999999999997,evaluated,,,73-96,ADP + market disagreement,0.6888888888888889,0.6,0.2,0.39999999999999997,2.0,1.0,0.16666666666666666,0.16666666666666666,Weak Research Signal
+draft_window,Underpriced_Top12,ALL,,41.0,,0.12195121951219512,,0.0,evaluated,,,73-96,ADP + age,0.49444444444444446,0.2,0.2,0.0,2.0,0.0,0.0,0.0,Weak Research Signal
+draft_window,Underpriced_Top12,ALL,,41.0,,0.12195121951219512,,0.39999999999999997,evaluated,,,73-96,ADP + age + market disagreement,0.6944444444444444,0.6,0.2,0.39999999999999997,2.0,1.0,0.33333333333333337,0.33333333333333337,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2014.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2015.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,73-96,,,,,,,,,,Weak Research Signal
+draft_window,Beat_ADP_By_12,ALL,,41.0,,0.12195121951219512,,0.0,evaluated,,,73-96,ADP-only,0.45000000000000007,0.2,0.2,0.0,2.0,0.0,0.0,0.0,Weak Research Signal
+draft_window,Beat_ADP_By_12,ALL,,41.0,,0.12195121951219512,,0.2,evaluated,,,73-96,market disagreement only,0.7055555555555555,0.4,0.2,0.2,2.0,1.0,0.16666666666666666,0.16666666666666666,Weak Research Signal
+draft_window,Beat_ADP_By_12,ALL,,41.0,,0.12195121951219512,,0.39999999999999997,evaluated,,,73-96,ADP + market disagreement,0.7333333333333333,0.6,0.2,0.39999999999999997,2.0,1.0,0.16666666666666666,0.16666666666666666,Weak Research Signal
+draft_window,Beat_ADP_By_12,ALL,,41.0,,0.12195121951219512,,0.0,evaluated,,,73-96,ADP + age,0.638888888888889,0.2,0.2,0.0,2.0,0.0,0.0,0.0,Weak Research Signal
+draft_window,Beat_ADP_By_12,ALL,,41.0,,0.12195121951219512,,0.39999999999999997,evaluated,,,73-96,ADP + age + market disagreement,0.7222222222222222,0.6,0.2,0.39999999999999997,2.0,1.0,0.33333333333333337,0.33333333333333337,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2016.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+draft_window,WR_Beat_ADP_By_12,WR,,139.0,,,,,skipped_no_walk_forward_predictions,,,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2017.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2018.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2019.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+draft_window,RB_Beat_ADP_By_12,RB,,101.0,,,,,skipped_no_walk_forward_predictions,,,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2016.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+draft_window,WR_Underpriced_Top24,WR,,139.0,,,,,skipped_no_walk_forward_predictions,,,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2017.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2018.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2019.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+draft_window,RB_Underpriced_Top24,RB,,101.0,,,,,skipped_no_walk_forward_predictions,,,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+draft_window,WR_Underpriced_Top12,WR,,139.0,,,,,skipped_no_walk_forward_predictions,,,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2017.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2018.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2019.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2020.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2021.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2022.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2023.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2024.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+draft_window,RB_Underpriced_Top12,RB,,101.0,,,,,skipped_no_walk_forward_predictions,,,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2014.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2015.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2016.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+draft_window,Underpriced_Top24,ALL,,25.0,,0.2,,0.0,evaluated,,,97-120,ADP-only,0.68,0.3333333333333333,0.3333333333333333,0.0,1.0,0.0,0.0,0.0,Weak Research Signal
+draft_window,Underpriced_Top24,ALL,,25.0,,0.2,,0.0,evaluated,,,97-120,market disagreement only,0.35,0.3333333333333333,0.3333333333333333,0.0,1.0,0.0,0.0,0.0,Weak Research Signal
+draft_window,Underpriced_Top24,ALL,,25.0,,0.2,,0.0,evaluated,,,97-120,ADP + market disagreement,0.53,0.3333333333333333,0.3333333333333333,0.0,1.0,0.0,0.0,0.0,Weak Research Signal
+draft_window,Underpriced_Top24,ALL,,25.0,,0.2,,-0.3333333333333333,evaluated,,,97-120,ADP + age,0.53,0.0,0.3333333333333333,-0.3333333333333333,1.0,0.0,-0.3333333333333333,-0.3333333333333333,Weak Research Signal
+draft_window,Underpriced_Top24,ALL,,25.0,,0.2,,0.0,evaluated,,,97-120,ADP + age + market disagreement,0.46,0.3333333333333333,0.3333333333333333,0.0,1.0,0.0,0.0,0.0,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2014.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2015.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2016.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+draft_window,Underpriced_Top12,ALL,,240.0,,,,,skipped_no_walk_forward_predictions,,,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2014.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2015.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2016.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,97-120,,,,,,,,,,Weak Research Signal
+draft_window,Beat_ADP_By_12,ALL,,25.0,,0.28,,0.0,evaluated,,,97-120,ADP-only,0.6388888888888888,0.3333333333333333,0.3333333333333333,0.0,1.0,0.0,0.0,0.0,Weak Research Signal
+draft_window,Beat_ADP_By_12,ALL,,25.0,,0.28,,0.0,evaluated,,,97-120,market disagreement only,0.21428571428571427,0.3333333333333333,0.3333333333333333,0.0,1.0,0.0,0.0,0.0,Weak Research Signal
+draft_window,Beat_ADP_By_12,ALL,,25.0,,0.28,,0.0,evaluated,,,97-120,ADP + market disagreement,0.24603174603174605,0.3333333333333333,0.3333333333333333,0.0,1.0,0.0,0.0,0.0,Weak Research Signal
+draft_window,Beat_ADP_By_12,ALL,,25.0,,0.28,,-0.3333333333333333,evaluated,,,97-120,ADP + age,0.3412698412698413,0.0,0.3333333333333333,-0.3333333333333333,1.0,0.0,-0.3333333333333333,-0.3333333333333333,Weak Research Signal
+draft_window,Beat_ADP_By_12,ALL,,25.0,,0.28,,0.0,evaluated,,,97-120,ADP + age + market disagreement,0.253968253968254,0.3333333333333333,0.3333333333333333,0.0,1.0,0.0,0.0,0.0,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2015.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2016.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+draft_window,WR_Beat_ADP_By_12,WR,,150.0,,,,,skipped_no_walk_forward_predictions,,,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+draft_window,RB_Beat_ADP_By_12,RB,,103.0,,,,,skipped_no_walk_forward_predictions,,,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2016.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+draft_window,WR_Underpriced_Top24,WR,,150.0,,,,,skipped_no_walk_forward_predictions,,,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+draft_window,RB_Underpriced_Top24,RB,,103.0,,,,,skipped_no_walk_forward_predictions,,,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2017.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2018.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2019.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2020.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2021.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2022.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2023.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2024.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+draft_window,WR_Underpriced_Top12,WR,,150.0,,,,,skipped_no_walk_forward_predictions,,,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2017.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2018.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2019.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2020.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2021.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2022.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2023.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2024.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+draft_window,RB_Underpriced_Top12,RB,,103.0,,,,,skipped_no_walk_forward_predictions,,,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2016.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+draft_window,Underpriced_Top24,ALL,,48.0,,0.10416666666666667,,0.0,evaluated,,,121-150,ADP-only,0.5232558139534884,0.2,0.2,0.0,2.0,0.0,0.0,0.0,Weak Research Signal
+draft_window,Underpriced_Top24,ALL,,48.0,,0.10416666666666667,,0.0,evaluated,,,121-150,market disagreement only,0.4302325581395349,0.2,0.2,0.0,2.0,0.0,0.0,0.0,Weak Research Signal
+draft_window,Underpriced_Top24,ALL,,48.0,,0.10416666666666667,,-0.2,evaluated,,,121-150,ADP + market disagreement,0.3790697674418605,0.0,0.2,-0.2,2.0,0.0,-0.16666666666666666,-0.16666666666666666,Weak Research Signal
+draft_window,Underpriced_Top24,ALL,,48.0,,0.10416666666666667,,-0.2,evaluated,,,121-150,ADP + age,0.43953488372093025,0.0,0.2,-0.2,2.0,0.0,-0.16666666666666666,-0.16666666666666666,Weak Research Signal
+draft_window,Underpriced_Top24,ALL,,48.0,,0.10416666666666667,,-0.2,evaluated,,,121-150,ADP + age + market disagreement,0.3930232558139535,0.0,0.2,-0.2,2.0,0.0,-0.16666666666666666,-0.16666666666666666,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2017.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+draft_window,Underpriced_Top12,ALL,,253.0,,,,,skipped_no_walk_forward_predictions,,,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2016.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,121-150,,,,,,,,,,Weak Research Signal
+draft_window,Beat_ADP_By_12,ALL,,48.0,,0.3125,,0.0,evaluated,,,121-150,ADP-only,0.4565656565656565,0.4,0.4,0.0,2.0,0.0,0.0,0.0,Weak Research Signal
+draft_window,Beat_ADP_By_12,ALL,,48.0,,0.3125,,0.0,evaluated,,,121-150,market disagreement only,0.5414141414141415,0.4,0.4,0.0,2.0,1.0,0.3333333333333333,0.3333333333333333,Weak Research Signal
+draft_window,Beat_ADP_By_12,ALL,,48.0,,0.3125,,0.0,evaluated,,,121-150,ADP + market disagreement,0.4888888888888888,0.4,0.4,0.0,2.0,2.0,0.5,0.5,Weak Research Signal
+draft_window,Beat_ADP_By_12,ALL,,48.0,,0.3125,,-0.2,evaluated,,,121-150,ADP + age,0.26565656565656565,0.2,0.4,-0.2,2.0,1.0,0.0,0.0,Weak Research Signal
+draft_window,Beat_ADP_By_12,ALL,,48.0,,0.3125,,0.0,evaluated,,,121-150,ADP + age + market disagreement,0.3767676767676768,0.4,0.4,0.0,2.0,1.0,0.0,0.0,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2017.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2018.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2019.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Beat_ADP_By_12,WR,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+draft_window,WR_Beat_ADP_By_12,WR,,96.0,,,,,skipped_no_walk_forward_predictions,,,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2017.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2018.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Beat_ADP_By_12,RB,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+draft_window,RB_Beat_ADP_By_12,RB,,104.0,,,,,skipped_no_walk_forward_predictions,,,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2017.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2018.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2019.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top24,WR,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+draft_window,WR_Underpriced_Top24,WR,,96.0,,,,,skipped_no_walk_forward_predictions,,,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2017.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2018.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top24,RB,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+draft_window,RB_Underpriced_Top24,RB,,104.0,,,,,skipped_no_walk_forward_predictions,,,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2017.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2018.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2019.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2020.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2021.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2022.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2023.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,WR_Underpriced_Top12,WR,,,,,,,skipped,2024.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+draft_window,WR_Underpriced_Top12,WR,,96.0,,,,,skipped_no_walk_forward_predictions,,,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2017.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2018.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2019.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2020.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2021.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2023.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,RB_Underpriced_Top12,RB,,,,,,,skipped,2024.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+draft_window,RB_Underpriced_Top12,RB,,104.0,,,,,skipped_no_walk_forward_predictions,,,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2015.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2016.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2020.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top24,ALL,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+draft_window,Underpriced_Top24,ALL,,200.0,,,,,skipped_no_walk_forward_predictions,,,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2015.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2016.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2017.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2018.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2019.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2020.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2021.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2022.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2023.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,Underpriced_Top12,ALL,,,,,,,skipped,2024.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+draft_window,Underpriced_Top12,ALL,,200.0,,,,,skipped_no_walk_forward_predictions,,,151+,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2010.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2011.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2012.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2013.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2014.0,insufficient_training_rows_or_classes,151+,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2015.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2016.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2017.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2018.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2019.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2021.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2022.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2023.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+season_skip,Beat_ADP_By_12,ALL,,,,,,,skipped,2024.0,insufficient_test_rows_or_positives,151+,,,,,,,,,,Weak Research Signal
+draft_window,Beat_ADP_By_12,ALL,,22.0,,0.13636363636363635,,0.0,evaluated,,,151+,ADP-only,0.6754385964912281,0.3333333333333333,0.3333333333333333,0.0,1.0,0.0,0.0,0.0,Weak Research Signal
+draft_window,Beat_ADP_By_12,ALL,,22.0,,0.13636363636363635,,-0.3333333333333333,evaluated,,,151+,market disagreement only,0.6666666666666667,0.0,0.3333333333333333,-0.3333333333333333,1.0,0.0,-0.3333333333333333,-0.3333333333333333,Weak Research Signal
+draft_window,Beat_ADP_By_12,ALL,,22.0,,0.13636363636363635,,0.0,evaluated,,,151+,ADP + market disagreement,0.7192982456140351,0.3333333333333333,0.3333333333333333,0.0,1.0,0.0,0.0,0.0,Weak Research Signal
+draft_window,Beat_ADP_By_12,ALL,,22.0,,0.13636363636363635,,0.3333333333333333,evaluated,,,151+,ADP + age,0.7017543859649122,0.6666666666666666,0.3333333333333333,0.3333333333333333,1.0,1.0,0.3333333333333333,0.3333333333333333,Weak Research Signal
+draft_window,Beat_ADP_By_12,ALL,,22.0,,0.13636363636363635,,0.3333333333333333,evaluated,,,151+,ADP + age + market disagreement,0.7017543859649122,0.6666666666666666,0.3333333333333333,0.3333333333333333,1.0,1.0,0.3333333333333333,0.3333333333333333,Weak Research Signal

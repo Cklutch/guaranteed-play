@@ -1,0 +1,249 @@
+{
+  "archive_date": "2019-07-15",
+  "http_status": 200,
+  "initial_position_lookup_rows": 2400,
+  "missing_projected_fantasy_points_count": 113,
+  "output_path": "C:\\Users\\cklut\\Desktop\\Projects\\Guaranteed Play\\research\\validation_v1\\historical_projections_wayback_2019.csv",
+  "output_rows": 113,
+  "page_accessible": true,
+  "position_lookup_rows": 2998,
+  "preseason_safe": true,
+  "raw_html_bytes": 348387,
+  "raw_html_chars": 348387,
+  "raw_html_path": "C:\\Users\\cklut\\Desktop\\Projects\\Guaranteed Play\\research\\validation_v1\\source_projection_raw\\wayback_fantasypros_2019.html",
+  "rb_rows_resolved": 59,
+  "report_path": "C:\\Users\\cklut\\Desktop\\Projects\\Guaranteed Play\\research\\validation_v1\\wayback_fantasypros_projection_poc_report.md",
+  "rows_extracted": 360,
+  "rows_extracted_by_section": {
+    "Receiving TDs": 60,
+    "Receiving Yards": 60,
+    "Receptions": 60,
+    "Rushing Attempts": 60,
+    "Rushing TDs": 60,
+    "Rushing Yards": 60
+  },
+  "sections_found": [
+    "Pass Completions",
+    "Pass Attempts",
+    "Pass Yards",
+    "Pass TDs",
+    "INTs",
+    "Rushing Attempts",
+    "Rushing Yards",
+    "Rushing TDs",
+    "Receptions",
+    "Receiving Yards",
+    "Receiving TDs"
+  ],
+  "source_url": "https://web.archive.org/web/20190715211021/https://www.fantasypros.com/nfl/projections/leaders.php",
+  "tables_found": 11,
+  "target_sections_found": [
+    "Rushing Attempts",
+    "Rushing Yards",
+    "Rushing TDs",
+    "Receptions",
+    "Receiving Yards",
+    "Receiving TDs"
+  ],
+  "unique_players_extracted": 138,
+  "unresolved_examples": [
+    {
+      "player_name": "Cam Newton",
+      "sections": [
+        "Rushing Attempts",
+        "Rushing TDs",
+        "Rushing Yards"
+      ],
+      "team": "CAR"
+    },
+    {
+      "player_name": "Kyler Murray",
+      "sections": [
+        "Rushing Attempts",
+        "Rushing TDs",
+        "Rushing Yards"
+      ],
+      "team": "ARI"
+    },
+    {
+      "player_name": "Deshaun Watson",
+      "sections": [
+        "Rushing Attempts",
+        "Rushing TDs",
+        "Rushing Yards"
+      ],
+      "team": "HOU"
+    },
+    {
+      "player_name": "Mitch Trubisky",
+      "sections": [
+        "Rushing Yards"
+      ],
+      "team": "CHI"
+    },
+    {
+      "player_name": "Marcus Mariota",
+      "sections": [
+        "Rushing TDs",
+        "Rushing Yards"
+      ],
+      "team": "TEN"
+    },
+    {
+      "player_name": "Dak Prescott",
+      "sections": [
+        "Rushing TDs"
+      ],
+      "team": "DAL"
+    },
+    {
+      "player_name": "Travis Kelce",
+      "sections": [
+        "Receiving TDs",
+        "Receiving Yards",
+        "Receptions"
+      ],
+      "team": "KC"
+    },
+    {
+      "player_name": "Zach Ertz",
+      "sections": [
+        "Receiving TDs",
+        "Receiving Yards",
+        "Receptions"
+      ],
+      "team": "PHI"
+    },
+    {
+      "player_name": "George Kittle",
+      "sections": [
+        "Receiving TDs",
+        "Receiving Yards",
+        "Receptions"
+      ],
+      "team": "SF"
+    },
+    {
+      "player_name": "Evan Engram",
+      "sections": [
+        "Receiving TDs",
+        "Receiving Yards",
+        "Receptions"
+      ],
+      "team": "NYG"
+    },
+    {
+      "player_name": "Jordan Reed",
+      "sections": [
+        "Receptions"
+      ],
+      "team": "WAS"
+    },
+    {
+      "player_name": "Austin Hooper",
+      "sections": [
+        "Receptions"
+      ],
+      "team": "ATL"
+    },
+    {
+      "player_name": "Vance McDonald",
+      "sections": [
+        "Receiving TDs",
+        "Receptions"
+      ],
+      "team": "PIT"
+    },
+    {
+      "player_name": "O.J. Howard",
+      "sections": [
+        "Receiving TDs",
+        "Receiving Yards",
+        "Receptions"
+      ],
+      "team": "TB"
+    },
+    {
+      "player_name": "Delanie Walker",
+      "sections": [
+        "Receptions"
+      ],
+      "team": "TEN"
+    },
+    {
+      "player_name": "Hunter Henry",
+      "sections": [
+        "Receiving TDs",
+        "Receiving Yards"
+      ],
+      "team": "LAC"
+    },
+    {
+      "player_name": "N'Keal Harry",
+      "sections": [
+        "Receiving TDs",
+        "Receiving Yards"
+      ],
+      "team": "NE"
+    },
+    {
+      "player_name": "Eric Ebron",
+      "sections": [
+        "Receiving TDs"
+      ],
+      "team": "IND"
+    },
+    {
+      "player_name": "Kyle Rudolph",
+      "sections": [
+        "Receiving TDs"
+      ],
+      "team": "MIN"
+    },
+    {
+      "player_name": "David Njoku",
+      "sections": [
+        "Receiving TDs"
+      ],
+      "team": "CLE"
+    },
+    {
+      "player_name": "Devin Funchess",
+      "sections": [
+        "Receiving TDs"
+      ],
+      "team": "IND"
+    },
+    {
+      "player_name": "Chris Herndon IV",
+      "sections": [
+        "Receiving TDs"
+      ],
+      "team": "NYJ"
+    },
+    {
+      "player_name": "T.J. Hockenson",
+      "sections": [
+        "Receiving TDs"
+      ],
+      "team": "DET"
+    },
+    {
+      "player_name": "Jack Doyle",
+      "sections": [
+        "Receiving TDs"
+      ],
+      "team": "IND"
+    },
+    {
+      "player_name": "Jimmy Graham",
+      "sections": [
+        "Receiving TDs"
+      ],
+      "team": "GB"
+    }
+  ],
+  "unresolved_rows": 25,
+  "valid_enough_to_expand": true,
+  "wr_rows_resolved": 54
+}

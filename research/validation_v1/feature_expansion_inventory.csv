@@ -1,0 +1,58 @@
+feature_name,meaning,source,safety_classification,status,coverage_rows,coverage_pct,added_in_expansion_v1
+projected_fantasy_points,preseason projection,Historical projection file not found,pre-draft-safe if sourced historically,unavailable,0,0.0,True
+projected_positional_rank,preseason projection rank,Historical projection file not found,pre-draft-safe if sourced historically,unavailable,0,0.0,True
+projected_points_over_adp_expectation,projection value vs ADP,Requires historical projections,pre-draft-safe if sourced historically,unavailable,0,0.0,True
+projection_minus_adp_implied_expectation,projection minus ADP implied expectation,Requires historical projections,pre-draft-safe if sourced historically,unavailable,0,0.0,True
+adp_team,preseason team from FFCalc ADP,FFCalc raw ADP archive,pre-draft-safe,usable,1881,18.57,True
+adp_source_total_drafts,number of drafts in ADP sample,FFCalc raw ADP archive,pre-draft-safe,usable,1900,18.75,True
+adp_times_drafted,times player was drafted in ADP sample,FFCalc raw ADP archive,pre-draft-safe,usable,1900,18.75,True
+adp_high,highest pick in ADP sample,FFCalc raw ADP archive,pre-draft-safe,usable,1900,18.75,True
+adp_low,lowest pick in ADP sample,FFCalc raw ADP archive,pre-draft-safe,usable,1900,18.75,True
+adp_stdev,ADP standard deviation,FFCalc raw ADP archive,pre-draft-safe,usable,1900,18.75,True
+adp_uncertainty_score,ADP stdev divided by ADP,derived from FFCalc raw ADP,pre-draft-safe,usable,1900,18.75,True
+team_position_adp_count,same-team same-position drafted players,derived from FFCalc raw ADP team,pre-draft-safe,usable,1881,18.57,True
+same_team_better_adp_count,same-team same-position players drafted earlier,derived from FFCalc raw ADP team,pre-draft-safe,usable,1881,18.57,True
+same_team_top48_count,same-team same-position players in top 48 overall,derived from FFCalc raw ADP team,pre-draft-safe,usable,1881,18.57,True
+same_team_top120_count,same-team same-position players in top 120 overall,derived from FFCalc raw ADP team,pre-draft-safe,usable,1881,18.57,True
+teammate_best_adp,best same-team same-position teammate ADP,derived from FFCalc raw ADP team,pre-draft-safe,usable,1619,15.98,True
+teammate_second_best_adp,second same-team same-position teammate ADP,derived from FFCalc raw ADP team,pre-draft-safe,usable,613,6.05,True
+adp_gap_to_next_teammate,ADP gap to next later teammate,derived from FFCalc raw ADP team,pre-draft-safe,usable,907,8.95,True
+target_competition_score,WR same-team ADP competition,derived from FFCalc raw ADP team,pre-draft-safe,usable,1021,10.08,True
+backfield_competition_score,RB same-team ADP competition,derived from FFCalc raw ADP team,pre-draft-safe,usable,860,8.49,True
+prior_wr_targets_expanded,previous-season WR targets,WR opportunity study shifted one season,pre-draft-safe,usable,1447,14.28,True
+prior_wr_target_share_expanded,previous-season WR target share,WR opportunity study shifted one season,pre-draft-safe,usable,1447,14.28,True
+prior_wr_team_targets_expanded,previous-season WR team targets,WR opportunity study shifted one season,pre-draft-safe,usable,1447,14.28,True
+prior_wr_games_expanded,previous-season WR games,WR opportunity study shifted one season,pre-draft-safe,usable,1447,14.28,True
+prior_wr_fantasy_ppg_expanded,previous-season WR fantasy PPG,WR opportunity study shifted one season,pre-draft-safe but production-derived,usable,1447,14.28,True
+prior_wr_late_season_target_growth,late-season target growth,Weekly historical target split not found,pre-draft-safe if prior-season weekly data,unavailable,0,0.0,True
+prior_team_from_opportunity,prior-season WR team,WR opportunity study shifted one season,pre-draft-safe,usable,1447,14.28,True
+adp_team_change_from_prior_adp,current ADP team differs from previous preseason ADP team,FFCalc raw ADP archive,pre-draft-safe proxy,usable,0,0.0,True
+wr_team_change_from_prior_opportunity,current ADP team differs from prior WR opportunity team,FFCalc plus prior WR opportunity,pre-draft-safe,usable,443,4.37,True
+player_first_dataset_season,first year in local outcome dataset,local historical outcome cache,questionable proxy,questionable,10131,100.0,True
+years_in_league_proxy,season minus first local outcome season,local historical outcome cache,questionable proxy,questionable,10131,100.0,True
+rookie_or_first_year_flag,first year in local outcome dataset,local historical outcome cache,questionable proxy,questionable,10131,100.0,True
+age_bucket_code,bucketed age,age field,pre-draft-safe,usable,10131,100.0,True
+prior_games_missed_proxy,17 minus prior games when available,prior season games,pre-draft-safe if games available,poor coverage,1447,14.28,True
+projected_targets,projected targets,Historical projected target file not found,pre-draft-safe if sourced historically; unsafe if current/post-season,unavailable,0,0.0,False
+projected_receptions,projected receptions,Historical projected reception file not found,pre-draft-safe if sourced historically; unsafe if current/post-season,unavailable,0,0.0,False
+projected_receiving_yards,projected receiving yards,Historical projected receiving-yard file not found,pre-draft-safe if sourced historically; unsafe if current/post-season,unavailable,0,0.0,False
+projected_receiving_tds,projected receiving tds,Historical projected receiving-TD file not found,pre-draft-safe if sourced historically; unsafe if current/post-season,unavailable,0,0.0,False
+projected_carries,projected carries,Historical projected carry file not found,pre-draft-safe if sourced historically; unsafe if current/post-season,unavailable,0,0.0,False
+projected_rushing_yards,projected rushing yards,Historical projected rushing-yard file not found,pre-draft-safe if sourced historically; unsafe if current/post-season,unavailable,0,0.0,False
+projected_total_tds,projected total tds,Historical projected TD file not found,pre-draft-safe if sourced historically; unsafe if current/post-season,unavailable,0,0.0,False
+prior_routes,prior routes,No local historical route data found,pre-draft-safe if sourced historically; unsafe if current/post-season,unavailable,0,0.0,False
+prior_route_participation,prior route participation,No local historical route participation data found,pre-draft-safe if sourced historically; unsafe if current/post-season,unavailable,0,0.0,False
+prior_air_yards,prior air yards,No local historical air-yards data found,pre-draft-safe if sourced historically; unsafe if current/post-season,unavailable,0,0.0,False
+prior_snap_share,prior snap share,No local historical snap share data found,pre-draft-safe if sourced historically; unsafe if current/post-season,unavailable,0,0.0,False
+prior_red_zone_usage,prior red zone usage,No local historical red-zone usage data found,pre-draft-safe if sourced historically; unsafe if current/post-season,unavailable,0,0.0,False
+prior_goal_line_usage,prior goal line usage,No local historical goal-line usage data found,pre-draft-safe if sourced historically; unsafe if current/post-season,unavailable,0,0.0,False
+team_implied_points,team implied points,No historical preseason betting/team implied point file found,pre-draft-safe if sourced historically; unsafe if current/post-season,unavailable,0,0.0,False
+projected_team_points,projected team points,No historical projected team scoring file found,pre-draft-safe if sourced historically; unsafe if current/post-season,unavailable,0,0.0,False
+prior_team_rush_attempts,prior team rush attempts,No local team rush attempts file found,pre-draft-safe if sourced historically; unsafe if current/post-season,unavailable,0,0.0,False
+prior_team_touchdowns,prior team touchdowns,No local team TD file found,pre-draft-safe if sourced historically; unsafe if current/post-season,unavailable,0,0.0,False
+offensive_pace,offensive pace,No local pace file found,pre-draft-safe if sourced historically; unsafe if current/post-season,unavailable,0,0.0,False
+qb_change_flag,qb change flag,No historical QB/team continuity file found,pre-draft-safe if sourced historically; unsafe if current/post-season,unavailable,0,0.0,False
+coach_change_flag,coach change flag,No historical coach/coordinator file found,pre-draft-safe if sourced historically; unsafe if current/post-season,unavailable,0,0.0,False
+draft_capital,draft capital,No historical NFL draft capital file found,pre-draft-safe if sourced historically; unsafe if current/post-season,unavailable,0,0.0,False
+injury_flag_entering_season,injury flag entering season,No historical preseason injury file found,pre-draft-safe if sourced historically; unsafe if current/post-season,unavailable,0,0.0,False
+suspension_flag_entering_season,suspension flag entering season,No historical preseason suspension file found,pre-draft-safe if sourced historically; unsafe if current/post-season,unavailable,0,0.0,False

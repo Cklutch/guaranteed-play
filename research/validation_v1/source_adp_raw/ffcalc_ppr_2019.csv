@@ -1,0 +1,128 @@
+season,player_name,position,overall_adp,positional_adp,adp_source,source_scoring,source_teams,source_rounds,source_total_drafts,source_start_date,source_end_date,source_player_id,source_team,source_times_drafted,source_high,source_low,source_stdev,ppr_adp
+2019,Saquon Barkley,RB,1.4,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2860,NYG,501,1,5,0.6,1.4
+2019,Alvin Kamara,RB,2.5,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2439,NO,507,1,6,0.9,2.5
+2019,Christian McCaffrey,RB,3.2,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2434,CAR,597,1,7,1.2,3.2
+2019,Ezekiel Elliott,RB,3.9,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2343,DAL,270,1,8,1.2,3.9
+2019,Davante Adams,WR,6.4,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2125,GB,332,2,13,1.5,6.4
+2019,DeAndre Hopkins,WR,7.0,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,1975,HOU,735,1,20,2.8,7.0
+2019,James Conner,RB,7.1,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2470,PIT,335,2,12,1.9,7.1
+2019,David Johnson,RB,7.1,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2297,ARI,366,3,16,2.0,7.1
+2019,LeVeon Bell,RB,8.8,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,1983,NYJ,514,2,17,2.2,8.8
+2019,Julio Jones,WR,10.2,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,1796,ATL,598,4,16,2.2,10.2
+2019,Michael Thomas,WR,10.4,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2357,NO,564,5,17,2.0,10.4
+2019,Nick Chubb,RB,11.7,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2863,CLE,502,5,17,2.4,11.7
+2019,JuJu Smith-Schuster,WR,12.9,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2442,PIT,569,6,21,2.3,12.9
+2019,Tyreek Hill,WR,13.9,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2390,KC,474,7,21,2.6,13.9
+2019,Dalvin Cook,RB,14.6,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2432,MIN,640,7,23,2.8,14.6
+2019,Odell Beckham Jr.,WR,15.1,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2113,CLE,571,8,21,2.5,15.1
+2019,Todd Gurley,RB,16.0,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2280,LAR,625,7,24,3.1,16.0
+2019,Joe Mixon,RB,18.4,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2438,CIN,475,9,27,3.3,18.4
+2019,Mike Evans,WR,20.2,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2111,TB,528,14,28,2.3,20.2
+2019,Antonio Brown,WR,21.4,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,1886,NE,504,14,29,2.5,21.4
+2019,Adam Thielen,WR,22.9,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2431,MIN,440,16,33,2.5,22.9
+2019,Leonard Fournette,RB,23.2,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2433,JAX,462,14,34,3.5,23.2
+2019,Keenan Allen,WR,25.0,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,1992,LAC,533,17,34,2.7,25.0
+2019,Damien Williams,RB,25.5,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2553,KC,227,14,37,4.2,25.5
+2019,Chris Carson,RB,26.5,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2518,SEA,520,16,37,3.7,26.5
+2019,Kerryon Johnson,RB,28.5,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2868,DET,436,19,38,3.5,28.5
+2019,Aaron Jones Sr.,RB,29.2,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2507,GB,515,20,40,3.4,29.2
+2019,Devonta Freeman,RB,30.4,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2144,ATL,460,21,40,3.5,30.4
+2019,Stefon Diggs,WR,30.8,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2316,MIN,472,21,41,3.8,30.8
+2019,David Montgomery,RB,31.3,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,3238,CHI,416,21,40,3.9,31.3
+2019,Josh Jacobs,RB,33.1,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,3255,LV,540,23,42,3.6,33.1
+2019,Amari Cooper,WR,33.1,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2277,DAL,555,22,44,4.3,33.1
+2019,Julian Edelman,WR,36.1,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,1708,NE,570,25,46,4.2,36.1
+2019,Sony Michel,RB,37.4,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2865,NE,541,27,52,3.9,37.4
+2019,Brandin Cooks,WR,39.1,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2114,LAR,484,29,47,3.8,39.1
+2019,Mark Ingram II,RB,39.7,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,1800,BAL,452,29,51,3.9,39.7
+2019,Chris Godwin Jr.,WR,39.9,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2465,TB,465,29,49,3.9,39.9
+2019,Melvin Gordon III,RB,42.0,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2282,LAC,237,28,59,5.2,42.0
+2019,Robert Woods,WR,42.2,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,1981,LAR,512,31,55,3.9,42.2
+2019,Tyler Lockett,WR,42.9,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2304,SEA,469,33,54,3.7,42.9
+2019,Derrick Henry,RB,43.8,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2350,TEN,426,30,59,5.1,43.8
+2019,Cooper Kupp,WR,45.2,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2449,LAR,382,35,56,3.7,45.2
+2019,Marlon Mack,RB,46.5,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2469,IND,471,31,61,5.7,46.5
+2019,Kenny Golladay,WR,47.1,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2488,DET,347,37,66,3.8,47.1
+2019,James White,RB,48.1,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2154,NE,419,32,61,6.2,48.1
+2019,T.Y. Hilton,WR,49.0,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,1935,IND,343,37,60,4.5,49.0
+2019,Tyler Boyd,WR,51.5,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2359,CIN,423,41,69,4.2,51.5
+2019,Duke Johnson,RB,51.7,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2285,HOU,453,36,72,5.8,51.7
+2019,Josh Gordon,WR,52.1,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,1951,SEA,434,39,67,4.8,52.1
+2019,Calvin Ridley,WR,53.5,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2866,ATL,346,39,68,5.2,53.5
+2019,Phillip Lindsay,RB,55.6,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,3032,DEN,507,39,74,6.2,55.6
+2019,Tevin Coleman,RB,57.7,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2289,SF,462,42,75,5.8,57.7
+2019,Miles Sanders,RB,59.0,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,3252,PHI,368,45,71,5.0,59.0
+2019,Mike Williams,WR,60.3,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2436,LAC,464,45,77,5.9,60.3
+2019,Austin Ekeler,RB,61.7,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2625,LAC,756,44,82,6.7,61.7
+2019,Dede Westbrook,WR,62.7,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2466,JAX,580,46,79,6.1,62.7
+2019,A.J. Green,WR,63.8,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,1795,CIN,356,47,81,6.4,63.8
+2019,Jarvis Landry,WR,64.8,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2132,CLE,420,46,87,6.9,64.8
+2019,DJ Moore,WR,67.2,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2876,CAR,408,50,87,6.6,67.2
+2019,Derrius Guice,RB,69.8,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2861,WAS,540,50,100,7.4,69.8
+2019,Tarik Cohen,RB,71.0,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2493,CHI,398,51,97,7.6,71.0
+2019,Alshon Jeffery,WR,71.9,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,1918,PHI,392,53,94,6.9,71.9
+2019,Robbie Chosen,WR,75.9,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2523,NYJ,359,60,95,6.3,75.9
+2019,Latavius Murray,RB,76.4,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2023,NO,476,55,94,7.9,76.4
+2019,Allen Robinson II,WR,76.6,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2130,CHI,392,57,95,7.5,76.6
+2019,Emmanuel Sanders,WR,80.6,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,1762,SF,373,60,99,7.6,80.6
+2019,Will Fuller,WR,81.6,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2345,HOU,311,63,99,7.0,81.6
+2019,Kenyan Drake,RB,82.9,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2360,ARI,391,62,98,8.0,82.9
+2019,Tony Pollard,RB,83.3,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,3435,DAL,210,61,99,8.3,83.3
+2019,Devin Singletary,RB,83.9,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,3267,BUF,678,61,108,8.6,83.9
+2019,Matt Breida,RB,84.8,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2525,SF,560,63,102,8.1,84.8
+2019,Darwin Thompson,RB,86.0,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,3427,KC,91,61,98,9.3,86.0
+2019,Curtis Samuel,WR,88.0,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2443,CAR,423,69,105,7.0,88.0
+2019,Christian Kirk,WR,89.9,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2870,ARI,373,69,111,7.9,89.9
+2019,LeSean McCoy,RB,90.8,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,1645,KC,479,67,112,8.9,90.8
+2019,Sterling Shepard,WR,92.2,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2349,NYG,331,71,108,7.8,92.2
+2019,Darrell Henderson Jr.,RB,93.0,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,3253,LAR,146,69,108,9.2,93.0
+2019,Rashaad Penny,RB,95.3,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2869,SEA,198,74,111,7.8,95.3
+2019,Sammy Watkins,WR,96.1,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2109,KC,322,75,113,8.0,96.1
+2019,Geronimo Allison,WR,98.7,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2691,GB,315,77,113,8.2,98.7
+2019,Marquez Valdes-Scantling,WR,100.6,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2987,GB,341,78,123,8.6,100.6
+2019,Kareem Hunt,RB,100.8,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2450,CLE,165,69,126,11.9,100.8
+2019,James Washington,WR,101.3,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2864,PIT,330,79,119,8.3,101.3
+2019,Jordan Howard,RB,103.7,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2384,PHI,157,80,129,9.0,103.7
+2019,Marvin Jones Jr.,WR,105.3,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2061,DET,239,85,121,7.6,105.3
+2019,Larry Fitzgerald,WR,106.5,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,374,ARI,222,81,128,9.5,106.5
+2019,Royce Freeman,RB,108.1,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2875,DEN,203,86,137,8.3,108.1
+2019,Dante Pettis,WR,109.8,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2926,SF,236,85,127,9.5,109.8
+2019,Corey Davis,WR,110.8,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2435,TEN,234,89,128,8.2,110.8
+2019,Kalen Ballage,RB,113.5,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2874,MIA,160,85,141,10.7,113.5
+2019,Michael Gallup,WR,113.8,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2879,DAL,281,91,130,8.4,113.8
+2019,Jaylen Samuels,RB,119.0,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,3219,PIT,282,92,145,10.4,119.0
+2019,DeSean Jackson,WR,119.4,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,1357,PHI,181,94,138,9.5,119.4
+2019,Donte Moncrief,WR,119.8,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2137,CAR,211,93,140,10.2,119.8
+2019,Justin Jackson,RB,119.9,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2970,LAC,431,93,145,10.3,119.9
+2019,Justice Hill,RB,120.7,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,3266,BAL,325,96,139,9.2,120.7
+2019,Golden Tate,WR,123.3,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,1730,NYG,189,97,145,10.1,123.3
+2019,Courtland Sutton,WR,126.2,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2862,DEN,151,95,148,11.8,126.2
+2019,Alexander Mattison,RB,127.3,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,3458,MIN,273,95,149,12.1,127.3
+2019,Jamison Crowder,WR,128.8,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2331,NYJ,184,102,150,10.0,128.8
+2019,Peyton Barber,RB,131.3,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2703,TB,287,95,170,13.8,131.3
+2019,Tyrell Williams,WR,131.4,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2483,LV,144,108,151,9.0,131.4
+2019,DK Metcalf,WR,131.8,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,3239,SEA,125,95,148,14.1,131.8
+2019,Adrian Peterson,RB,133.1,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,925,WAS,218,101,168,12.1,133.1
+2019,Anthony Miller,WR,134.4,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2878,CHI,139,114,149,7.5,134.4
+2019,John Brown,WR,136.2,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2138,BUF,160,113,165,8.6,136.2
+2019,Mecole Hardman Jr.,WR,137.7,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,3426,KC,78,102,160,13.5,137.7
+2019,Dion Lewis,RB,142.9,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,1860,TEN,279,104,179,14.9,142.9
+2019,Keke Coutee,WR,146.2,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2892,HOU,110,111,175,13.3,146.2
+2019,Damien Harris,RB,151.4,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,3243,NE,175,115,176,13.7,151.4
+2019,Deebo Samuel Sr.,WR,151.8,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,3246,SF,102,123,172,11.2,151.8
+2019,Carlos Hyde,RB,151.9,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2129,HOU,349,105,183,17.8,151.9
+2019,Frank Gore,RB,152.3,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,437,BUF,46,83,200,27.6,152.3
+2019,N'Keal Harry,WR,152.8,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,3237,NE,63,116,175,13.8,152.8
+2019,Ito Smith,RB,154.2,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2991,ATL,163,108,180,17.5,154.2
+2019,Ty Montgomery II,RB,157.1,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2317,NYJ,135,107,187,19.1,157.1
+2019,Malcolm Brown,RB,157.6,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2326,LAR,126,114,191,16.7,157.6
+2019,Dare Ogunbowale,RB,157.9,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2798,TB,56,114,180,17.9,157.9
+2019,Ronald Jones,RB,158.1,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2867,TB,132,113,180,17.1,158.1
+2019,Nyheim Hines,RB,159.2,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2948,IND,66,110,181,18.7,159.2
+2019,Cole Beasley,WR,159.6,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,1970,BUF,94,121,180,14.8,159.6
+2019,Mohamed Sanu,WR,160.7,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,1919,NE,94,124,183,13.9,160.7
+2019,Demaryius Thomas,WR,161.4,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,1735,NYJ,101,120,181,15.9,161.4
+2019,Kenny Stills,WR,161.5,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2011,HOU,43,115,184,17.7,161.5
+2019,Tre'Quan Smith,WR,161.6,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2941,NO,78,119,180,16.2,161.6
+2019,Marquise Goodwin,WR,163.0,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,1993,SF,64,127,180,13.8,163.0
+2019,Adam Humphries,WR,166.9,,FantasyFootballCalculator,ppr,12,15,2167,2019-09-02,2019-09-04,2701,TEN,50,140,182,10.3,166.9

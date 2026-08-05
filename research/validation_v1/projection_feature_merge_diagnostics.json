@@ -1,0 +1,23 @@
+{
+  "base_dataset_used": "C:\\Users\\cklut\\Desktop\\Projects\\Guaranteed Play\\research\\validation_v1\\predraft_validation_dataset_expanded.csv",
+  "base_rows": 10131,
+  "matched_projection_rows": 1474,
+  "normalized_projection_file": "C:\\Users\\cklut\\Desktop\\Projects\\Guaranteed Play\\research\\validation_v1\\historical_projections_normalized.csv",
+  "projection_rows": 1473,
+  "rb_validation_dataset_rows_with_projections": 714,
+  "seasons_with_projection_features": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "unmatched_projection_rows": 0,
+  "wr_validation_dataset_rows_with_projections": 760
+}

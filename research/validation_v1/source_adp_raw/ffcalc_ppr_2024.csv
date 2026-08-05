@@ -1,0 +1,133 @@
+season,player_name,position,overall_adp,positional_adp,adp_source,source_scoring,source_teams,source_rounds,source_total_drafts,source_start_date,source_end_date,source_player_id,source_team,source_times_drafted,source_high,source_low,source_stdev,ppr_adp
+2024,Christian McCaffrey,RB,1.4,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,2434,SF,181,1,5,0.7,1.4
+2024,Breece Hall,RB,2.2,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5503,NYJ,68,1,5,0.9,2.2
+2024,Tyreek Hill,WR,2.6,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,2390,MIA,144,1,6,0.9,2.6
+2024,CeeDee Lamb,WR,3.7,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,4869,DAL,321,1,6,1.3,3.7
+2024,Bijan Robinson,RB,4.9,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5670,ATL,281,1,9,1.3,4.9
+2024,Amon-Ra St. Brown,WR,6.2,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5182,DET,261,3,10,1.2,6.2
+2024,Ja'Marr Chase,WR,7.2,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5177,CIN,162,2,11,1.8,7.2
+2024,Justin Jefferson,WR,8.0,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,4876,MIN,242,3,14,1.6,8.0
+2024,Jahmyr Gibbs,RB,9.4,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5672,DET,151,3,17,2.2,9.4
+2024,Jonathan Taylor,RB,9.8,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,4864,IND,212,4,15,2.0,9.8
+2024,A.J. Brown,WR,10.9,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,3247,PHI,248,6,15,1.8,10.9
+2024,Saquon Barkley,RB,11.3,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,2860,PHI,243,5,18,2.3,11.3
+2024,Garrett Wilson,WR,12.1,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5548,NYJ,311,7,18,1.9,12.1
+2024,Marvin Harrison Jr.,WR,14.5,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,6193,ARI,152,8,19,2.3,14.5
+2024,Puka Nacua,WR,15.2,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5714,LAR,136,9,23,2.2,15.2
+2024,Kyren Williams,RB,15.9,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5623,LAR,174,8,24,2.9,15.9
+2024,Derrick Henry,RB,15.9,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,2350,BAL,283,8,24,2.8,15.9
+2024,Travis Etienne Jr.,RB,17.6,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,4863,JAX,250,11,25,2.5,17.6
+2024,Cooper Kupp,WR,18.9,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,2449,LAR,189,12,26,2.7,18.9
+2024,Isiah Pacheco,RB,19.8,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5337,KC,285,12,27,2.9,19.8
+2024,Davante Adams,WR,20.0,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,2125,NYJ,128,12,28,2.8,20.0
+2024,De'Von Achane,RB,21.4,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5683,MIA,227,9,34,4.5,21.4
+2024,Drake London,WR,21.5,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5574,ATL,174,13,28,3.1,21.5
+2024,Deebo Samuel Sr.,WR,23.0,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,3246,SF,138,16,30,3.2,23.0
+2024,Josh Jacobs,RB,23.6,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,3255,GB,229,14,33,3.6,23.6
+2024,Chris Olave,WR,26.2,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5544,NO,194,17,33,3.3,26.2
+2024,Rachaad White,RB,29.0,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5626,TB,108,24,37,3.3,29.0
+2024,Jaylen Waddle,WR,29.1,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5178,MIA,295,19,40,3.7,29.1
+2024,James Cook III,RB,30.3,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5652,BUF,244,19,41,4.1,30.3
+2024,Nico Collins,WR,32.1,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5207,HOU,301,21,41,4.0,32.1
+2024,Alvin Kamara,RB,32.3,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,2439,NO,196,22,42,3.8,32.3
+2024,Mike Evans,WR,33.5,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,2111,TB,241,21,44,4.5,33.5
+2024,Joe Mixon,RB,35.0,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,2438,HOU,200,25,47,4.3,35.0
+2024,Kenneth Walker III,RB,35.6,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5625,SEA,261,24,46,4.1,35.6
+2024,DeVonta Smith,WR,38.3,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,4883,PHI,167,27,47,4.1,38.3
+2024,Malik Nabers,WR,38.3,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,6183,NYG,221,26,50,4.6,38.3
+2024,DK Metcalf,WR,40.7,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,3239,SEA,333,25,55,5.7,40.7
+2024,Stefon Diggs,WR,41.8,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,2316,HOU,83,29,51,4.8,41.8
+2024,DJ Moore,WR,43.7,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,2876,CHI,263,31,56,4.6,43.7
+2024,Michael Pittman Jr.,WR,45.2,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,4880,IND,167,31,57,5.4,45.2
+2024,Aaron Jones Sr.,RB,46.0,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,2507,MIN,153,31,56,5.7,46.0
+2024,James Conner,RB,47.6,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,2470,ARI,194,34,61,5.0,47.6
+2024,Brandon Aiyuk,WR,48.1,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,4891,SF,306,34,60,5.3,48.1
+2024,Amari Cooper,WR,49.2,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,2277,BUF,75,40,58,3.7,49.2
+2024,Tee Higgins,WR,51.8,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,4870,CIN,148,42,61,4.5,51.8
+2024,David Montgomery,RB,54.6,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,3238,DET,200,39,68,5.7,54.6
+2024,Christian Kirk,WR,55.6,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,2870,JAX,78,44,69,4.3,55.6
+2024,D'Andre Swift,RB,56.5,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,4862,CHI,235,39,73,6.5,56.5
+2024,Zay Flowers,WR,56.8,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5675,BAL,141,47,65,4.2,56.8
+2024,Tank Dell,WR,57.5,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5711,HOU,148,46,70,4.4,57.5
+2024,George Pickens,WR,59.8,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5576,PIT,164,44,72,5.8,59.8
+2024,Rhamondre Stevenson,RB,62.0,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5210,NE,174,46,74,5.8,62.0
+2024,Keenan Allen,WR,63.5,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,1992,CHI,56,49,76,5.7,63.5
+2024,Raheem Mostert,RB,64.1,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,2737,MIA,229,48,79,6.2,64.1
+2024,Rashee Rice,WR,64.2,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5696,KC,454,39,85,9.6,64.2
+2024,Nick Chubb,RB,65.0,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,2863,CLE,58,46,82,7.1,65.0
+2024,Jayden Reed,WR,65.1,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5707,GB,82,49,74,5.9,65.1
+2024,Najee Harris,RB,67.1,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,4872,PIT,155,52,80,5.7,67.1
+2024,Zamir White,RB,67.8,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5513,LV,186,52,81,6.1,67.8
+2024,Chris Godwin Jr.,WR,68.4,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,2465,TB,94,54,86,6.3,68.4
+2024,Terry McLaurin,WR,70.2,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,3449,WAS,343,50,86,7.4,70.2
+2024,Zack Moss,RB,74.4,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,4877,CIN,83,53,93,8.0,74.4
+2024,Calvin Ridley,WR,74.7,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,2866,TEN,177,59,87,5.8,74.7
+2024,Javonte Williams,RB,77.5,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5185,DEN,258,61,91,6.3,77.5
+2024,Jaylen Warren,RB,79.6,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5443,PIT,69,64,89,5.7,79.6
+2024,Tony Pollard,RB,81.7,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,3435,TEN,183,62,97,7.4,81.7
+2024,Xavier Worthy,WR,81.9,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,6172,KC,132,63,95,7.1,81.9
+2024,Hollywood Brown,WR,82.2,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,3249,KC,44,72,92,4.8,82.2
+2024,Christian Watson,WR,84.2,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5360,GB,153,64,121,7.7,84.2
+2024,Jonathon Brooks,RB,85.4,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,6179,CAR,151,70,100,5.8,85.4
+2024,Devin Singletary,RB,87.9,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,3267,NYG,114,72,104,6.1,87.9
+2024,Austin Ekeler,RB,88.0,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,2625,WAS,113,70,97,6.7,88.0
+2024,Keon Coleman,WR,88.1,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,6189,BUF,136,70,101,6.7,88.1
+2024,Jaxon Smith-Njigba,WR,90.5,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5671,SEA,147,62,106,10.8,90.5
+2024,Tyjae Spears,RB,91.4,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5692,TEN,99,76,115,5.6,91.4
+2024,Chase Brown,RB,91.9,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5706,CIN,167,72,107,7.4,91.9
+2024,Diontae Johnson,WR,92.1,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,3419,BAL,274,72,117,7.7,92.1
+2024,Ezekiel Elliott,RB,96.2,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,2343,LAC,42,74,110,8.3,96.2
+2024,Rome Odunze,WR,97.7,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,6194,CHI,134,79,112,7.0,97.7
+2024,Brian Robinson Jr.,RB,97.9,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5605,WAS,256,77,120,7.9,97.9
+2024,Ladd McConkey,WR,98.4,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,6281,LAC,104,87,112,6.0,98.4
+2024,Jerome Ford,RB,98.5,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5617,CLE,241,75,115,8.9,98.5
+2024,Gus Edwards,RB,100.6,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,3081,LAC,78,85,119,6.5,100.6
+2024,Romeo Doubs,WR,103.0,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5586,GB,61,84,118,7.1,103.0
+2024,DeAndre Hopkins,WR,104.5,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,1975,KC,101,89,118,5.9,104.5
+2024,Tyler Lockett,WR,106.6,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,2304,SEA,24,87,116,7.3,106.6
+2024,Jameson Williams,WR,107.8,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5643,DET,87,86,131,8.1,107.8
+2024,Trey Benson,RB,108.5,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5990,ARI,96,96,122,5.7,108.5
+2024,Chuba Hubbard,RB,108.8,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,4873,CAR,123,91,122,6.6,108.8
+2024,Blake Corum,RB,110.3,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5965,LAR,181,91,145,7.2,110.3
+2024,Courtland Sutton,WR,110.8,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,2862,DEN,185,89,137,8.2,110.8
+2024,Brian Thomas Jr.,WR,114.2,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,6175,JAX,229,92,145,8.5,114.2
+2024,Mike Williams,WR,116.1,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,2436,PIT,50,98,144,8.1,116.1
+2024,J.K. Dobbins,RB,116.2,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,4888,LAC,122,96,129,7.6,116.2
+2024,Khalil Shakir,WR,117.4,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5636,BUF,109,92,144,9.7,117.4
+2024,Rico Dowdle,RB,118.9,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5095,DAL,171,94,148,9.5,118.9
+2024,Curtis Samuel,WR,122.6,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,2443,BUF,61,104,149,8.6,122.6
+2024,Tyler Allgeier,RB,125.1,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5655,ATL,79,99,150,10.4,125.1
+2024,Jaleel McLaughlin,RB,126.6,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5998,DEN,113,104,148,8.6,126.6
+2024,Elijah Mitchell,RB,129.8,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5214,SF,18,101,150,14.5,129.8
+2024,Ty Chandler,RB,130.3,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5659,MIN,46,112,150,7.1,130.3
+2024,Joshua Palmer,WR,130.5,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5232,LAC,197,109,150,8.1,130.5
+2024,Zach Charbonnet,RB,130.7,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5677,SEA,59,113,147,6.7,130.7
+2024,Jakobi Meyers,WR,131.7,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,3496,LV,42,95,154,13.8,131.7
+2024,Jerry Jeudy,WR,132.9,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,4861,CLE,51,111,145,8.2,132.9
+2024,Jordan Addison,WR,134.1,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5673,MIN,49,108,152,9.7,134.1
+2024,Brandin Cooks,WR,135.1,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,2114,DAL,46,110,152,9.4,135.1
+2024,Khalil Herbert,RB,136.4,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5720,CIN,30,113,163,9.8,136.4
+2024,Rashid Shaheed,WR,139.8,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5896,NO,35,123,150,7.7,139.8
+2024,Xavier Legette,WR,141.3,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,6213,CAR,23,121,178,11.9,141.3
+2024,Kimani Vidal,RB,143.9,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,6263,LAC,63,118,180,14.2,143.9
+2024,Ray Davis,RB,147.7,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,6197,BUF,65,113,178,13.2,147.7
+2024,Jordan Mason,RB,149.1,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5330,SF,40,102,177,18.1,149.1
+2024,Dameon Pierce,RB,151.4,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5632,HOU,22,120,178,16.3,151.4
+2024,Jahan Dotson,WR,152.0,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5578,PHI,22,126,178,12.7,152.0
+2024,Quentin Johnston,WR,152.2,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5674,LAC,22,113,179,19.5,152.2
+2024,Bucky Irving,RB,152.9,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,6190,TB,97,123,180,13.2,152.9
+2024,Josh Downs,WR,155.9,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5680,IND,50,122,180,13.6,155.9
+2024,Jaylen Wright,RB,156.6,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,6171,MIA,69,119,186,14.3,156.6
+2024,Antonio Gibson,RB,158.6,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5008,NE,25,136,178,12.6,158.6
+2024,Adam Thielen,WR,159.0,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,2431,CAR,67,122,180,13.9,159.0
+2024,MarShawn Lloyd,RB,159.1,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5622,GB,19,134,182,14.1,159.1
+2024,Dontayvion Wicks,WR,160.0,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5725,GB,51,114,200,17.6,160.0
+2024,Alexander Mattison,RB,160.7,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,3458,LV,20,139,184,11.1,160.7
+2024,Adonai Mitchell,WR,160.9,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,6184,IND,35,127,180,14.9,160.9
+2024,Darnell Mooney,WR,161.8,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5119,ATL,56,126,180,14.4,161.8
+2024,Ricky Pearsall,WR,162.7,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,6199,SF,16,121,182,15.7,162.7
+2024,Ja'Lynn Polk,WR,163.4,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,6182,NE,29,128,193,15.0,163.4
+2024,Rashod Bateman,WR,169.6,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5180,BAL,10,151,181,9.7,169.6
+2024,Gabe Davis,WR,169.6,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5018,JAX,14,151,178,9.4,169.6
+2024,Michael Wilson,WR,170.2,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,5721,ARI,17,125,205,22.3,170.2
+2024,Tyrone Tracy Jr.,RB,174.0,,FantasyFootballCalculator,ppr,12,15,1371,2024-08-31,2024-09-01,6276,NYG,16,150,201,15.7,174.0

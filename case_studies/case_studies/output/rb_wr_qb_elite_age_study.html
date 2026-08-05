@@ -1,0 +1,2645 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>RB/WR/QB Elite Season Age Study</title>
+    <style>
+        body { margin: 0; background: #f4f7fb; color: #111827; font-family: Arial, sans-serif; }
+        main { max-width: 1180px; margin: 0 auto; padding: 34px 28px 60px; }
+        h1 { margin: 0 0 8px; font-size: 34px; }
+        .subtitle { margin: 0 0 22px; color: #4b5563; line-height: 1.5; }
+        .meta { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px; }
+        .meta-card, .card, .chart, .table-wrap { background: #ffffff; border: 1px solid #dbe3ef; border-radius: 8px; }
+        .meta-card { padding: 14px 16px; }
+        .meta-label, .label { color: #64748b; font-size: 12px; font-weight: 800; text-transform: uppercase; }
+        .meta-value { margin-top: 6px; font-size: 15px; font-weight: 700; line-height: 1.35; }
+        .tab-label { display: inline-block; padding: 12px 22px; margin-right: 8px; border: 1px solid #cbd5e1; border-radius: 8px 8px 0 0; background: #e2e8f0; font-weight: 800; cursor: pointer; }
+        input[name="position-tabs"] { display: none; }
+        .tab-panel { display: none; border-top: 2px solid #cbd5e1; padding-top: 22px; }
+        #tab-RB:checked ~ .panel-RB, #tab-WR:checked ~ .panel-WR, #tab-QB:checked ~ .panel-QB { display: block; }
+        #tab-RB:checked + label, #tab-WR:checked + label, #tab-QB:checked + label { background: #ffffff; border-bottom-color: #ffffff; }
+        .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 26px; }
+        .card { padding: 18px; }
+        .value { margin-top: 8px; font-size: 32px; font-weight: 800; }
+        .detail { margin-top: 4px; color: #047857; font-size: 18px; font-weight: 700; }
+        .chart { margin: 22px 0; padding: 10px; }
+        .chart svg { width: 100%; height: auto; }
+        .table-wrap { margin-top: 24px; padding: 18px; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th, td { padding: 9px 10px; border-bottom: 1px solid #e5e7eb; text-align: right; }
+        th:first-child, td:first-child { text-align: left; }
+        th { background: #f8fafc; font-weight: 800; }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>RB/WR/QB Elite Season Age Study</h1>
+        <p class="subtitle">Age share inside elite finish groups. Rate % = players at that age inside Top N slots / all Top N slots.</p>
+        <p class="subtitle"><a href="number_one_overall_age_share.html">Open separate #1 overall comparison page</a></p>
+        <section class="meta">
+            <div class="meta-card"><div class="meta-label">Data Source</div><div class="meta-value">nflverse-data GitHub releases: stats_player + rosters</div></div>
+            <div class="meta-card"><div class="meta-label">Timeline</div><div class="meta-value">2015-2025</div></div>
+            <div class="meta-card"><div class="meta-label">Seasons Used</div><div class="meta-value">11</div></div>
+            <div class="meta-card"><div class="meta-label">Scoring</div><div class="meta-value">Half PPR</div></div>
+            <div class="meta-card"><div class="meta-label">Player-Seasons</div><div class="meta-value">5,094</div></div>
+        </section>
+        <input type="radio" id="tab-RB" name="position-tabs" checked><label class="tab-label" for="tab-RB">RB</label><input type="radio" id="tab-WR" name="position-tabs"><label class="tab-label" for="tab-WR">WR</label><input type="radio" id="tab-QB" name="position-tabs"><label class="tab-label" for="tab-QB">QB</label>
+        
+            <section class="tab-panel panel-RB">
+                <div class="cards">
+            <section class="card">
+                <div class="label">Average #1 Age</div>
+                <div class="value">24.3</div>
+                <div class="detail">11 seasons</div>
+            </section>
+            
+                <section class="card">
+                    <div class="label">Top 36 Peak</div>
+                    <div class="value">Age 24</div>
+                    <div class="detail">17.93%</div>
+                </section>
+                
+                <section class="card">
+                    <div class="label">Top 24 Peak</div>
+                    <div class="value">Age 24</div>
+                    <div class="detail">16.67%</div>
+                </section>
+                
+                <section class="card">
+                    <div class="label">Top 12 Peak</div>
+                    <div class="value">Age 24</div>
+                    <div class="detail">15.15%</div>
+                </section>
+                
+                <section class="card">
+                    <div class="label">Top 5 Peak</div>
+                    <div class="value">Age 23</div>
+                    <div class="detail">18.18%</div>
+                </section>
+                
+                <section class="card">
+                    <div class="label">Top 3 Peak</div>
+                    <div class="value">Age 22</div>
+                    <div class="detail">18.18%</div>
+                </section>
+                </div>
+                <section class="chart"><svg xmlns="http://www.w3.org/2000/svg" width="1100" height="640" viewBox="0 0 1100 640">
+<style>
+text { font-family: Arial, sans-serif; fill: #1f2937; }
+.title { font-size: 28px; font-weight: 700; }
+.label { font-size: 15px; font-weight: 700; }
+.tick { font-size: 12px; fill: #4b5563; }
+.legend { font-size: 14px; font-weight: 700; }
+.mean-label { font-size: 12px; font-weight: 700; }
+.grid { stroke: #e5e7eb; stroke-width: 1; }
+.axis { stroke: #111827; stroke-width: 1.4; }
+.rate-line { fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.dot { stroke: #ffffff; stroke-width: 1.4; }
+</style>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text class="title" x="78" y="42">RB Age Share Within Top 36 / Top 24 / Top 12 / Top 5 / Top 3</text>
+<line class="grid" x1="78" y1="570.00" x2="910" y2="570.00"/>
+<text class="tick" x="66" y="574.00" text-anchor="end">0.0%</text>
+<line class="grid" x1="78" y1="446.00" x2="910" y2="446.00"/>
+<text class="tick" x="66" y="450.00" text-anchor="end">5.1%</text>
+<line class="grid" x1="78" y1="322.00" x2="910" y2="322.00"/>
+<text class="tick" x="66" y="326.00" text-anchor="end">10.2%</text>
+<line class="grid" x1="78" y1="198.00" x2="910" y2="198.00"/>
+<text class="tick" x="66" y="202.00" text-anchor="end">15.3%</text>
+<line class="grid" x1="78" y1="74.00" x2="910" y2="74.00"/>
+<text class="tick" x="66" y="78.00" text-anchor="end">20.4%</text>
+<line class="grid" x1="78.00" y1="74" x2="78.00" y2="570"/>
+<text class="tick" x="78.00" y="598" text-anchor="middle">21</text>
+<line class="grid" x1="142.00" y1="74" x2="142.00" y2="570"/>
+<text class="tick" x="142.00" y="598" text-anchor="middle">22</text>
+<line class="grid" x1="206.00" y1="74" x2="206.00" y2="570"/>
+<text class="tick" x="206.00" y="598" text-anchor="middle">23</text>
+<line class="grid" x1="270.00" y1="74" x2="270.00" y2="570"/>
+<text class="tick" x="270.00" y="598" text-anchor="middle">24</text>
+<line class="grid" x1="334.00" y1="74" x2="334.00" y2="570"/>
+<text class="tick" x="334.00" y="598" text-anchor="middle">25</text>
+<line class="grid" x1="398.00" y1="74" x2="398.00" y2="570"/>
+<text class="tick" x="398.00" y="598" text-anchor="middle">26</text>
+<line class="grid" x1="462.00" y1="74" x2="462.00" y2="570"/>
+<text class="tick" x="462.00" y="598" text-anchor="middle">27</text>
+<line class="grid" x1="526.00" y1="74" x2="526.00" y2="570"/>
+<text class="tick" x="526.00" y="598" text-anchor="middle">28</text>
+<line class="grid" x1="590.00" y1="74" x2="590.00" y2="570"/>
+<text class="tick" x="590.00" y="598" text-anchor="middle">29</text>
+<line class="grid" x1="654.00" y1="74" x2="654.00" y2="570"/>
+<text class="tick" x="654.00" y="598" text-anchor="middle">30</text>
+<line class="grid" x1="718.00" y1="74" x2="718.00" y2="570"/>
+<text class="tick" x="718.00" y="598" text-anchor="middle">31</text>
+<line class="grid" x1="782.00" y1="74" x2="782.00" y2="570"/>
+<text class="tick" x="782.00" y="598" text-anchor="middle">32</text>
+<line class="grid" x1="846.00" y1="74" x2="846.00" y2="570"/>
+<text class="tick" x="846.00" y="598" text-anchor="middle">33</text>
+<line class="grid" x1="910.00" y1="74" x2="910.00" y2="570"/>
+<text class="tick" x="910.00" y="598" text-anchor="middle">34</text>
+<line class="axis" x1="78" y1="570" x2="910" y2="570"/>
+<line class="axis" x1="78" y1="74" x2="78" y2="570"/>
+<text class="label" x="494.00" y="628" text-anchor="middle">Age</text>
+<text class="label" transform="translate(22 320.00) rotate(-90)" text-anchor="middle">Rate (%)</text>
+<line x1="78" y1="395.97" x2="910" y2="395.97" stroke="#2563eb" stroke-width="1.2" stroke-dasharray="7 6" opacity="0.55"/>
+<path class="rate-line" stroke="#2563eb" d="M 78.00 490.10 L 142.00 317.88 L 206.00 237.74 L 270.00 133.23 L 334.00 200.95 L 398.00 262.34 L 462.00 330.06 L 526.00 434.56 L 590.00 453.07 L 654.00 496.19 L 718.00 532.97 L 782.00 545.40 L 846.00 551.49 L 910.00 557.58"/>
+<circle class="dot" fill="#2563eb" cx="78.00" cy="490.10" r="4.5"><title>Top 36
+Age: 21
+Player seasons at age: 40
+Age count in group: 13
+Share: 3.28%</title></circle>
+<circle class="dot" fill="#2563eb" cx="142.00" cy="317.88" r="4.5"><title>Top 36
+Age: 22
+Player seasons at age: 150
+Age count in group: 41
+Share: 10.35%</title></circle>
+<circle class="dot" fill="#2563eb" cx="206.00" cy="237.74" r="4.5"><title>Top 36
+Age: 23
+Player seasons at age: 244
+Age count in group: 54
+Share: 13.64%</title></circle>
+<circle class="dot" fill="#2563eb" cx="270.00" cy="133.23" r="4.5"><title>Top 36
+Age: 24
+Player seasons at age: 275
+Age count in group: 71
+Share: 17.93%</title></circle>
+<circle class="dot" fill="#2563eb" cx="334.00" cy="200.95" r="4.5"><title>Top 36
+Age: 25
+Player seasons at age: 258
+Age count in group: 60
+Share: 15.15%</title></circle>
+<circle class="dot" fill="#2563eb" cx="398.00" cy="262.34" r="4.5"><title>Top 36
+Age: 26
+Player seasons at age: 219
+Age count in group: 50
+Share: 12.63%</title></circle>
+<circle class="dot" fill="#2563eb" cx="462.00" cy="330.06" r="4.5"><title>Top 36
+Age: 27
+Player seasons at age: 166
+Age count in group: 39
+Share: 9.85%</title></circle>
+<circle class="dot" fill="#2563eb" cx="526.00" cy="434.56" r="4.5"><title>Top 36
+Age: 28
+Player seasons at age: 112
+Age count in group: 22
+Share: 5.56%</title></circle>
+<circle class="dot" fill="#2563eb" cx="590.00" cy="453.07" r="4.5"><title>Top 36
+Age: 29
+Player seasons at age: 88
+Age count in group: 19
+Share: 4.80%</title></circle>
+<circle class="dot" fill="#2563eb" cx="654.00" cy="496.19" r="4.5"><title>Top 36
+Age: 30
+Player seasons at age: 53
+Age count in group: 12
+Share: 3.03%</title></circle>
+<circle class="dot" fill="#2563eb" cx="718.00" cy="532.97" r="4.5"><title>Top 36
+Age: 31
+Player seasons at age: 34
+Age count in group: 6
+Share: 1.52%</title></circle>
+<circle class="dot" fill="#2563eb" cx="782.00" cy="545.40" r="4.5"><title>Top 36
+Age: 32
+Player seasons at age: 23
+Age count in group: 4
+Share: 1.01%</title></circle>
+<circle class="dot" fill="#2563eb" cx="846.00" cy="551.49" r="4.5"><title>Top 36
+Age: 33
+Player seasons at age: 11
+Age count in group: 3
+Share: 0.76%</title></circle>
+<circle class="dot" fill="#2563eb" cx="910.00" cy="557.58" r="4.5"><title>Top 36
+Age: 34
+Player seasons at age: 5
+Age count in group: 2
+Share: 0.51%</title></circle>
+<line x1="78" y1="395.97" x2="910" y2="395.97" stroke="#0891b2" stroke-width="1.2" stroke-dasharray="7 6" opacity="0.55"/>
+<path class="rate-line" stroke="#0891b2" d="M 78.00 468.42 L 142.00 339.31 L 206.00 246.99 L 270.00 163.93 L 334.00 200.95 L 398.00 246.99 L 462.00 256.25 L 526.00 440.89 L 590.00 505.45 L 654.00 486.93 L 718.00 532.97 L 782.00 551.49 L 846.00 542.23 L 910.00 560.74"/>
+<circle class="dot" fill="#0891b2" cx="78.00" cy="468.42" r="4.5"><title>Top 24
+Age: 21
+Player seasons at age: 40
+Age count in group: 11
+Share: 4.17%</title></circle>
+<circle class="dot" fill="#0891b2" cx="142.00" cy="339.31" r="4.5"><title>Top 24
+Age: 22
+Player seasons at age: 150
+Age count in group: 25
+Share: 9.47%</title></circle>
+<circle class="dot" fill="#0891b2" cx="206.00" cy="246.99" r="4.5"><title>Top 24
+Age: 23
+Player seasons at age: 244
+Age count in group: 35
+Share: 13.26%</title></circle>
+<circle class="dot" fill="#0891b2" cx="270.00" cy="163.93" r="4.5"><title>Top 24
+Age: 24
+Player seasons at age: 275
+Age count in group: 44
+Share: 16.67%</title></circle>
+<circle class="dot" fill="#0891b2" cx="334.00" cy="200.95" r="4.5"><title>Top 24
+Age: 25
+Player seasons at age: 258
+Age count in group: 40
+Share: 15.15%</title></circle>
+<circle class="dot" fill="#0891b2" cx="398.00" cy="246.99" r="4.5"><title>Top 24
+Age: 26
+Player seasons at age: 219
+Age count in group: 35
+Share: 13.26%</title></circle>
+<circle class="dot" fill="#0891b2" cx="462.00" cy="256.25" r="4.5"><title>Top 24
+Age: 27
+Player seasons at age: 166
+Age count in group: 34
+Share: 12.88%</title></circle>
+<circle class="dot" fill="#0891b2" cx="526.00" cy="440.89" r="4.5"><title>Top 24
+Age: 28
+Player seasons at age: 112
+Age count in group: 14
+Share: 5.30%</title></circle>
+<circle class="dot" fill="#0891b2" cx="590.00" cy="505.45" r="4.5"><title>Top 24
+Age: 29
+Player seasons at age: 88
+Age count in group: 7
+Share: 2.65%</title></circle>
+<circle class="dot" fill="#0891b2" cx="654.00" cy="486.93" r="4.5"><title>Top 24
+Age: 30
+Player seasons at age: 53
+Age count in group: 9
+Share: 3.41%</title></circle>
+<circle class="dot" fill="#0891b2" cx="718.00" cy="532.97" r="4.5"><title>Top 24
+Age: 31
+Player seasons at age: 34
+Age count in group: 4
+Share: 1.52%</title></circle>
+<circle class="dot" fill="#0891b2" cx="782.00" cy="551.49" r="4.5"><title>Top 24
+Age: 32
+Player seasons at age: 23
+Age count in group: 2
+Share: 0.76%</title></circle>
+<circle class="dot" fill="#0891b2" cx="846.00" cy="542.23" r="4.5"><title>Top 24
+Age: 33
+Player seasons at age: 11
+Age count in group: 3
+Share: 1.14%</title></circle>
+<circle class="dot" fill="#0891b2" cx="910.00" cy="560.74" r="4.5"><title>Top 24
+Age: 34
+Player seasons at age: 5
+Age count in group: 1
+Share: 0.38%</title></circle>
+<line x1="78" y1="396.00" x2="910" y2="396.00" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="7 6" opacity="0.55"/>
+<path class="rate-line" stroke="#16a34a" d="M 78.00 440.89 L 142.00 293.28 L 206.00 219.47 L 270.00 200.95 L 334.00 200.95 L 398.00 274.76 L 462.00 311.54 L 526.00 440.89 L 590.00 477.68 L 654.00 459.16 L 718.00 532.97 L 782.00 570.00 L 846.00 551.49 L 910.00 570.00"/>
+<circle class="dot" fill="#16a34a" cx="78.00" cy="440.89" r="4.5"><title>Top 12
+Age: 21
+Player seasons at age: 40
+Age count in group: 7
+Share: 5.30%</title></circle>
+<circle class="dot" fill="#16a34a" cx="142.00" cy="293.28" r="4.5"><title>Top 12
+Age: 22
+Player seasons at age: 150
+Age count in group: 15
+Share: 11.36%</title></circle>
+<circle class="dot" fill="#16a34a" cx="206.00" cy="219.47" r="4.5"><title>Top 12
+Age: 23
+Player seasons at age: 244
+Age count in group: 19
+Share: 14.39%</title></circle>
+<circle class="dot" fill="#16a34a" cx="270.00" cy="200.95" r="4.5"><title>Top 12
+Age: 24
+Player seasons at age: 275
+Age count in group: 20
+Share: 15.15%</title></circle>
+<circle class="dot" fill="#16a34a" cx="334.00" cy="200.95" r="4.5"><title>Top 12
+Age: 25
+Player seasons at age: 258
+Age count in group: 20
+Share: 15.15%</title></circle>
+<circle class="dot" fill="#16a34a" cx="398.00" cy="274.76" r="4.5"><title>Top 12
+Age: 26
+Player seasons at age: 219
+Age count in group: 16
+Share: 12.12%</title></circle>
+<circle class="dot" fill="#16a34a" cx="462.00" cy="311.54" r="4.5"><title>Top 12
+Age: 27
+Player seasons at age: 166
+Age count in group: 14
+Share: 10.61%</title></circle>
+<circle class="dot" fill="#16a34a" cx="526.00" cy="440.89" r="4.5"><title>Top 12
+Age: 28
+Player seasons at age: 112
+Age count in group: 7
+Share: 5.30%</title></circle>
+<circle class="dot" fill="#16a34a" cx="590.00" cy="477.68" r="4.5"><title>Top 12
+Age: 29
+Player seasons at age: 88
+Age count in group: 5
+Share: 3.79%</title></circle>
+<circle class="dot" fill="#16a34a" cx="654.00" cy="459.16" r="4.5"><title>Top 12
+Age: 30
+Player seasons at age: 53
+Age count in group: 6
+Share: 4.55%</title></circle>
+<circle class="dot" fill="#16a34a" cx="718.00" cy="532.97" r="4.5"><title>Top 12
+Age: 31
+Player seasons at age: 34
+Age count in group: 2
+Share: 1.52%</title></circle>
+<circle class="dot" fill="#16a34a" cx="782.00" cy="570.00" r="4.5"><title>Top 12
+Age: 32
+Player seasons at age: 23
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#16a34a" cx="846.00" cy="551.49" r="4.5"><title>Top 12
+Age: 33
+Player seasons at age: 11
+Age count in group: 1
+Share: 0.76%</title></circle>
+<circle class="dot" fill="#16a34a" cx="910.00" cy="570.00" r="4.5"><title>Top 12
+Age: 34
+Player seasons at age: 5
+Age count in group: 0
+Share: 0.00%</title></circle>
+<line x1="78" y1="396.00" x2="910" y2="396.00" stroke="#ca8a04" stroke-width="1.2" stroke-dasharray="7 6" opacity="0.55"/>
+<path class="rate-line" stroke="#ca8a04" d="M 78.00 481.33 L 142.00 259.90 L 206.00 127.14 L 270.00 127.14 L 334.00 215.57 L 398.00 259.90 L 462.00 437.24 L 526.00 437.24 L 590.00 525.67 L 654.00 437.24 L 718.00 525.67 L 782.00 570.00 L 846.00 570.00 L 910.00 570.00"/>
+<circle class="dot" fill="#ca8a04" cx="78.00" cy="481.33" r="4.5"><title>Top 5
+Age: 21
+Player seasons at age: 40
+Age count in group: 2
+Share: 3.64%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="142.00" cy="259.90" r="4.5"><title>Top 5
+Age: 22
+Player seasons at age: 150
+Age count in group: 7
+Share: 12.73%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="206.00" cy="127.14" r="4.5"><title>Top 5
+Age: 23
+Player seasons at age: 244
+Age count in group: 10
+Share: 18.18%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="270.00" cy="127.14" r="4.5"><title>Top 5
+Age: 24
+Player seasons at age: 275
+Age count in group: 10
+Share: 18.18%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="334.00" cy="215.57" r="4.5"><title>Top 5
+Age: 25
+Player seasons at age: 258
+Age count in group: 8
+Share: 14.55%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="398.00" cy="259.90" r="4.5"><title>Top 5
+Age: 26
+Player seasons at age: 219
+Age count in group: 7
+Share: 12.73%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="462.00" cy="437.24" r="4.5"><title>Top 5
+Age: 27
+Player seasons at age: 166
+Age count in group: 3
+Share: 5.45%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="526.00" cy="437.24" r="4.5"><title>Top 5
+Age: 28
+Player seasons at age: 112
+Age count in group: 3
+Share: 5.45%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="590.00" cy="525.67" r="4.5"><title>Top 5
+Age: 29
+Player seasons at age: 88
+Age count in group: 1
+Share: 1.82%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="654.00" cy="437.24" r="4.5"><title>Top 5
+Age: 30
+Player seasons at age: 53
+Age count in group: 3
+Share: 5.45%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="718.00" cy="525.67" r="4.5"><title>Top 5
+Age: 31
+Player seasons at age: 34
+Age count in group: 1
+Share: 1.82%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="782.00" cy="570.00" r="4.5"><title>Top 5
+Age: 32
+Player seasons at age: 23
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="846.00" cy="570.00" r="4.5"><title>Top 5
+Age: 33
+Player seasons at age: 11
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="910.00" cy="570.00" r="4.5"><title>Top 5
+Age: 34
+Player seasons at age: 5
+Age count in group: 0
+Share: 0.00%</title></circle>
+<line x1="78" y1="396.02" x2="910" y2="396.02" stroke="#ea580c" stroke-width="1.2" stroke-dasharray="7 6" opacity="0.55"/>
+<path class="rate-line" stroke="#ea580c" d="M 78.00 422.38 L 142.00 127.14 L 206.00 127.14 L 270.00 200.95 L 334.00 200.95 L 398.00 348.57 L 462.00 348.57 L 526.00 570.00 L 590.00 496.19 L 654.00 422.38 L 718.00 570.00 L 782.00 570.00 L 846.00 570.00 L 910.00 570.00"/>
+<circle class="dot" fill="#ea580c" cx="78.00" cy="422.38" r="4.5"><title>Top 3
+Age: 21
+Player seasons at age: 40
+Age count in group: 2
+Share: 6.06%</title></circle>
+<circle class="dot" fill="#ea580c" cx="142.00" cy="127.14" r="4.5"><title>Top 3
+Age: 22
+Player seasons at age: 150
+Age count in group: 6
+Share: 18.18%</title></circle>
+<circle class="dot" fill="#ea580c" cx="206.00" cy="127.14" r="4.5"><title>Top 3
+Age: 23
+Player seasons at age: 244
+Age count in group: 6
+Share: 18.18%</title></circle>
+<circle class="dot" fill="#ea580c" cx="270.00" cy="200.95" r="4.5"><title>Top 3
+Age: 24
+Player seasons at age: 275
+Age count in group: 5
+Share: 15.15%</title></circle>
+<circle class="dot" fill="#ea580c" cx="334.00" cy="200.95" r="4.5"><title>Top 3
+Age: 25
+Player seasons at age: 258
+Age count in group: 5
+Share: 15.15%</title></circle>
+<circle class="dot" fill="#ea580c" cx="398.00" cy="348.57" r="4.5"><title>Top 3
+Age: 26
+Player seasons at age: 219
+Age count in group: 3
+Share: 9.09%</title></circle>
+<circle class="dot" fill="#ea580c" cx="462.00" cy="348.57" r="4.5"><title>Top 3
+Age: 27
+Player seasons at age: 166
+Age count in group: 3
+Share: 9.09%</title></circle>
+<circle class="dot" fill="#ea580c" cx="526.00" cy="570.00" r="4.5"><title>Top 3
+Age: 28
+Player seasons at age: 112
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ea580c" cx="590.00" cy="496.19" r="4.5"><title>Top 3
+Age: 29
+Player seasons at age: 88
+Age count in group: 1
+Share: 3.03%</title></circle>
+<circle class="dot" fill="#ea580c" cx="654.00" cy="422.38" r="4.5"><title>Top 3
+Age: 30
+Player seasons at age: 53
+Age count in group: 2
+Share: 6.06%</title></circle>
+<circle class="dot" fill="#ea580c" cx="718.00" cy="570.00" r="4.5"><title>Top 3
+Age: 31
+Player seasons at age: 34
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ea580c" cx="782.00" cy="570.00" r="4.5"><title>Top 3
+Age: 32
+Player seasons at age: 23
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ea580c" cx="846.00" cy="570.00" r="4.5"><title>Top 3
+Age: 33
+Player seasons at age: 11
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ea580c" cx="910.00" cy="570.00" r="4.5"><title>Top 3
+Age: 34
+Player seasons at age: 5
+Age count in group: 0
+Share: 0.00%</title></circle>
+<line x1="944" y1="82" x2="972" y2="82" stroke="#2563eb" stroke-width="4" stroke-linecap="round"/>
+<text class="legend" x="982" y="87">Top 36</text>
+<line x1="944" y1="112" x2="972" y2="112" stroke="#0891b2" stroke-width="4" stroke-linecap="round"/>
+<text class="legend" x="982" y="117">Top 24</text>
+<line x1="944" y1="142" x2="972" y2="142" stroke="#16a34a" stroke-width="4" stroke-linecap="round"/>
+<text class="legend" x="982" y="147">Top 12</text>
+<line x1="944" y1="172" x2="972" y2="172" stroke="#ca8a04" stroke-width="4" stroke-linecap="round"/>
+<text class="legend" x="982" y="177">Top 5</text>
+<line x1="944" y1="202" x2="972" y2="202" stroke="#ea580c" stroke-width="4" stroke-linecap="round"/>
+<text class="legend" x="982" y="207">Top 3</text>
+</svg></section>
+                <section class="table-wrap">
+                    <h2>RB Age Share Table</h2>
+                    <table class="dataframe rate-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Age</th>
+      <th>player_seasons_at_age</th>
+      <th>top36_age_count</th>
+      <th>top36_rate_pct</th>
+      <th>top24_age_count</th>
+      <th>top24_rate_pct</th>
+      <th>top12_age_count</th>
+      <th>top12_rate_pct</th>
+      <th>top5_age_count</th>
+      <th>top5_rate_pct</th>
+      <th>top3_age_count</th>
+      <th>top3_rate_pct</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>21</td>
+      <td>40</td>
+      <td>13</td>
+      <td>3.28</td>
+      <td>11</td>
+      <td>4.17</td>
+      <td>7</td>
+      <td>5.30</td>
+      <td>2</td>
+      <td>3.64</td>
+      <td>2</td>
+      <td>6.06</td>
+    </tr>
+    <tr>
+      <td>22</td>
+      <td>150</td>
+      <td>41</td>
+      <td>10.35</td>
+      <td>25</td>
+      <td>9.47</td>
+      <td>15</td>
+      <td>11.36</td>
+      <td>7</td>
+      <td>12.73</td>
+      <td>6</td>
+      <td>18.18</td>
+    </tr>
+    <tr>
+      <td>23</td>
+      <td>244</td>
+      <td>54</td>
+      <td>13.64</td>
+      <td>35</td>
+      <td>13.26</td>
+      <td>19</td>
+      <td>14.39</td>
+      <td>10</td>
+      <td>18.18</td>
+      <td>6</td>
+      <td>18.18</td>
+    </tr>
+    <tr>
+      <td>24</td>
+      <td>275</td>
+      <td>71</td>
+      <td>17.93</td>
+      <td>44</td>
+      <td>16.67</td>
+      <td>20</td>
+      <td>15.15</td>
+      <td>10</td>
+      <td>18.18</td>
+      <td>5</td>
+      <td>15.15</td>
+    </tr>
+    <tr>
+      <td>25</td>
+      <td>258</td>
+      <td>60</td>
+      <td>15.15</td>
+      <td>40</td>
+      <td>15.15</td>
+      <td>20</td>
+      <td>15.15</td>
+      <td>8</td>
+      <td>14.55</td>
+      <td>5</td>
+      <td>15.15</td>
+    </tr>
+    <tr>
+      <td>26</td>
+      <td>219</td>
+      <td>50</td>
+      <td>12.63</td>
+      <td>35</td>
+      <td>13.26</td>
+      <td>16</td>
+      <td>12.12</td>
+      <td>7</td>
+      <td>12.73</td>
+      <td>3</td>
+      <td>9.09</td>
+    </tr>
+    <tr>
+      <td>27</td>
+      <td>166</td>
+      <td>39</td>
+      <td>9.85</td>
+      <td>34</td>
+      <td>12.88</td>
+      <td>14</td>
+      <td>10.61</td>
+      <td>3</td>
+      <td>5.45</td>
+      <td>3</td>
+      <td>9.09</td>
+    </tr>
+    <tr>
+      <td>28</td>
+      <td>112</td>
+      <td>22</td>
+      <td>5.56</td>
+      <td>14</td>
+      <td>5.30</td>
+      <td>7</td>
+      <td>5.30</td>
+      <td>3</td>
+      <td>5.45</td>
+      <td>0</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <td>29</td>
+      <td>88</td>
+      <td>19</td>
+      <td>4.80</td>
+      <td>7</td>
+      <td>2.65</td>
+      <td>5</td>
+      <td>3.79</td>
+      <td>1</td>
+      <td>1.82</td>
+      <td>1</td>
+      <td>3.03</td>
+    </tr>
+    <tr>
+      <td>30</td>
+      <td>53</td>
+      <td>12</td>
+      <td>3.03</td>
+      <td>9</td>
+      <td>3.41</td>
+      <td>6</td>
+      <td>4.55</td>
+      <td>3</td>
+      <td>5.45</td>
+      <td>2</td>
+      <td>6.06</td>
+    </tr>
+    <tr>
+      <td>31</td>
+      <td>34</td>
+      <td>6</td>
+      <td>1.52</td>
+      <td>4</td>
+      <td>1.52</td>
+      <td>2</td>
+      <td>1.52</td>
+      <td>1</td>
+      <td>1.82</td>
+      <td>0</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <td>32</td>
+      <td>23</td>
+      <td>4</td>
+      <td>1.01</td>
+      <td>2</td>
+      <td>0.76</td>
+      <td>0</td>
+      <td>0.00</td>
+      <td>0</td>
+      <td>0.00</td>
+      <td>0</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <td>33</td>
+      <td>11</td>
+      <td>3</td>
+      <td>0.76</td>
+      <td>3</td>
+      <td>1.14</td>
+      <td>1</td>
+      <td>0.76</td>
+      <td>0</td>
+      <td>0.00</td>
+      <td>0</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <td>34</td>
+      <td>5</td>
+      <td>2</td>
+      <td>0.51</td>
+      <td>1</td>
+      <td>0.38</td>
+      <td>0</td>
+      <td>0.00</td>
+      <td>0</td>
+      <td>0.00</td>
+      <td>0</td>
+      <td>0.00</td>
+    </tr>
+  </tbody>
+</table>
+                </section>
+            </section>
+            
+            <section class="tab-panel panel-WR">
+                <div class="cards">
+            <section class="card">
+                <div class="label">Average #1 Age</div>
+                <div class="value">25.9</div>
+                <div class="detail">11 seasons</div>
+            </section>
+            
+                <section class="card">
+                    <div class="label">Top 36 Peak</div>
+                    <div class="value">Age 24</div>
+                    <div class="detail">13.13%</div>
+                </section>
+                
+                <section class="card">
+                    <div class="label">Top 24 Peak</div>
+                    <div class="value">Age 24</div>
+                    <div class="detail">14.39%</div>
+                </section>
+                
+                <section class="card">
+                    <div class="label">Top 12 Peak</div>
+                    <div class="value">Age 26</div>
+                    <div class="detail">13.64%</div>
+                </section>
+                
+                <section class="card">
+                    <div class="label">Top 5 Peak</div>
+                    <div class="value">Age 26</div>
+                    <div class="detail">16.36%</div>
+                </section>
+                
+                <section class="card">
+                    <div class="label">Top 3 Peak</div>
+                    <div class="value">Age 26</div>
+                    <div class="detail">18.18%</div>
+                </section>
+                </div>
+                <section class="chart"><svg xmlns="http://www.w3.org/2000/svg" width="1100" height="640" viewBox="0 0 1100 640">
+<style>
+text { font-family: Arial, sans-serif; fill: #1f2937; }
+.title { font-size: 28px; font-weight: 700; }
+.label { font-size: 15px; font-weight: 700; }
+.tick { font-size: 12px; fill: #4b5563; }
+.legend { font-size: 14px; font-weight: 700; }
+.mean-label { font-size: 12px; font-weight: 700; }
+.grid { stroke: #e5e7eb; stroke-width: 1; }
+.axis { stroke: #111827; stroke-width: 1.4; }
+.rate-line { fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.dot { stroke: #ffffff; stroke-width: 1.4; }
+</style>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text class="title" x="78" y="42">WR Age Share Within Top 36 / Top 24 / Top 12 / Top 5 / Top 3</text>
+<line class="grid" x1="78" y1="570.00" x2="910" y2="570.00"/>
+<text class="tick" x="66" y="574.00" text-anchor="end">0.0%</text>
+<line class="grid" x1="78" y1="446.00" x2="910" y2="446.00"/>
+<text class="tick" x="66" y="450.00" text-anchor="end">5.1%</text>
+<line class="grid" x1="78" y1="322.00" x2="910" y2="322.00"/>
+<text class="tick" x="66" y="326.00" text-anchor="end">10.2%</text>
+<line class="grid" x1="78" y1="198.00" x2="910" y2="198.00"/>
+<text class="tick" x="66" y="202.00" text-anchor="end">15.3%</text>
+<line class="grid" x1="78" y1="74.00" x2="910" y2="74.00"/>
+<text class="tick" x="66" y="78.00" text-anchor="end">20.4%</text>
+<line class="grid" x1="78.00" y1="74" x2="78.00" y2="570"/>
+<text class="tick" x="78.00" y="598" text-anchor="middle">21</text>
+<line class="grid" x1="133.47" y1="74" x2="133.47" y2="570"/>
+<text class="tick" x="133.47" y="598" text-anchor="middle">22</text>
+<line class="grid" x1="188.93" y1="74" x2="188.93" y2="570"/>
+<text class="tick" x="188.93" y="598" text-anchor="middle">23</text>
+<line class="grid" x1="244.40" y1="74" x2="244.40" y2="570"/>
+<text class="tick" x="244.40" y="598" text-anchor="middle">24</text>
+<line class="grid" x1="299.87" y1="74" x2="299.87" y2="570"/>
+<text class="tick" x="299.87" y="598" text-anchor="middle">25</text>
+<line class="grid" x1="355.33" y1="74" x2="355.33" y2="570"/>
+<text class="tick" x="355.33" y="598" text-anchor="middle">26</text>
+<line class="grid" x1="410.80" y1="74" x2="410.80" y2="570"/>
+<text class="tick" x="410.80" y="598" text-anchor="middle">27</text>
+<line class="grid" x1="466.27" y1="74" x2="466.27" y2="570"/>
+<text class="tick" x="466.27" y="598" text-anchor="middle">28</text>
+<line class="grid" x1="521.73" y1="74" x2="521.73" y2="570"/>
+<text class="tick" x="521.73" y="598" text-anchor="middle">29</text>
+<line class="grid" x1="577.20" y1="74" x2="577.20" y2="570"/>
+<text class="tick" x="577.20" y="598" text-anchor="middle">30</text>
+<line class="grid" x1="632.67" y1="74" x2="632.67" y2="570"/>
+<text class="tick" x="632.67" y="598" text-anchor="middle">31</text>
+<line class="grid" x1="688.13" y1="74" x2="688.13" y2="570"/>
+<text class="tick" x="688.13" y="598" text-anchor="middle">32</text>
+<line class="grid" x1="743.60" y1="74" x2="743.60" y2="570"/>
+<text class="tick" x="743.60" y="598" text-anchor="middle">33</text>
+<line class="grid" x1="799.07" y1="74" x2="799.07" y2="570"/>
+<text class="tick" x="799.07" y="598" text-anchor="middle">34</text>
+<line class="grid" x1="854.53" y1="74" x2="854.53" y2="570"/>
+<text class="tick" x="854.53" y="598" text-anchor="middle">35</text>
+<line class="grid" x1="910.00" y1="74" x2="910.00" y2="570"/>
+<text class="tick" x="910.00" y="598" text-anchor="middle">36</text>
+<line class="axis" x1="78" y1="570" x2="910" y2="570"/>
+<line class="axis" x1="78" y1="74" x2="78" y2="570"/>
+<text class="label" x="494.00" y="628" text-anchor="middle">Age</text>
+<text class="label" transform="translate(22 320.00) rotate(-90)" text-anchor="middle">Rate (%)</text>
+<line x1="78" y1="417.75" x2="910" y2="417.75" stroke="#2563eb" stroke-width="1.2" stroke-dasharray="7 6" opacity="0.55"/>
+<path class="rate-line" stroke="#2563eb" d="M 78.00 502.28 L 133.47 385.35 L 188.93 262.34 L 244.40 250.16 L 299.87 262.34 L 355.33 293.28 L 410.80 286.94 L 466.27 348.57 L 521.73 403.87 L 577.20 440.89 L 632.67 496.19 L 688.13 520.79 L 743.60 539.31 L 799.07 563.91 L 854.53 563.91 L 910.00 563.91"/>
+<circle class="dot" fill="#2563eb" cx="78.00" cy="502.28" r="4.5"><title>Top 36
+Age: 21
+Player seasons at age: 48
+Age count in group: 11
+Share: 2.78%</title></circle>
+<circle class="dot" fill="#2563eb" cx="133.47" cy="385.35" r="4.5"><title>Top 36
+Age: 22
+Player seasons at age: 190
+Age count in group: 30
+Share: 7.58%</title></circle>
+<circle class="dot" fill="#2563eb" cx="188.93" cy="262.34" r="4.5"><title>Top 36
+Age: 23
+Player seasons at age: 361
+Age count in group: 50
+Share: 12.63%</title></circle>
+<circle class="dot" fill="#2563eb" cx="244.40" cy="250.16" r="4.5"><title>Top 36
+Age: 24
+Player seasons at age: 400
+Age count in group: 52
+Share: 13.13%</title></circle>
+<circle class="dot" fill="#2563eb" cx="299.87" cy="262.34" r="4.5"><title>Top 36
+Age: 25
+Player seasons at age: 358
+Age count in group: 50
+Share: 12.63%</title></circle>
+<circle class="dot" fill="#2563eb" cx="355.33" cy="293.28" r="4.5"><title>Top 36
+Age: 26
+Player seasons at age: 301
+Age count in group: 45
+Share: 11.36%</title></circle>
+<circle class="dot" fill="#2563eb" cx="410.80" cy="286.94" r="4.5"><title>Top 36
+Age: 27
+Player seasons at age: 246
+Age count in group: 46
+Share: 11.62%</title></circle>
+<circle class="dot" fill="#2563eb" cx="466.27" cy="348.57" r="4.5"><title>Top 36
+Age: 28
+Player seasons at age: 202
+Age count in group: 36
+Share: 9.09%</title></circle>
+<circle class="dot" fill="#2563eb" cx="521.73" cy="403.87" r="4.5"><title>Top 36
+Age: 29
+Player seasons at age: 154
+Age count in group: 27
+Share: 6.82%</title></circle>
+<circle class="dot" fill="#2563eb" cx="577.20" cy="440.89" r="4.5"><title>Top 36
+Age: 30
+Player seasons at age: 104
+Age count in group: 21
+Share: 5.30%</title></circle>
+<circle class="dot" fill="#2563eb" cx="632.67" cy="496.19" r="4.5"><title>Top 36
+Age: 31
+Player seasons at age: 66
+Age count in group: 12
+Share: 3.03%</title></circle>
+<circle class="dot" fill="#2563eb" cx="688.13" cy="520.79" r="4.5"><title>Top 36
+Age: 32
+Player seasons at age: 58
+Age count in group: 8
+Share: 2.02%</title></circle>
+<circle class="dot" fill="#2563eb" cx="743.60" cy="539.31" r="4.5"><title>Top 36
+Age: 33
+Player seasons at age: 29
+Age count in group: 5
+Share: 1.26%</title></circle>
+<circle class="dot" fill="#2563eb" cx="799.07" cy="563.91" r="4.5"><title>Top 36
+Age: 34
+Player seasons at age: 18
+Age count in group: 1
+Share: 0.25%</title></circle>
+<circle class="dot" fill="#2563eb" cx="854.53" cy="563.91" r="4.5"><title>Top 36
+Age: 35
+Player seasons at age: 8
+Age count in group: 1
+Share: 0.25%</title></circle>
+<circle class="dot" fill="#2563eb" cx="910.00" cy="563.91" r="4.5"><title>Top 36
+Age: 36
+Player seasons at age: 6
+Age count in group: 1
+Share: 0.25%</title></circle>
+<line x1="78" y1="417.77" x2="910" y2="417.77" stroke="#0891b2" stroke-width="1.2" stroke-dasharray="7 6" opacity="0.55"/>
+<path class="rate-line" stroke="#0891b2" d="M 78.00 505.45 L 133.47 376.34 L 188.93 330.06 L 244.40 219.47 L 299.87 274.76 L 355.33 274.76 L 410.80 274.76 L 466.27 357.83 L 521.73 357.83 L 577.20 440.89 L 632.67 505.45 L 688.13 532.97 L 743.60 532.97 L 799.07 560.74 L 854.53 570.00 L 910.00 570.00"/>
+<circle class="dot" fill="#0891b2" cx="78.00" cy="505.45" r="4.5"><title>Top 24
+Age: 21
+Player seasons at age: 48
+Age count in group: 7
+Share: 2.65%</title></circle>
+<circle class="dot" fill="#0891b2" cx="133.47" cy="376.34" r="4.5"><title>Top 24
+Age: 22
+Player seasons at age: 190
+Age count in group: 21
+Share: 7.95%</title></circle>
+<circle class="dot" fill="#0891b2" cx="188.93" cy="330.06" r="4.5"><title>Top 24
+Age: 23
+Player seasons at age: 361
+Age count in group: 26
+Share: 9.85%</title></circle>
+<circle class="dot" fill="#0891b2" cx="244.40" cy="219.47" r="4.5"><title>Top 24
+Age: 24
+Player seasons at age: 400
+Age count in group: 38
+Share: 14.39%</title></circle>
+<circle class="dot" fill="#0891b2" cx="299.87" cy="274.76" r="4.5"><title>Top 24
+Age: 25
+Player seasons at age: 358
+Age count in group: 32
+Share: 12.12%</title></circle>
+<circle class="dot" fill="#0891b2" cx="355.33" cy="274.76" r="4.5"><title>Top 24
+Age: 26
+Player seasons at age: 301
+Age count in group: 32
+Share: 12.12%</title></circle>
+<circle class="dot" fill="#0891b2" cx="410.80" cy="274.76" r="4.5"><title>Top 24
+Age: 27
+Player seasons at age: 246
+Age count in group: 32
+Share: 12.12%</title></circle>
+<circle class="dot" fill="#0891b2" cx="466.27" cy="357.83" r="4.5"><title>Top 24
+Age: 28
+Player seasons at age: 202
+Age count in group: 23
+Share: 8.71%</title></circle>
+<circle class="dot" fill="#0891b2" cx="521.73" cy="357.83" r="4.5"><title>Top 24
+Age: 29
+Player seasons at age: 154
+Age count in group: 23
+Share: 8.71%</title></circle>
+<circle class="dot" fill="#0891b2" cx="577.20" cy="440.89" r="4.5"><title>Top 24
+Age: 30
+Player seasons at age: 104
+Age count in group: 14
+Share: 5.30%</title></circle>
+<circle class="dot" fill="#0891b2" cx="632.67" cy="505.45" r="4.5"><title>Top 24
+Age: 31
+Player seasons at age: 66
+Age count in group: 7
+Share: 2.65%</title></circle>
+<circle class="dot" fill="#0891b2" cx="688.13" cy="532.97" r="4.5"><title>Top 24
+Age: 32
+Player seasons at age: 58
+Age count in group: 4
+Share: 1.52%</title></circle>
+<circle class="dot" fill="#0891b2" cx="743.60" cy="532.97" r="4.5"><title>Top 24
+Age: 33
+Player seasons at age: 29
+Age count in group: 4
+Share: 1.52%</title></circle>
+<circle class="dot" fill="#0891b2" cx="799.07" cy="560.74" r="4.5"><title>Top 24
+Age: 34
+Player seasons at age: 18
+Age count in group: 1
+Share: 0.38%</title></circle>
+<circle class="dot" fill="#0891b2" cx="854.53" cy="570.00" r="4.5"><title>Top 24
+Age: 35
+Player seasons at age: 8
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#0891b2" cx="910.00" cy="570.00" r="4.5"><title>Top 24
+Age: 36
+Player seasons at age: 6
+Age count in group: 0
+Share: 0.00%</title></circle>
+<line x1="78" y1="417.74" x2="910" y2="417.74" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="7 6" opacity="0.55"/>
+<path class="rate-line" stroke="#16a34a" d="M 78.00 514.70 L 133.47 440.89 L 188.93 256.25 L 244.40 311.54 L 299.87 256.25 L 355.33 237.74 L 410.80 330.06 L 466.27 311.54 L 521.73 367.08 L 577.20 422.38 L 632.67 496.19 L 688.13 532.97 L 743.60 514.70 L 799.07 551.49 L 854.53 570.00 L 910.00 570.00"/>
+<circle class="dot" fill="#16a34a" cx="78.00" cy="514.70" r="4.5"><title>Top 12
+Age: 21
+Player seasons at age: 48
+Age count in group: 3
+Share: 2.27%</title></circle>
+<circle class="dot" fill="#16a34a" cx="133.47" cy="440.89" r="4.5"><title>Top 12
+Age: 22
+Player seasons at age: 190
+Age count in group: 7
+Share: 5.30%</title></circle>
+<circle class="dot" fill="#16a34a" cx="188.93" cy="256.25" r="4.5"><title>Top 12
+Age: 23
+Player seasons at age: 361
+Age count in group: 17
+Share: 12.88%</title></circle>
+<circle class="dot" fill="#16a34a" cx="244.40" cy="311.54" r="4.5"><title>Top 12
+Age: 24
+Player seasons at age: 400
+Age count in group: 14
+Share: 10.61%</title></circle>
+<circle class="dot" fill="#16a34a" cx="299.87" cy="256.25" r="4.5"><title>Top 12
+Age: 25
+Player seasons at age: 358
+Age count in group: 17
+Share: 12.88%</title></circle>
+<circle class="dot" fill="#16a34a" cx="355.33" cy="237.74" r="4.5"><title>Top 12
+Age: 26
+Player seasons at age: 301
+Age count in group: 18
+Share: 13.64%</title></circle>
+<circle class="dot" fill="#16a34a" cx="410.80" cy="330.06" r="4.5"><title>Top 12
+Age: 27
+Player seasons at age: 246
+Age count in group: 13
+Share: 9.85%</title></circle>
+<circle class="dot" fill="#16a34a" cx="466.27" cy="311.54" r="4.5"><title>Top 12
+Age: 28
+Player seasons at age: 202
+Age count in group: 14
+Share: 10.61%</title></circle>
+<circle class="dot" fill="#16a34a" cx="521.73" cy="367.08" r="4.5"><title>Top 12
+Age: 29
+Player seasons at age: 154
+Age count in group: 11
+Share: 8.33%</title></circle>
+<circle class="dot" fill="#16a34a" cx="577.20" cy="422.38" r="4.5"><title>Top 12
+Age: 30
+Player seasons at age: 104
+Age count in group: 8
+Share: 6.06%</title></circle>
+<circle class="dot" fill="#16a34a" cx="632.67" cy="496.19" r="4.5"><title>Top 12
+Age: 31
+Player seasons at age: 66
+Age count in group: 4
+Share: 3.03%</title></circle>
+<circle class="dot" fill="#16a34a" cx="688.13" cy="532.97" r="4.5"><title>Top 12
+Age: 32
+Player seasons at age: 58
+Age count in group: 2
+Share: 1.52%</title></circle>
+<circle class="dot" fill="#16a34a" cx="743.60" cy="514.70" r="4.5"><title>Top 12
+Age: 33
+Player seasons at age: 29
+Age count in group: 3
+Share: 2.27%</title></circle>
+<circle class="dot" fill="#16a34a" cx="799.07" cy="551.49" r="4.5"><title>Top 12
+Age: 34
+Player seasons at age: 18
+Age count in group: 1
+Share: 0.76%</title></circle>
+<circle class="dot" fill="#16a34a" cx="854.53" cy="570.00" r="4.5"><title>Top 12
+Age: 35
+Player seasons at age: 8
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#16a34a" cx="910.00" cy="570.00" r="4.5"><title>Top 12
+Age: 36
+Player seasons at age: 6
+Age count in group: 0
+Share: 0.00%</title></circle>
+<line x1="78" y1="417.75" x2="910" y2="417.75" stroke="#ca8a04" stroke-width="1.2" stroke-dasharray="7 6" opacity="0.55"/>
+<path class="rate-line" stroke="#ca8a04" d="M 78.00 525.67 L 133.47 437.24 L 188.93 215.57 L 244.40 259.90 L 299.87 259.90 L 355.33 171.48 L 410.80 392.91 L 466.27 348.57 L 521.73 348.57 L 577.20 437.24 L 632.67 481.33 L 688.13 570.00 L 743.60 570.00 L 799.07 525.67 L 854.53 570.00 L 910.00 570.00"/>
+<circle class="dot" fill="#ca8a04" cx="78.00" cy="525.67" r="4.5"><title>Top 5
+Age: 21
+Player seasons at age: 48
+Age count in group: 1
+Share: 1.82%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="133.47" cy="437.24" r="4.5"><title>Top 5
+Age: 22
+Player seasons at age: 190
+Age count in group: 3
+Share: 5.45%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="188.93" cy="215.57" r="4.5"><title>Top 5
+Age: 23
+Player seasons at age: 361
+Age count in group: 8
+Share: 14.55%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="244.40" cy="259.90" r="4.5"><title>Top 5
+Age: 24
+Player seasons at age: 400
+Age count in group: 7
+Share: 12.73%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="299.87" cy="259.90" r="4.5"><title>Top 5
+Age: 25
+Player seasons at age: 358
+Age count in group: 7
+Share: 12.73%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="355.33" cy="171.48" r="4.5"><title>Top 5
+Age: 26
+Player seasons at age: 301
+Age count in group: 9
+Share: 16.36%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="410.80" cy="392.91" r="4.5"><title>Top 5
+Age: 27
+Player seasons at age: 246
+Age count in group: 4
+Share: 7.27%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="466.27" cy="348.57" r="4.5"><title>Top 5
+Age: 28
+Player seasons at age: 202
+Age count in group: 5
+Share: 9.09%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="521.73" cy="348.57" r="4.5"><title>Top 5
+Age: 29
+Player seasons at age: 154
+Age count in group: 5
+Share: 9.09%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="577.20" cy="437.24" r="4.5"><title>Top 5
+Age: 30
+Player seasons at age: 104
+Age count in group: 3
+Share: 5.45%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="632.67" cy="481.33" r="4.5"><title>Top 5
+Age: 31
+Player seasons at age: 66
+Age count in group: 2
+Share: 3.64%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="688.13" cy="570.00" r="4.5"><title>Top 5
+Age: 32
+Player seasons at age: 58
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="743.60" cy="570.00" r="4.5"><title>Top 5
+Age: 33
+Player seasons at age: 29
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="799.07" cy="525.67" r="4.5"><title>Top 5
+Age: 34
+Player seasons at age: 18
+Age count in group: 1
+Share: 1.82%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="854.53" cy="570.00" r="4.5"><title>Top 5
+Age: 35
+Player seasons at age: 8
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="910.00" cy="570.00" r="4.5"><title>Top 5
+Age: 36
+Player seasons at age: 6
+Age count in group: 0
+Share: 0.00%</title></circle>
+<line x1="78" y1="417.77" x2="910" y2="417.77" stroke="#ea580c" stroke-width="1.2" stroke-dasharray="7 6" opacity="0.55"/>
+<path class="rate-line" stroke="#ea580c" d="M 78.00 570.00 L 133.47 570.00 L 188.93 274.76 L 244.40 200.95 L 299.87 200.95 L 355.33 127.14 L 410.80 422.38 L 466.27 274.76 L 521.73 348.57 L 577.20 422.38 L 632.67 422.38 L 688.13 570.00 L 743.60 570.00 L 799.07 570.00 L 854.53 570.00 L 910.00 570.00"/>
+<circle class="dot" fill="#ea580c" cx="78.00" cy="570.00" r="4.5"><title>Top 3
+Age: 21
+Player seasons at age: 48
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ea580c" cx="133.47" cy="570.00" r="4.5"><title>Top 3
+Age: 22
+Player seasons at age: 190
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ea580c" cx="188.93" cy="274.76" r="4.5"><title>Top 3
+Age: 23
+Player seasons at age: 361
+Age count in group: 4
+Share: 12.12%</title></circle>
+<circle class="dot" fill="#ea580c" cx="244.40" cy="200.95" r="4.5"><title>Top 3
+Age: 24
+Player seasons at age: 400
+Age count in group: 5
+Share: 15.15%</title></circle>
+<circle class="dot" fill="#ea580c" cx="299.87" cy="200.95" r="4.5"><title>Top 3
+Age: 25
+Player seasons at age: 358
+Age count in group: 5
+Share: 15.15%</title></circle>
+<circle class="dot" fill="#ea580c" cx="355.33" cy="127.14" r="4.5"><title>Top 3
+Age: 26
+Player seasons at age: 301
+Age count in group: 6
+Share: 18.18%</title></circle>
+<circle class="dot" fill="#ea580c" cx="410.80" cy="422.38" r="4.5"><title>Top 3
+Age: 27
+Player seasons at age: 246
+Age count in group: 2
+Share: 6.06%</title></circle>
+<circle class="dot" fill="#ea580c" cx="466.27" cy="274.76" r="4.5"><title>Top 3
+Age: 28
+Player seasons at age: 202
+Age count in group: 4
+Share: 12.12%</title></circle>
+<circle class="dot" fill="#ea580c" cx="521.73" cy="348.57" r="4.5"><title>Top 3
+Age: 29
+Player seasons at age: 154
+Age count in group: 3
+Share: 9.09%</title></circle>
+<circle class="dot" fill="#ea580c" cx="577.20" cy="422.38" r="4.5"><title>Top 3
+Age: 30
+Player seasons at age: 104
+Age count in group: 2
+Share: 6.06%</title></circle>
+<circle class="dot" fill="#ea580c" cx="632.67" cy="422.38" r="4.5"><title>Top 3
+Age: 31
+Player seasons at age: 66
+Age count in group: 2
+Share: 6.06%</title></circle>
+<circle class="dot" fill="#ea580c" cx="688.13" cy="570.00" r="4.5"><title>Top 3
+Age: 32
+Player seasons at age: 58
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ea580c" cx="743.60" cy="570.00" r="4.5"><title>Top 3
+Age: 33
+Player seasons at age: 29
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ea580c" cx="799.07" cy="570.00" r="4.5"><title>Top 3
+Age: 34
+Player seasons at age: 18
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ea580c" cx="854.53" cy="570.00" r="4.5"><title>Top 3
+Age: 35
+Player seasons at age: 8
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ea580c" cx="910.00" cy="570.00" r="4.5"><title>Top 3
+Age: 36
+Player seasons at age: 6
+Age count in group: 0
+Share: 0.00%</title></circle>
+<line x1="944" y1="82" x2="972" y2="82" stroke="#2563eb" stroke-width="4" stroke-linecap="round"/>
+<text class="legend" x="982" y="87">Top 36</text>
+<line x1="944" y1="112" x2="972" y2="112" stroke="#0891b2" stroke-width="4" stroke-linecap="round"/>
+<text class="legend" x="982" y="117">Top 24</text>
+<line x1="944" y1="142" x2="972" y2="142" stroke="#16a34a" stroke-width="4" stroke-linecap="round"/>
+<text class="legend" x="982" y="147">Top 12</text>
+<line x1="944" y1="172" x2="972" y2="172" stroke="#ca8a04" stroke-width="4" stroke-linecap="round"/>
+<text class="legend" x="982" y="177">Top 5</text>
+<line x1="944" y1="202" x2="972" y2="202" stroke="#ea580c" stroke-width="4" stroke-linecap="round"/>
+<text class="legend" x="982" y="207">Top 3</text>
+</svg></section>
+                <section class="table-wrap">
+                    <h2>WR Age Share Table</h2>
+                    <table class="dataframe rate-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Age</th>
+      <th>player_seasons_at_age</th>
+      <th>top36_age_count</th>
+      <th>top36_rate_pct</th>
+      <th>top24_age_count</th>
+      <th>top24_rate_pct</th>
+      <th>top12_age_count</th>
+      <th>top12_rate_pct</th>
+      <th>top5_age_count</th>
+      <th>top5_rate_pct</th>
+      <th>top3_age_count</th>
+      <th>top3_rate_pct</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>21</td>
+      <td>48</td>
+      <td>11</td>
+      <td>2.78</td>
+      <td>7</td>
+      <td>2.65</td>
+      <td>3</td>
+      <td>2.27</td>
+      <td>1</td>
+      <td>1.82</td>
+      <td>0</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <td>22</td>
+      <td>190</td>
+      <td>30</td>
+      <td>7.58</td>
+      <td>21</td>
+      <td>7.95</td>
+      <td>7</td>
+      <td>5.30</td>
+      <td>3</td>
+      <td>5.45</td>
+      <td>0</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <td>23</td>
+      <td>361</td>
+      <td>50</td>
+      <td>12.63</td>
+      <td>26</td>
+      <td>9.85</td>
+      <td>17</td>
+      <td>12.88</td>
+      <td>8</td>
+      <td>14.55</td>
+      <td>4</td>
+      <td>12.12</td>
+    </tr>
+    <tr>
+      <td>24</td>
+      <td>400</td>
+      <td>52</td>
+      <td>13.13</td>
+      <td>38</td>
+      <td>14.39</td>
+      <td>14</td>
+      <td>10.61</td>
+      <td>7</td>
+      <td>12.73</td>
+      <td>5</td>
+      <td>15.15</td>
+    </tr>
+    <tr>
+      <td>25</td>
+      <td>358</td>
+      <td>50</td>
+      <td>12.63</td>
+      <td>32</td>
+      <td>12.12</td>
+      <td>17</td>
+      <td>12.88</td>
+      <td>7</td>
+      <td>12.73</td>
+      <td>5</td>
+      <td>15.15</td>
+    </tr>
+    <tr>
+      <td>26</td>
+      <td>301</td>
+      <td>45</td>
+      <td>11.36</td>
+      <td>32</td>
+      <td>12.12</td>
+      <td>18</td>
+      <td>13.64</td>
+      <td>9</td>
+      <td>16.36</td>
+      <td>6</td>
+      <td>18.18</td>
+    </tr>
+    <tr>
+      <td>27</td>
+      <td>246</td>
+      <td>46</td>
+      <td>11.62</td>
+      <td>32</td>
+      <td>12.12</td>
+      <td>13</td>
+      <td>9.85</td>
+      <td>4</td>
+      <td>7.27</td>
+      <td>2</td>
+      <td>6.06</td>
+    </tr>
+    <tr>
+      <td>28</td>
+      <td>202</td>
+      <td>36</td>
+      <td>9.09</td>
+      <td>23</td>
+      <td>8.71</td>
+      <td>14</td>
+      <td>10.61</td>
+      <td>5</td>
+      <td>9.09</td>
+      <td>4</td>
+      <td>12.12</td>
+    </tr>
+    <tr>
+      <td>29</td>
+      <td>154</td>
+      <td>27</td>
+      <td>6.82</td>
+      <td>23</td>
+      <td>8.71</td>
+      <td>11</td>
+      <td>8.33</td>
+      <td>5</td>
+      <td>9.09</td>
+      <td>3</td>
+      <td>9.09</td>
+    </tr>
+    <tr>
+      <td>30</td>
+      <td>104</td>
+      <td>21</td>
+      <td>5.30</td>
+      <td>14</td>
+      <td>5.30</td>
+      <td>8</td>
+      <td>6.06</td>
+      <td>3</td>
+      <td>5.45</td>
+      <td>2</td>
+      <td>6.06</td>
+    </tr>
+    <tr>
+      <td>31</td>
+      <td>66</td>
+      <td>12</td>
+      <td>3.03</td>
+      <td>7</td>
+      <td>2.65</td>
+      <td>4</td>
+      <td>3.03</td>
+      <td>2</td>
+      <td>3.64</td>
+      <td>2</td>
+      <td>6.06</td>
+    </tr>
+    <tr>
+      <td>32</td>
+      <td>58</td>
+      <td>8</td>
+      <td>2.02</td>
+      <td>4</td>
+      <td>1.52</td>
+      <td>2</td>
+      <td>1.52</td>
+      <td>0</td>
+      <td>0.00</td>
+      <td>0</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <td>33</td>
+      <td>29</td>
+      <td>5</td>
+      <td>1.26</td>
+      <td>4</td>
+      <td>1.52</td>
+      <td>3</td>
+      <td>2.27</td>
+      <td>0</td>
+      <td>0.00</td>
+      <td>0</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <td>34</td>
+      <td>18</td>
+      <td>1</td>
+      <td>0.25</td>
+      <td>1</td>
+      <td>0.38</td>
+      <td>1</td>
+      <td>0.76</td>
+      <td>1</td>
+      <td>1.82</td>
+      <td>0</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <td>35</td>
+      <td>8</td>
+      <td>1</td>
+      <td>0.25</td>
+      <td>0</td>
+      <td>0.00</td>
+      <td>0</td>
+      <td>0.00</td>
+      <td>0</td>
+      <td>0.00</td>
+      <td>0</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <td>36</td>
+      <td>6</td>
+      <td>1</td>
+      <td>0.25</td>
+      <td>0</td>
+      <td>0.00</td>
+      <td>0</td>
+      <td>0.00</td>
+      <td>0</td>
+      <td>0.00</td>
+      <td>0</td>
+      <td>0.00</td>
+    </tr>
+  </tbody>
+</table>
+                </section>
+            </section>
+            
+            <section class="tab-panel panel-QB">
+                <div class="cards">
+            <section class="card">
+                <div class="label">Average #1 Age</div>
+                <div class="value">26.4</div>
+                <div class="detail">11 seasons</div>
+            </section>
+            
+                <section class="card">
+                    <div class="label">Top 36 Peak</div>
+                    <div class="value">Age 24</div>
+                    <div class="detail">9.85%</div>
+                </section>
+                
+                <section class="card">
+                    <div class="label">Top 24 Peak</div>
+                    <div class="value">Age 24</div>
+                    <div class="detail">10.98%</div>
+                </section>
+                
+                <section class="card">
+                    <div class="label">Top 12 Peak</div>
+                    <div class="value">Age 24</div>
+                    <div class="detail">10.61%</div>
+                </section>
+                
+                <section class="card">
+                    <div class="label">Top 5 Peak</div>
+                    <div class="value">Age 25</div>
+                    <div class="detail">12.73%</div>
+                </section>
+                
+                <section class="card">
+                    <div class="label">Top 3 Peak</div>
+                    <div class="value">Age 23</div>
+                    <div class="detail">12.12%</div>
+                </section>
+                </div>
+                <section class="chart"><svg xmlns="http://www.w3.org/2000/svg" width="1100" height="640" viewBox="0 0 1100 640">
+<style>
+text { font-family: Arial, sans-serif; fill: #1f2937; }
+.title { font-size: 28px; font-weight: 700; }
+.label { font-size: 15px; font-weight: 700; }
+.tick { font-size: 12px; fill: #4b5563; }
+.legend { font-size: 14px; font-weight: 700; }
+.mean-label { font-size: 12px; font-weight: 700; }
+.grid { stroke: #e5e7eb; stroke-width: 1; }
+.axis { stroke: #111827; stroke-width: 1.4; }
+.rate-line { fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.dot { stroke: #ffffff; stroke-width: 1.4; }
+</style>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text class="title" x="78" y="42">QB Age Share Within Top 36 / Top 24 / Top 12 / Top 5 / Top 3</text>
+<line class="grid" x1="78" y1="570.00" x2="910" y2="570.00"/>
+<text class="tick" x="66" y="574.00" text-anchor="end">0.0%</text>
+<line class="grid" x1="78" y1="446.00" x2="910" y2="446.00"/>
+<text class="tick" x="66" y="450.00" text-anchor="end">3.6%</text>
+<line class="grid" x1="78" y1="322.00" x2="910" y2="322.00"/>
+<text class="tick" x="66" y="326.00" text-anchor="end">7.1%</text>
+<line class="grid" x1="78" y1="198.00" x2="910" y2="198.00"/>
+<text class="tick" x="66" y="202.00" text-anchor="end">10.7%</text>
+<line class="grid" x1="78" y1="74.00" x2="910" y2="74.00"/>
+<text class="tick" x="66" y="78.00" text-anchor="end">14.3%</text>
+<line class="grid" x1="78.00" y1="74" x2="78.00" y2="570"/>
+<text class="tick" x="78.00" y="598" text-anchor="middle">21</text>
+<line class="grid" x1="112.67" y1="74" x2="112.67" y2="570"/>
+<text class="tick" x="112.67" y="598" text-anchor="middle">22</text>
+<line class="grid" x1="147.33" y1="74" x2="147.33" y2="570"/>
+<text class="tick" x="147.33" y="598" text-anchor="middle">23</text>
+<line class="grid" x1="182.00" y1="74" x2="182.00" y2="570"/>
+<text class="tick" x="182.00" y="598" text-anchor="middle">24</text>
+<line class="grid" x1="216.67" y1="74" x2="216.67" y2="570"/>
+<text class="tick" x="216.67" y="598" text-anchor="middle">25</text>
+<line class="grid" x1="251.33" y1="74" x2="251.33" y2="570"/>
+<text class="tick" x="251.33" y="598" text-anchor="middle">26</text>
+<line class="grid" x1="286.00" y1="74" x2="286.00" y2="570"/>
+<text class="tick" x="286.00" y="598" text-anchor="middle">27</text>
+<line class="grid" x1="320.67" y1="74" x2="320.67" y2="570"/>
+<text class="tick" x="320.67" y="598" text-anchor="middle">28</text>
+<line class="grid" x1="355.33" y1="74" x2="355.33" y2="570"/>
+<text class="tick" x="355.33" y="598" text-anchor="middle">29</text>
+<line class="grid" x1="390.00" y1="74" x2="390.00" y2="570"/>
+<text class="tick" x="390.00" y="598" text-anchor="middle">30</text>
+<line class="grid" x1="424.67" y1="74" x2="424.67" y2="570"/>
+<text class="tick" x="424.67" y="598" text-anchor="middle">31</text>
+<line class="grid" x1="459.33" y1="74" x2="459.33" y2="570"/>
+<text class="tick" x="459.33" y="598" text-anchor="middle">32</text>
+<line class="grid" x1="494.00" y1="74" x2="494.00" y2="570"/>
+<text class="tick" x="494.00" y="598" text-anchor="middle">33</text>
+<line class="grid" x1="528.67" y1="74" x2="528.67" y2="570"/>
+<text class="tick" x="528.67" y="598" text-anchor="middle">34</text>
+<line class="grid" x1="563.33" y1="74" x2="563.33" y2="570"/>
+<text class="tick" x="563.33" y="598" text-anchor="middle">35</text>
+<line class="grid" x1="598.00" y1="74" x2="598.00" y2="570"/>
+<text class="tick" x="598.00" y="598" text-anchor="middle">36</text>
+<line class="grid" x1="632.67" y1="74" x2="632.67" y2="570"/>
+<text class="tick" x="632.67" y="598" text-anchor="middle">37</text>
+<line class="grid" x1="667.33" y1="74" x2="667.33" y2="570"/>
+<text class="tick" x="667.33" y="598" text-anchor="middle">38</text>
+<line class="grid" x1="702.00" y1="74" x2="702.00" y2="570"/>
+<text class="tick" x="702.00" y="598" text-anchor="middle">39</text>
+<line class="grid" x1="736.67" y1="74" x2="736.67" y2="570"/>
+<text class="tick" x="736.67" y="598" text-anchor="middle">40</text>
+<line class="grid" x1="771.33" y1="74" x2="771.33" y2="570"/>
+<text class="tick" x="771.33" y="598" text-anchor="middle">41</text>
+<line class="grid" x1="806.00" y1="74" x2="806.00" y2="570"/>
+<text class="tick" x="806.00" y="598" text-anchor="middle">42</text>
+<line class="grid" x1="840.67" y1="74" x2="840.67" y2="570"/>
+<text class="tick" x="840.67" y="598" text-anchor="middle">43</text>
+<line class="grid" x1="875.33" y1="74" x2="875.33" y2="570"/>
+<text class="tick" x="875.33" y="598" text-anchor="middle">44</text>
+<line class="grid" x1="910.00" y1="74" x2="910.00" y2="570"/>
+<text class="tick" x="910.00" y="598" text-anchor="middle">45</text>
+<line class="axis" x1="78" y1="570" x2="910" y2="570"/>
+<line class="axis" x1="78" y1="74" x2="78" y2="570"/>
+<text class="label" x="494.00" y="628" text-anchor="middle">Age</text>
+<text class="label" transform="translate(22 320.00) rotate(-90)" text-anchor="middle">Rate (%)</text>
+<line x1="78" y1="430.85" x2="910" y2="430.85" stroke="#2563eb" stroke-width="1.2" stroke-dasharray="7 6" opacity="0.55"/>
+<path class="rate-line" stroke="#2563eb" d="M 78.00 526.17 L 112.67 394.32 L 147.33 245.08 L 182.00 227.33 L 216.67 236.03 L 251.33 288.91 L 286.00 280.21 L 320.67 332.74 L 355.33 385.62 L 390.00 403.02 L 424.67 420.76 L 459.33 429.45 L 494.00 446.85 L 528.67 429.45 L 563.33 473.29 L 598.00 455.89 L 632.67 491.03 L 667.33 481.99 L 702.00 508.42 L 736.67 534.86 L 771.33 543.56 L 806.00 552.26 L 840.67 561.30 L 875.33 561.30 L 910.00 561.30"/>
+<circle class="dot" fill="#2563eb" cx="78.00" cy="526.17" r="4.5"><title>Top 36
+Age: 21
+Player seasons at age: 7
+Age count in group: 5
+Share: 1.26%</title></circle>
+<circle class="dot" fill="#2563eb" cx="112.67" cy="394.32" r="4.5"><title>Top 36
+Age: 22
+Player seasons at age: 32
+Age count in group: 20
+Share: 5.05%</title></circle>
+<circle class="dot" fill="#2563eb" cx="147.33" cy="245.08" r="4.5"><title>Top 36
+Age: 23
+Player seasons at age: 62
+Age count in group: 37
+Share: 9.34%</title></circle>
+<circle class="dot" fill="#2563eb" cx="182.00" cy="227.33" r="4.5"><title>Top 36
+Age: 24
+Player seasons at age: 86
+Age count in group: 39
+Share: 9.85%</title></circle>
+<circle class="dot" fill="#2563eb" cx="216.67" cy="236.03" r="4.5"><title>Top 36
+Age: 25
+Player seasons at age: 88
+Age count in group: 38
+Share: 9.60%</title></circle>
+<circle class="dot" fill="#2563eb" cx="251.33" cy="288.91" r="4.5"><title>Top 36
+Age: 26
+Player seasons at age: 78
+Age count in group: 32
+Share: 8.08%</title></circle>
+<circle class="dot" fill="#2563eb" cx="286.00" cy="280.21" r="4.5"><title>Top 36
+Age: 27
+Player seasons at age: 78
+Age count in group: 33
+Share: 8.33%</title></circle>
+<circle class="dot" fill="#2563eb" cx="320.67" cy="332.74" r="4.5"><title>Top 36
+Age: 28
+Player seasons at age: 65
+Age count in group: 27
+Share: 6.82%</title></circle>
+<circle class="dot" fill="#2563eb" cx="355.33" cy="385.62" r="4.5"><title>Top 36
+Age: 29
+Player seasons at age: 60
+Age count in group: 21
+Share: 5.30%</title></circle>
+<circle class="dot" fill="#2563eb" cx="390.00" cy="403.02" r="4.5"><title>Top 36
+Age: 30
+Player seasons at age: 47
+Age count in group: 19
+Share: 4.80%</title></circle>
+<circle class="dot" fill="#2563eb" cx="424.67" cy="420.76" r="4.5"><title>Top 36
+Age: 31
+Player seasons at age: 35
+Age count in group: 17
+Share: 4.29%</title></circle>
+<circle class="dot" fill="#2563eb" cx="459.33" cy="429.45" r="4.5"><title>Top 36
+Age: 32
+Player seasons at age: 42
+Age count in group: 16
+Share: 4.04%</title></circle>
+<circle class="dot" fill="#2563eb" cx="494.00" cy="446.85" r="4.5"><title>Top 36
+Age: 33
+Player seasons at age: 35
+Age count in group: 14
+Share: 3.54%</title></circle>
+<circle class="dot" fill="#2563eb" cx="528.67" cy="429.45" r="4.5"><title>Top 36
+Age: 34
+Player seasons at age: 29
+Age count in group: 16
+Share: 4.04%</title></circle>
+<circle class="dot" fill="#2563eb" cx="563.33" cy="473.29" r="4.5"><title>Top 36
+Age: 35
+Player seasons at age: 28
+Age count in group: 11
+Share: 2.78%</title></circle>
+<circle class="dot" fill="#2563eb" cx="598.00" cy="455.89" r="4.5"><title>Top 36
+Age: 36
+Player seasons at age: 24
+Age count in group: 13
+Share: 3.28%</title></circle>
+<circle class="dot" fill="#2563eb" cx="632.67" cy="491.03" r="4.5"><title>Top 36
+Age: 37
+Player seasons at age: 17
+Age count in group: 9
+Share: 2.27%</title></circle>
+<circle class="dot" fill="#2563eb" cx="667.33" cy="481.99" r="4.5"><title>Top 36
+Age: 38
+Player seasons at age: 15
+Age count in group: 10
+Share: 2.53%</title></circle>
+<circle class="dot" fill="#2563eb" cx="702.00" cy="508.42" r="4.5"><title>Top 36
+Age: 39
+Player seasons at age: 11
+Age count in group: 7
+Share: 1.77%</title></circle>
+<circle class="dot" fill="#2563eb" cx="736.67" cy="534.86" r="4.5"><title>Top 36
+Age: 40
+Player seasons at age: 6
+Age count in group: 4
+Share: 1.01%</title></circle>
+<circle class="dot" fill="#2563eb" cx="771.33" cy="543.56" r="4.5"><title>Top 36
+Age: 41
+Player seasons at age: 3
+Age count in group: 3
+Share: 0.76%</title></circle>
+<circle class="dot" fill="#2563eb" cx="806.00" cy="552.26" r="4.5"><title>Top 36
+Age: 42
+Player seasons at age: 2
+Age count in group: 2
+Share: 0.51%</title></circle>
+<circle class="dot" fill="#2563eb" cx="840.67" cy="561.30" r="4.5"><title>Top 36
+Age: 43
+Player seasons at age: 1
+Age count in group: 1
+Share: 0.25%</title></circle>
+<circle class="dot" fill="#2563eb" cx="875.33" cy="561.30" r="4.5"><title>Top 36
+Age: 44
+Player seasons at age: 2
+Age count in group: 1
+Share: 0.25%</title></circle>
+<circle class="dot" fill="#2563eb" cx="910.00" cy="561.30" r="4.5"><title>Top 36
+Age: 45
+Player seasons at age: 1
+Age count in group: 1
+Share: 0.25%</title></circle>
+<line x1="78" y1="430.85" x2="910" y2="430.85" stroke="#0891b2" stroke-width="1.2" stroke-dasharray="7 6" opacity="0.55"/>
+<path class="rate-line" stroke="#0891b2" d="M 78.00 556.78 L 112.67 411.71 L 147.33 240.55 L 182.00 188.02 L 216.67 280.21 L 251.33 359.18 L 286.00 306.30 L 320.67 280.21 L 355.33 345.96 L 390.00 398.84 L 424.67 451.37 L 459.33 398.84 L 494.00 424.93 L 528.67 477.81 L 563.33 438.15 L 598.00 438.15 L 632.67 477.81 L 667.33 504.25 L 702.00 504.25 L 736.67 543.56 L 771.33 530.34 L 806.00 543.56 L 840.67 556.78 L 875.33 556.78 L 910.00 556.78"/>
+<circle class="dot" fill="#0891b2" cx="78.00" cy="556.78" r="4.5"><title>Top 24
+Age: 21
+Player seasons at age: 7
+Age count in group: 1
+Share: 0.38%</title></circle>
+<circle class="dot" fill="#0891b2" cx="112.67" cy="411.71" r="4.5"><title>Top 24
+Age: 22
+Player seasons at age: 32
+Age count in group: 12
+Share: 4.55%</title></circle>
+<circle class="dot" fill="#0891b2" cx="147.33" cy="240.55" r="4.5"><title>Top 24
+Age: 23
+Player seasons at age: 62
+Age count in group: 25
+Share: 9.47%</title></circle>
+<circle class="dot" fill="#0891b2" cx="182.00" cy="188.02" r="4.5"><title>Top 24
+Age: 24
+Player seasons at age: 86
+Age count in group: 29
+Share: 10.98%</title></circle>
+<circle class="dot" fill="#0891b2" cx="216.67" cy="280.21" r="4.5"><title>Top 24
+Age: 25
+Player seasons at age: 88
+Age count in group: 22
+Share: 8.33%</title></circle>
+<circle class="dot" fill="#0891b2" cx="251.33" cy="359.18" r="4.5"><title>Top 24
+Age: 26
+Player seasons at age: 78
+Age count in group: 16
+Share: 6.06%</title></circle>
+<circle class="dot" fill="#0891b2" cx="286.00" cy="306.30" r="4.5"><title>Top 24
+Age: 27
+Player seasons at age: 78
+Age count in group: 20
+Share: 7.58%</title></circle>
+<circle class="dot" fill="#0891b2" cx="320.67" cy="280.21" r="4.5"><title>Top 24
+Age: 28
+Player seasons at age: 65
+Age count in group: 22
+Share: 8.33%</title></circle>
+<circle class="dot" fill="#0891b2" cx="355.33" cy="345.96" r="4.5"><title>Top 24
+Age: 29
+Player seasons at age: 60
+Age count in group: 17
+Share: 6.44%</title></circle>
+<circle class="dot" fill="#0891b2" cx="390.00" cy="398.84" r="4.5"><title>Top 24
+Age: 30
+Player seasons at age: 47
+Age count in group: 13
+Share: 4.92%</title></circle>
+<circle class="dot" fill="#0891b2" cx="424.67" cy="451.37" r="4.5"><title>Top 24
+Age: 31
+Player seasons at age: 35
+Age count in group: 9
+Share: 3.41%</title></circle>
+<circle class="dot" fill="#0891b2" cx="459.33" cy="398.84" r="4.5"><title>Top 24
+Age: 32
+Player seasons at age: 42
+Age count in group: 13
+Share: 4.92%</title></circle>
+<circle class="dot" fill="#0891b2" cx="494.00" cy="424.93" r="4.5"><title>Top 24
+Age: 33
+Player seasons at age: 35
+Age count in group: 11
+Share: 4.17%</title></circle>
+<circle class="dot" fill="#0891b2" cx="528.67" cy="477.81" r="4.5"><title>Top 24
+Age: 34
+Player seasons at age: 29
+Age count in group: 7
+Share: 2.65%</title></circle>
+<circle class="dot" fill="#0891b2" cx="563.33" cy="438.15" r="4.5"><title>Top 24
+Age: 35
+Player seasons at age: 28
+Age count in group: 10
+Share: 3.79%</title></circle>
+<circle class="dot" fill="#0891b2" cx="598.00" cy="438.15" r="4.5"><title>Top 24
+Age: 36
+Player seasons at age: 24
+Age count in group: 10
+Share: 3.79%</title></circle>
+<circle class="dot" fill="#0891b2" cx="632.67" cy="477.81" r="4.5"><title>Top 24
+Age: 37
+Player seasons at age: 17
+Age count in group: 7
+Share: 2.65%</title></circle>
+<circle class="dot" fill="#0891b2" cx="667.33" cy="504.25" r="4.5"><title>Top 24
+Age: 38
+Player seasons at age: 15
+Age count in group: 5
+Share: 1.89%</title></circle>
+<circle class="dot" fill="#0891b2" cx="702.00" cy="504.25" r="4.5"><title>Top 24
+Age: 39
+Player seasons at age: 11
+Age count in group: 5
+Share: 1.89%</title></circle>
+<circle class="dot" fill="#0891b2" cx="736.67" cy="543.56" r="4.5"><title>Top 24
+Age: 40
+Player seasons at age: 6
+Age count in group: 2
+Share: 0.76%</title></circle>
+<circle class="dot" fill="#0891b2" cx="771.33" cy="530.34" r="4.5"><title>Top 24
+Age: 41
+Player seasons at age: 3
+Age count in group: 3
+Share: 1.14%</title></circle>
+<circle class="dot" fill="#0891b2" cx="806.00" cy="543.56" r="4.5"><title>Top 24
+Age: 42
+Player seasons at age: 2
+Age count in group: 2
+Share: 0.76%</title></circle>
+<circle class="dot" fill="#0891b2" cx="840.67" cy="556.78" r="4.5"><title>Top 24
+Age: 43
+Player seasons at age: 1
+Age count in group: 1
+Share: 0.38%</title></circle>
+<circle class="dot" fill="#0891b2" cx="875.33" cy="556.78" r="4.5"><title>Top 24
+Age: 44
+Player seasons at age: 2
+Age count in group: 1
+Share: 0.38%</title></circle>
+<circle class="dot" fill="#0891b2" cx="910.00" cy="556.78" r="4.5"><title>Top 24
+Age: 45
+Player seasons at age: 1
+Age count in group: 1
+Share: 0.38%</title></circle>
+<line x1="78" y1="430.79" x2="910" y2="430.79" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="7 6" opacity="0.55"/>
+<path class="rate-line" stroke="#16a34a" d="M 78.00 570.00 L 112.67 464.59 L 147.33 253.77 L 182.00 200.89 L 216.67 200.89 L 251.33 332.74 L 286.00 227.33 L 320.67 306.30 L 355.33 306.30 L 390.00 411.71 L 424.67 491.03 L 459.33 411.71 L 494.00 385.62 L 528.67 464.59 L 563.33 491.03 L 598.00 438.15 L 632.67 464.59 L 667.33 517.12 L 702.00 543.56 L 736.67 543.56 L 771.33 570.00 L 806.00 543.56 L 840.67 543.56 L 875.33 543.56 L 910.00 543.56"/>
+<circle class="dot" fill="#16a34a" cx="78.00" cy="570.00" r="4.5"><title>Top 12
+Age: 21
+Player seasons at age: 7
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#16a34a" cx="112.67" cy="464.59" r="4.5"><title>Top 12
+Age: 22
+Player seasons at age: 32
+Age count in group: 4
+Share: 3.03%</title></circle>
+<circle class="dot" fill="#16a34a" cx="147.33" cy="253.77" r="4.5"><title>Top 12
+Age: 23
+Player seasons at age: 62
+Age count in group: 12
+Share: 9.09%</title></circle>
+<circle class="dot" fill="#16a34a" cx="182.00" cy="200.89" r="4.5"><title>Top 12
+Age: 24
+Player seasons at age: 86
+Age count in group: 14
+Share: 10.61%</title></circle>
+<circle class="dot" fill="#16a34a" cx="216.67" cy="200.89" r="4.5"><title>Top 12
+Age: 25
+Player seasons at age: 88
+Age count in group: 14
+Share: 10.61%</title></circle>
+<circle class="dot" fill="#16a34a" cx="251.33" cy="332.74" r="4.5"><title>Top 12
+Age: 26
+Player seasons at age: 78
+Age count in group: 9
+Share: 6.82%</title></circle>
+<circle class="dot" fill="#16a34a" cx="286.00" cy="227.33" r="4.5"><title>Top 12
+Age: 27
+Player seasons at age: 78
+Age count in group: 13
+Share: 9.85%</title></circle>
+<circle class="dot" fill="#16a34a" cx="320.67" cy="306.30" r="4.5"><title>Top 12
+Age: 28
+Player seasons at age: 65
+Age count in group: 10
+Share: 7.58%</title></circle>
+<circle class="dot" fill="#16a34a" cx="355.33" cy="306.30" r="4.5"><title>Top 12
+Age: 29
+Player seasons at age: 60
+Age count in group: 10
+Share: 7.58%</title></circle>
+<circle class="dot" fill="#16a34a" cx="390.00" cy="411.71" r="4.5"><title>Top 12
+Age: 30
+Player seasons at age: 47
+Age count in group: 6
+Share: 4.55%</title></circle>
+<circle class="dot" fill="#16a34a" cx="424.67" cy="491.03" r="4.5"><title>Top 12
+Age: 31
+Player seasons at age: 35
+Age count in group: 3
+Share: 2.27%</title></circle>
+<circle class="dot" fill="#16a34a" cx="459.33" cy="411.71" r="4.5"><title>Top 12
+Age: 32
+Player seasons at age: 42
+Age count in group: 6
+Share: 4.55%</title></circle>
+<circle class="dot" fill="#16a34a" cx="494.00" cy="385.62" r="4.5"><title>Top 12
+Age: 33
+Player seasons at age: 35
+Age count in group: 7
+Share: 5.30%</title></circle>
+<circle class="dot" fill="#16a34a" cx="528.67" cy="464.59" r="4.5"><title>Top 12
+Age: 34
+Player seasons at age: 29
+Age count in group: 4
+Share: 3.03%</title></circle>
+<circle class="dot" fill="#16a34a" cx="563.33" cy="491.03" r="4.5"><title>Top 12
+Age: 35
+Player seasons at age: 28
+Age count in group: 3
+Share: 2.27%</title></circle>
+<circle class="dot" fill="#16a34a" cx="598.00" cy="438.15" r="4.5"><title>Top 12
+Age: 36
+Player seasons at age: 24
+Age count in group: 5
+Share: 3.79%</title></circle>
+<circle class="dot" fill="#16a34a" cx="632.67" cy="464.59" r="4.5"><title>Top 12
+Age: 37
+Player seasons at age: 17
+Age count in group: 4
+Share: 3.03%</title></circle>
+<circle class="dot" fill="#16a34a" cx="667.33" cy="517.12" r="4.5"><title>Top 12
+Age: 38
+Player seasons at age: 15
+Age count in group: 2
+Share: 1.52%</title></circle>
+<circle class="dot" fill="#16a34a" cx="702.00" cy="543.56" r="4.5"><title>Top 12
+Age: 39
+Player seasons at age: 11
+Age count in group: 1
+Share: 0.76%</title></circle>
+<circle class="dot" fill="#16a34a" cx="736.67" cy="543.56" r="4.5"><title>Top 12
+Age: 40
+Player seasons at age: 6
+Age count in group: 1
+Share: 0.76%</title></circle>
+<circle class="dot" fill="#16a34a" cx="771.33" cy="570.00" r="4.5"><title>Top 12
+Age: 41
+Player seasons at age: 3
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#16a34a" cx="806.00" cy="543.56" r="4.5"><title>Top 12
+Age: 42
+Player seasons at age: 2
+Age count in group: 1
+Share: 0.76%</title></circle>
+<circle class="dot" fill="#16a34a" cx="840.67" cy="543.56" r="4.5"><title>Top 12
+Age: 43
+Player seasons at age: 1
+Age count in group: 1
+Share: 0.76%</title></circle>
+<circle class="dot" fill="#16a34a" cx="875.33" cy="543.56" r="4.5"><title>Top 12
+Age: 44
+Player seasons at age: 2
+Age count in group: 1
+Share: 0.76%</title></circle>
+<circle class="dot" fill="#16a34a" cx="910.00" cy="543.56" r="4.5"><title>Top 12
+Age: 45
+Player seasons at age: 1
+Age count in group: 1
+Share: 0.76%</title></circle>
+<line x1="78" y1="430.83" x2="910" y2="430.83" stroke="#ca8a04" stroke-width="1.2" stroke-dasharray="7 6" opacity="0.55"/>
+<path class="rate-line" stroke="#ca8a04" d="M 78.00 570.00 L 112.67 506.68 L 147.33 190.46 L 182.00 253.77 L 216.67 127.14 L 251.33 127.14 L 286.00 253.77 L 320.67 317.09 L 355.33 317.09 L 390.00 506.68 L 424.67 443.37 L 459.33 506.68 L 494.00 317.09 L 528.67 570.00 L 563.33 570.00 L 598.00 443.37 L 632.67 380.40 L 667.33 506.68 L 702.00 570.00 L 736.67 506.68 L 771.33 570.00 L 806.00 570.00 L 840.67 570.00 L 875.33 506.68 L 910.00 570.00"/>
+<circle class="dot" fill="#ca8a04" cx="78.00" cy="570.00" r="4.5"><title>Top 5
+Age: 21
+Player seasons at age: 7
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="112.67" cy="506.68" r="4.5"><title>Top 5
+Age: 22
+Player seasons at age: 32
+Age count in group: 1
+Share: 1.82%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="147.33" cy="190.46" r="4.5"><title>Top 5
+Age: 23
+Player seasons at age: 62
+Age count in group: 6
+Share: 10.91%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="182.00" cy="253.77" r="4.5"><title>Top 5
+Age: 24
+Player seasons at age: 86
+Age count in group: 5
+Share: 9.09%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="216.67" cy="127.14" r="4.5"><title>Top 5
+Age: 25
+Player seasons at age: 88
+Age count in group: 7
+Share: 12.73%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="251.33" cy="127.14" r="4.5"><title>Top 5
+Age: 26
+Player seasons at age: 78
+Age count in group: 7
+Share: 12.73%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="286.00" cy="253.77" r="4.5"><title>Top 5
+Age: 27
+Player seasons at age: 78
+Age count in group: 5
+Share: 9.09%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="320.67" cy="317.09" r="4.5"><title>Top 5
+Age: 28
+Player seasons at age: 65
+Age count in group: 4
+Share: 7.27%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="355.33" cy="317.09" r="4.5"><title>Top 5
+Age: 29
+Player seasons at age: 60
+Age count in group: 4
+Share: 7.27%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="390.00" cy="506.68" r="4.5"><title>Top 5
+Age: 30
+Player seasons at age: 47
+Age count in group: 1
+Share: 1.82%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="424.67" cy="443.37" r="4.5"><title>Top 5
+Age: 31
+Player seasons at age: 35
+Age count in group: 2
+Share: 3.64%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="459.33" cy="506.68" r="4.5"><title>Top 5
+Age: 32
+Player seasons at age: 42
+Age count in group: 1
+Share: 1.82%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="494.00" cy="317.09" r="4.5"><title>Top 5
+Age: 33
+Player seasons at age: 35
+Age count in group: 4
+Share: 7.27%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="528.67" cy="570.00" r="4.5"><title>Top 5
+Age: 34
+Player seasons at age: 29
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="563.33" cy="570.00" r="4.5"><title>Top 5
+Age: 35
+Player seasons at age: 28
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="598.00" cy="443.37" r="4.5"><title>Top 5
+Age: 36
+Player seasons at age: 24
+Age count in group: 2
+Share: 3.64%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="632.67" cy="380.40" r="4.5"><title>Top 5
+Age: 37
+Player seasons at age: 17
+Age count in group: 3
+Share: 5.45%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="667.33" cy="506.68" r="4.5"><title>Top 5
+Age: 38
+Player seasons at age: 15
+Age count in group: 1
+Share: 1.82%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="702.00" cy="570.00" r="4.5"><title>Top 5
+Age: 39
+Player seasons at age: 11
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="736.67" cy="506.68" r="4.5"><title>Top 5
+Age: 40
+Player seasons at age: 6
+Age count in group: 1
+Share: 1.82%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="771.33" cy="570.00" r="4.5"><title>Top 5
+Age: 41
+Player seasons at age: 3
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="806.00" cy="570.00" r="4.5"><title>Top 5
+Age: 42
+Player seasons at age: 2
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="840.67" cy="570.00" r="4.5"><title>Top 5
+Age: 43
+Player seasons at age: 1
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="875.33" cy="506.68" r="4.5"><title>Top 5
+Age: 44
+Player seasons at age: 2
+Age count in group: 1
+Share: 1.82%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="910.00" cy="570.00" r="4.5"><title>Top 5
+Age: 45
+Player seasons at age: 1
+Age count in group: 0
+Share: 0.00%</title></circle>
+<line x1="78" y1="430.86" x2="910" y2="430.86" stroke="#ea580c" stroke-width="1.2" stroke-dasharray="7 6" opacity="0.55"/>
+<path class="rate-line" stroke="#ea580c" d="M 78.00 570.00 L 112.67 464.59 L 147.33 148.36 L 182.00 359.18 L 216.67 359.18 L 251.33 253.77 L 286.00 148.36 L 320.67 253.77 L 355.33 359.18 L 390.00 464.59 L 424.67 359.18 L 459.33 570.00 L 494.00 359.18 L 528.67 570.00 L 563.33 570.00 L 598.00 464.59 L 632.67 253.77 L 667.33 464.59 L 702.00 570.00 L 736.67 464.59 L 771.33 570.00 L 806.00 570.00 L 840.67 570.00 L 875.33 464.59 L 910.00 570.00"/>
+<circle class="dot" fill="#ea580c" cx="78.00" cy="570.00" r="4.5"><title>Top 3
+Age: 21
+Player seasons at age: 7
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ea580c" cx="112.67" cy="464.59" r="4.5"><title>Top 3
+Age: 22
+Player seasons at age: 32
+Age count in group: 1
+Share: 3.03%</title></circle>
+<circle class="dot" fill="#ea580c" cx="147.33" cy="148.36" r="4.5"><title>Top 3
+Age: 23
+Player seasons at age: 62
+Age count in group: 4
+Share: 12.12%</title></circle>
+<circle class="dot" fill="#ea580c" cx="182.00" cy="359.18" r="4.5"><title>Top 3
+Age: 24
+Player seasons at age: 86
+Age count in group: 2
+Share: 6.06%</title></circle>
+<circle class="dot" fill="#ea580c" cx="216.67" cy="359.18" r="4.5"><title>Top 3
+Age: 25
+Player seasons at age: 88
+Age count in group: 2
+Share: 6.06%</title></circle>
+<circle class="dot" fill="#ea580c" cx="251.33" cy="253.77" r="4.5"><title>Top 3
+Age: 26
+Player seasons at age: 78
+Age count in group: 3
+Share: 9.09%</title></circle>
+<circle class="dot" fill="#ea580c" cx="286.00" cy="148.36" r="4.5"><title>Top 3
+Age: 27
+Player seasons at age: 78
+Age count in group: 4
+Share: 12.12%</title></circle>
+<circle class="dot" fill="#ea580c" cx="320.67" cy="253.77" r="4.5"><title>Top 3
+Age: 28
+Player seasons at age: 65
+Age count in group: 3
+Share: 9.09%</title></circle>
+<circle class="dot" fill="#ea580c" cx="355.33" cy="359.18" r="4.5"><title>Top 3
+Age: 29
+Player seasons at age: 60
+Age count in group: 2
+Share: 6.06%</title></circle>
+<circle class="dot" fill="#ea580c" cx="390.00" cy="464.59" r="4.5"><title>Top 3
+Age: 30
+Player seasons at age: 47
+Age count in group: 1
+Share: 3.03%</title></circle>
+<circle class="dot" fill="#ea580c" cx="424.67" cy="359.18" r="4.5"><title>Top 3
+Age: 31
+Player seasons at age: 35
+Age count in group: 2
+Share: 6.06%</title></circle>
+<circle class="dot" fill="#ea580c" cx="459.33" cy="570.00" r="4.5"><title>Top 3
+Age: 32
+Player seasons at age: 42
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ea580c" cx="494.00" cy="359.18" r="4.5"><title>Top 3
+Age: 33
+Player seasons at age: 35
+Age count in group: 2
+Share: 6.06%</title></circle>
+<circle class="dot" fill="#ea580c" cx="528.67" cy="570.00" r="4.5"><title>Top 3
+Age: 34
+Player seasons at age: 29
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ea580c" cx="563.33" cy="570.00" r="4.5"><title>Top 3
+Age: 35
+Player seasons at age: 28
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ea580c" cx="598.00" cy="464.59" r="4.5"><title>Top 3
+Age: 36
+Player seasons at age: 24
+Age count in group: 1
+Share: 3.03%</title></circle>
+<circle class="dot" fill="#ea580c" cx="632.67" cy="253.77" r="4.5"><title>Top 3
+Age: 37
+Player seasons at age: 17
+Age count in group: 3
+Share: 9.09%</title></circle>
+<circle class="dot" fill="#ea580c" cx="667.33" cy="464.59" r="4.5"><title>Top 3
+Age: 38
+Player seasons at age: 15
+Age count in group: 1
+Share: 3.03%</title></circle>
+<circle class="dot" fill="#ea580c" cx="702.00" cy="570.00" r="4.5"><title>Top 3
+Age: 39
+Player seasons at age: 11
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ea580c" cx="736.67" cy="464.59" r="4.5"><title>Top 3
+Age: 40
+Player seasons at age: 6
+Age count in group: 1
+Share: 3.03%</title></circle>
+<circle class="dot" fill="#ea580c" cx="771.33" cy="570.00" r="4.5"><title>Top 3
+Age: 41
+Player seasons at age: 3
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ea580c" cx="806.00" cy="570.00" r="4.5"><title>Top 3
+Age: 42
+Player seasons at age: 2
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ea580c" cx="840.67" cy="570.00" r="4.5"><title>Top 3
+Age: 43
+Player seasons at age: 1
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" fill="#ea580c" cx="875.33" cy="464.59" r="4.5"><title>Top 3
+Age: 44
+Player seasons at age: 2
+Age count in group: 1
+Share: 3.03%</title></circle>
+<circle class="dot" fill="#ea580c" cx="910.00" cy="570.00" r="4.5"><title>Top 3
+Age: 45
+Player seasons at age: 1
+Age count in group: 0
+Share: 0.00%</title></circle>
+<line x1="944" y1="82" x2="972" y2="82" stroke="#2563eb" stroke-width="4" stroke-linecap="round"/>
+<text class="legend" x="982" y="87">Top 36</text>
+<line x1="944" y1="112" x2="972" y2="112" stroke="#0891b2" stroke-width="4" stroke-linecap="round"/>
+<text class="legend" x="982" y="117">Top 24</text>
+<line x1="944" y1="142" x2="972" y2="142" stroke="#16a34a" stroke-width="4" stroke-linecap="round"/>
+<text class="legend" x="982" y="147">Top 12</text>
+<line x1="944" y1="172" x2="972" y2="172" stroke="#ca8a04" stroke-width="4" stroke-linecap="round"/>
+<text class="legend" x="982" y="177">Top 5</text>
+<line x1="944" y1="202" x2="972" y2="202" stroke="#ea580c" stroke-width="4" stroke-linecap="round"/>
+<text class="legend" x="982" y="207">Top 3</text>
+</svg></section>
+                <section class="table-wrap">
+                    <h2>QB Age Share Table</h2>
+                    <table class="dataframe rate-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Age</th>
+      <th>player_seasons_at_age</th>
+      <th>top36_age_count</th>
+      <th>top36_rate_pct</th>
+      <th>top24_age_count</th>
+      <th>top24_rate_pct</th>
+      <th>top12_age_count</th>
+      <th>top12_rate_pct</th>
+      <th>top5_age_count</th>
+      <th>top5_rate_pct</th>
+      <th>top3_age_count</th>
+      <th>top3_rate_pct</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>21</td>
+      <td>7</td>
+      <td>5</td>
+      <td>1.26</td>
+      <td>1</td>
+      <td>0.38</td>
+      <td>0</td>
+      <td>0.00</td>
+      <td>0</td>
+      <td>0.00</td>
+      <td>0</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <td>22</td>
+      <td>32</td>
+      <td>20</td>
+      <td>5.05</td>
+      <td>12</td>
+      <td>4.55</td>
+      <td>4</td>
+      <td>3.03</td>
+      <td>1</td>
+      <td>1.82</td>
+      <td>1</td>
+      <td>3.03</td>
+    </tr>
+    <tr>
+      <td>23</td>
+      <td>62</td>
+      <td>37</td>
+      <td>9.34</td>
+      <td>25</td>
+      <td>9.47</td>
+      <td>12</td>
+      <td>9.09</td>
+      <td>6</td>
+      <td>10.91</td>
+      <td>4</td>
+      <td>12.12</td>
+    </tr>
+    <tr>
+      <td>24</td>
+      <td>86</td>
+      <td>39</td>
+      <td>9.85</td>
+      <td>29</td>
+      <td>10.98</td>
+      <td>14</td>
+      <td>10.61</td>
+      <td>5</td>
+      <td>9.09</td>
+      <td>2</td>
+      <td>6.06</td>
+    </tr>
+    <tr>
+      <td>25</td>
+      <td>88</td>
+      <td>38</td>
+      <td>9.60</td>
+      <td>22</td>
+      <td>8.33</td>
+      <td>14</td>
+      <td>10.61</td>
+      <td>7</td>
+      <td>12.73</td>
+      <td>2</td>
+      <td>6.06</td>
+    </tr>
+    <tr>
+      <td>26</td>
+      <td>78</td>
+      <td>32</td>
+      <td>8.08</td>
+      <td>16</td>
+      <td>6.06</td>
+      <td>9</td>
+      <td>6.82</td>
+      <td>7</td>
+      <td>12.73</td>
+      <td>3</td>
+      <td>9.09</td>
+    </tr>
+    <tr>
+      <td>27</td>
+      <td>78</td>
+      <td>33</td>
+      <td>8.33</td>
+      <td>20</td>
+      <td>7.58</td>
+      <td>13</td>
+      <td>9.85</td>
+      <td>5</td>
+      <td>9.09</td>
+      <td>4</td>
+      <td>12.12</td>
+    </tr>
+    <tr>
+      <td>28</td>
+      <td>65</td>
+      <td>27</td>
+      <td>6.82</td>
+      <td>22</td>
+      <td>8.33</td>
+      <td>10</td>
+      <td>7.58</td>
+      <td>4</td>
+      <td>7.27</td>
+      <td>3</td>
+      <td>9.09</td>
+    </tr>
+    <tr>
+      <td>29</td>
+      <td>60</td>
+      <td>21</td>
+      <td>5.30</td>
+      <td>17</td>
+      <td>6.44</td>
+      <td>10</td>
+      <td>7.58</td>
+      <td>4</td>
+      <td>7.27</td>
+      <td>2</td>
+      <td>6.06</td>
+    </tr>
+    <tr>
+      <td>30</td>
+      <td>47</td>
+      <td>19</td>
+      <td>4.80</td>
+      <td>13</td>
+      <td>4.92</td>
+      <td>6</td>
+      <td>4.55</td>
+      <td>1</td>
+      <td>1.82</td>
+      <td>1</td>
+      <td>3.03</td>
+    </tr>
+    <tr>
+      <td>31</td>
+      <td>35</td>
+      <td>17</td>
+      <td>4.29</td>
+      <td>9</td>
+      <td>3.41</td>
+      <td>3</td>
+      <td>2.27</td>
+      <td>2</td>
+      <td>3.64</td>
+      <td>2</td>
+      <td>6.06</td>
+    </tr>
+    <tr>
+      <td>32</td>
+      <td>42</td>
+      <td>16</td>
+      <td>4.04</td>
+      <td>13</td>
+      <td>4.92</td>
+      <td>6</td>
+      <td>4.55</td>
+      <td>1</td>
+      <td>1.82</td>
+      <td>0</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <td>33</td>
+      <td>35</td>
+      <td>14</td>
+      <td>3.54</td>
+      <td>11</td>
+      <td>4.17</td>
+      <td>7</td>
+      <td>5.30</td>
+      <td>4</td>
+      <td>7.27</td>
+      <td>2</td>
+      <td>6.06</td>
+    </tr>
+    <tr>
+      <td>34</td>
+      <td>29</td>
+      <td>16</td>
+      <td>4.04</td>
+      <td>7</td>
+      <td>2.65</td>
+      <td>4</td>
+      <td>3.03</td>
+      <td>0</td>
+      <td>0.00</td>
+      <td>0</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <td>35</td>
+      <td>28</td>
+      <td>11</td>
+      <td>2.78</td>
+      <td>10</td>
+      <td>3.79</td>
+      <td>3</td>
+      <td>2.27</td>
+      <td>0</td>
+      <td>0.00</td>
+      <td>0</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <td>36</td>
+      <td>24</td>
+      <td>13</td>
+      <td>3.28</td>
+      <td>10</td>
+      <td>3.79</td>
+      <td>5</td>
+      <td>3.79</td>
+      <td>2</td>
+      <td>3.64</td>
+      <td>1</td>
+      <td>3.03</td>
+    </tr>
+    <tr>
+      <td>37</td>
+      <td>17</td>
+      <td>9</td>
+      <td>2.27</td>
+      <td>7</td>
+      <td>2.65</td>
+      <td>4</td>
+      <td>3.03</td>
+      <td>3</td>
+      <td>5.45</td>
+      <td>3</td>
+      <td>9.09</td>
+    </tr>
+    <tr>
+      <td>38</td>
+      <td>15</td>
+      <td>10</td>
+      <td>2.53</td>
+      <td>5</td>
+      <td>1.89</td>
+      <td>2</td>
+      <td>1.52</td>
+      <td>1</td>
+      <td>1.82</td>
+      <td>1</td>
+      <td>3.03</td>
+    </tr>
+    <tr>
+      <td>39</td>
+      <td>11</td>
+      <td>7</td>
+      <td>1.77</td>
+      <td>5</td>
+      <td>1.89</td>
+      <td>1</td>
+      <td>0.76</td>
+      <td>0</td>
+      <td>0.00</td>
+      <td>0</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <td>40</td>
+      <td>6</td>
+      <td>4</td>
+      <td>1.01</td>
+      <td>2</td>
+      <td>0.76</td>
+      <td>1</td>
+      <td>0.76</td>
+      <td>1</td>
+      <td>1.82</td>
+      <td>1</td>
+      <td>3.03</td>
+    </tr>
+    <tr>
+      <td>41</td>
+      <td>3</td>
+      <td>3</td>
+      <td>0.76</td>
+      <td>3</td>
+      <td>1.14</td>
+      <td>0</td>
+      <td>0.00</td>
+      <td>0</td>
+      <td>0.00</td>
+      <td>0</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <td>42</td>
+      <td>2</td>
+      <td>2</td>
+      <td>0.51</td>
+      <td>2</td>
+      <td>0.76</td>
+      <td>1</td>
+      <td>0.76</td>
+      <td>0</td>
+      <td>0.00</td>
+      <td>0</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <td>43</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0.25</td>
+      <td>1</td>
+      <td>0.38</td>
+      <td>1</td>
+      <td>0.76</td>
+      <td>0</td>
+      <td>0.00</td>
+      <td>0</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <td>44</td>
+      <td>2</td>
+      <td>1</td>
+      <td>0.25</td>
+      <td>1</td>
+      <td>0.38</td>
+      <td>1</td>
+      <td>0.76</td>
+      <td>1</td>
+      <td>1.82</td>
+      <td>1</td>
+      <td>3.03</td>
+    </tr>
+    <tr>
+      <td>45</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0.25</td>
+      <td>1</td>
+      <td>0.38</td>
+      <td>1</td>
+      <td>0.76</td>
+      <td>0</td>
+      <td>0.00</td>
+      <td>0</td>
+      <td>0.00</td>
+    </tr>
+  </tbody>
+</table>
+                </section>
+            </section>
+            
+    </main>
+</body>
+</html>

@@ -1,0 +1,29 @@
+{
+  "projection_file_used": "C:\\Users\\cklut\\Desktop\\Projects\\Guaranteed Play\\research\\validation_v1\\historical_projections.csv",
+  "projection_source": "FantasyPros_Wayback",
+  "seasons_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "wr_projection_coverage": 760,
+  "rb_projection_coverage": 714,
+  "best_wr_result_vs_adp": "WR_Beat_ADP_By_12 / adp_projection_expanded_features_logistic / adp_projection_expanded: model hit 0.211, ADP hit 0.030, lift 0.181, AUC 0.542, ADP AUC 0.283, beats ADP 13/15 seasons (86.7%)",
+  "best_rb_result_vs_adp": "RB_Beat_ADP_By_12 / adp_projection_expanded_features_logistic / adp_projection_expanded: model hit 0.213, ADP hit 0.017, lift 0.195, AUC 0.571, ADP AUC 0.261, beats ADP 11/15 seasons (73.3%)",
+  "wr_beats_adp": true,
+  "rb_beats_adp": true,
+  "any_tie_breaker_only": true,
+  "any_strong_draft_signal": false,
+  "anything_app_ready": false,
+  "bucket_window_projection_validation_completed": false,
+  "unified_signal_export_refreshed": true,
+  "report_path": "C:\\Users\\cklut\\Desktop\\Projects\\Guaranteed Play\\research\\validation_v1\\projection_validation_v1_report.md"
+}

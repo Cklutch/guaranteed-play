@@ -1,0 +1,2 @@
+﻿season,player_name,position,team,opponent,market,market_type,line,sportsbook,odds,odds_format,over_odds,under_odds,snapshot_date,source,source_url_or_file,is_season_long,is_preseason_snapshot
+2024,Example Player,WR,EX,,season_receiving_yards,player,925.5,ExampleBook,-110,american,-110,-110,2024-08-25,manual_csv,manual_file.csv,true,true

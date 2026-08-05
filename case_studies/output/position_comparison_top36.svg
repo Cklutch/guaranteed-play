@@ -1,0 +1,166 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="620" viewBox="0 0 1100 620">
+<style>
+text { font-family: Arial, sans-serif; fill: #1f2937; }
+.title { font-size: 27px; font-weight: 800; }
+.subtitle { font-size: 14px; fill: #64748b; }
+.label { font-size: 15px; font-weight: 700; }
+.tick { font-size: 12px; fill: #4b5563; }
+.legend { font-size: 14px; font-weight: 800; }
+.grid { stroke: #e5e7eb; stroke-width: 1; }
+.axis { stroke: #111827; stroke-width: 1.4; }
+.rate-line { fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+.dot { stroke: #ffffff; stroke-width: 1.3; }
+</style>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text class="title" x="78" y="38">Top 36 Comparison by Position</text>
+<text class="subtitle" x="78" y="62">Overlay of Top 36 age-share curves across RB, WR, QB, and TE</text>
+<line class="grid" x1="78" y1="550.00" x2="940" y2="550.00"/>
+<text class="tick" x="66" y="554.00" text-anchor="end">0.0%</text>
+<line class="grid" x1="78" y1="436.00" x2="940" y2="436.00"/>
+<text class="tick" x="66" y="440.00" text-anchor="end">5.0%</text>
+<line class="grid" x1="78" y1="322.00" x2="940" y2="322.00"/>
+<text class="tick" x="66" y="326.00" text-anchor="end">9.9%</text>
+<line class="grid" x1="78" y1="208.00" x2="940" y2="208.00"/>
+<text class="tick" x="66" y="212.00" text-anchor="end">14.9%</text>
+<line class="grid" x1="78" y1="94.00" x2="940" y2="94.00"/>
+<text class="tick" x="66" y="98.00" text-anchor="end">19.8%</text>
+<line class="grid" x1="78.00" y1="94" x2="78.00" y2="550"/>
+<text class="tick" x="78.00" y="578" text-anchor="middle">21</text>
+<line class="grid" x1="113.92" y1="94" x2="113.92" y2="550"/>
+<text class="tick" x="113.92" y="578" text-anchor="middle">22</text>
+<line class="grid" x1="149.83" y1="94" x2="149.83" y2="550"/>
+<text class="tick" x="149.83" y="578" text-anchor="middle">23</text>
+<line class="grid" x1="185.75" y1="94" x2="185.75" y2="550"/>
+<text class="tick" x="185.75" y="578" text-anchor="middle">24</text>
+<line class="grid" x1="221.67" y1="94" x2="221.67" y2="550"/>
+<text class="tick" x="221.67" y="578" text-anchor="middle">25</text>
+<line class="grid" x1="257.58" y1="94" x2="257.58" y2="550"/>
+<text class="tick" x="257.58" y="578" text-anchor="middle">26</text>
+<line class="grid" x1="293.50" y1="94" x2="293.50" y2="550"/>
+<text class="tick" x="293.50" y="578" text-anchor="middle">27</text>
+<line class="grid" x1="329.42" y1="94" x2="329.42" y2="550"/>
+<text class="tick" x="329.42" y="578" text-anchor="middle">28</text>
+<line class="grid" x1="365.33" y1="94" x2="365.33" y2="550"/>
+<text class="tick" x="365.33" y="578" text-anchor="middle">29</text>
+<line class="grid" x1="401.25" y1="94" x2="401.25" y2="550"/>
+<text class="tick" x="401.25" y="578" text-anchor="middle">30</text>
+<line class="grid" x1="437.17" y1="94" x2="437.17" y2="550"/>
+<text class="tick" x="437.17" y="578" text-anchor="middle">31</text>
+<line class="grid" x1="473.08" y1="94" x2="473.08" y2="550"/>
+<text class="tick" x="473.08" y="578" text-anchor="middle">32</text>
+<line class="grid" x1="509.00" y1="94" x2="509.00" y2="550"/>
+<text class="tick" x="509.00" y="578" text-anchor="middle">33</text>
+<line class="grid" x1="544.92" y1="94" x2="544.92" y2="550"/>
+<text class="tick" x="544.92" y="578" text-anchor="middle">34</text>
+<line class="grid" x1="580.83" y1="94" x2="580.83" y2="550"/>
+<text class="tick" x="580.83" y="578" text-anchor="middle">35</text>
+<line class="grid" x1="616.75" y1="94" x2="616.75" y2="550"/>
+<text class="tick" x="616.75" y="578" text-anchor="middle">36</text>
+<line class="grid" x1="652.67" y1="94" x2="652.67" y2="550"/>
+<text class="tick" x="652.67" y="578" text-anchor="middle">37</text>
+<line class="grid" x1="688.58" y1="94" x2="688.58" y2="550"/>
+<text class="tick" x="688.58" y="578" text-anchor="middle">38</text>
+<line class="grid" x1="724.50" y1="94" x2="724.50" y2="550"/>
+<text class="tick" x="724.50" y="578" text-anchor="middle">39</text>
+<line class="grid" x1="760.42" y1="94" x2="760.42" y2="550"/>
+<text class="tick" x="760.42" y="578" text-anchor="middle">40</text>
+<line class="grid" x1="796.33" y1="94" x2="796.33" y2="550"/>
+<text class="tick" x="796.33" y="578" text-anchor="middle">41</text>
+<line class="grid" x1="832.25" y1="94" x2="832.25" y2="550"/>
+<text class="tick" x="832.25" y="578" text-anchor="middle">42</text>
+<line class="grid" x1="868.17" y1="94" x2="868.17" y2="550"/>
+<text class="tick" x="868.17" y="578" text-anchor="middle">43</text>
+<line class="grid" x1="904.08" y1="94" x2="904.08" y2="550"/>
+<text class="tick" x="904.08" y="578" text-anchor="middle">44</text>
+<line class="grid" x1="940.00" y1="94" x2="940.00" y2="550"/>
+<text class="tick" x="940.00" y="578" text-anchor="middle">45</text>
+<line class="axis" x1="78" y1="550" x2="940" y2="550"/>
+<line class="axis" x1="78" y1="94" x2="78" y2="550"/>
+<text class="label" x="509.00" y="608" text-anchor="middle">Age</text>
+<text class="label" transform="translate(22 310.00) rotate(-90)" text-anchor="middle">Share of Finishes (%)</text>
+<path class="rate-line" stroke="#2563eb" d="M 78.00 473.32 L 113.92 306.84 L 149.83 217.49 L 185.75 153.48 L 221.67 185.49 L 257.58 249.27 L 293.50 326.18 L 329.42 428.42 L 365.33 434.87 L 401.25 498.88 L 437.17 511.55 L 473.08 543.55 L 509.00 530.89 L 544.92 537.10"/>
+<circle class="dot" fill="#2563eb" cx="78.00" cy="473.32" r="3.9"><title>RB Age 21: 3.33%</title></circle>
+<circle class="dot" fill="#2563eb" cx="113.92" cy="306.84" r="3.9"><title>RB Age 22: 10.56%</title></circle>
+<circle class="dot" fill="#2563eb" cx="149.83" cy="217.49" r="3.9"><title>RB Age 23: 14.44%</title></circle>
+<circle class="dot" fill="#2563eb" cx="185.75" cy="153.48" r="3.9"><title>RB Age 24: 17.22%</title></circle>
+<circle class="dot" fill="#2563eb" cx="221.67" cy="185.49" r="3.9"><title>RB Age 25: 15.83%</title></circle>
+<circle class="dot" fill="#2563eb" cx="257.58" cy="249.27" r="3.9"><title>RB Age 26: 13.06%</title></circle>
+<circle class="dot" fill="#2563eb" cx="293.50" cy="326.18" r="3.9"><title>RB Age 27: 9.72%</title></circle>
+<circle class="dot" fill="#2563eb" cx="329.42" cy="428.42" r="3.9"><title>RB Age 28: 5.28%</title></circle>
+<circle class="dot" fill="#2563eb" cx="365.33" cy="434.87" r="3.9"><title>RB Age 29: 5.00%</title></circle>
+<circle class="dot" fill="#2563eb" cx="401.25" cy="498.88" r="3.9"><title>RB Age 30: 2.22%</title></circle>
+<circle class="dot" fill="#2563eb" cx="437.17" cy="511.55" r="3.9"><title>RB Age 31: 1.67%</title></circle>
+<circle class="dot" fill="#2563eb" cx="473.08" cy="543.55" r="3.9"><title>RB Age 32: 0.28%</title></circle>
+<circle class="dot" fill="#2563eb" cx="509.00" cy="530.89" r="3.9"><title>RB Age 33: 0.83%</title></circle>
+<circle class="dot" fill="#2563eb" cx="544.92" cy="537.10" r="3.9"><title>RB Age 34: 0.56%</title></circle>
+<path class="rate-line" stroke="#16a34a" d="M 78.00 485.99 L 113.92 390.19 L 149.83 255.72 L 185.75 230.16 L 221.67 249.27 L 257.58 294.17 L 293.50 287.72 L 329.42 345.29 L 365.33 390.19 L 401.25 428.42 L 437.17 485.99 L 473.08 505.33 L 509.00 517.99 L 544.92 543.55 L 580.83 543.55 L 616.75 543.55"/>
+<circle class="dot" fill="#16a34a" cx="78.00" cy="485.99" r="3.9"><title>WR Age 21: 2.78%</title></circle>
+<circle class="dot" fill="#16a34a" cx="113.92" cy="390.19" r="3.9"><title>WR Age 22: 6.94%</title></circle>
+<circle class="dot" fill="#16a34a" cx="149.83" cy="255.72" r="3.9"><title>WR Age 23: 12.78%</title></circle>
+<circle class="dot" fill="#16a34a" cx="185.75" cy="230.16" r="3.9"><title>WR Age 24: 13.89%</title></circle>
+<circle class="dot" fill="#16a34a" cx="221.67" cy="249.27" r="3.9"><title>WR Age 25: 13.06%</title></circle>
+<circle class="dot" fill="#16a34a" cx="257.58" cy="294.17" r="3.9"><title>WR Age 26: 11.11%</title></circle>
+<circle class="dot" fill="#16a34a" cx="293.50" cy="287.72" r="3.9"><title>WR Age 27: 11.39%</title></circle>
+<circle class="dot" fill="#16a34a" cx="329.42" cy="345.29" r="3.9"><title>WR Age 28: 8.89%</title></circle>
+<circle class="dot" fill="#16a34a" cx="365.33" cy="390.19" r="3.9"><title>WR Age 29: 6.94%</title></circle>
+<circle class="dot" fill="#16a34a" cx="401.25" cy="428.42" r="3.9"><title>WR Age 30: 5.28%</title></circle>
+<circle class="dot" fill="#16a34a" cx="437.17" cy="485.99" r="3.9"><title>WR Age 31: 2.78%</title></circle>
+<circle class="dot" fill="#16a34a" cx="473.08" cy="505.33" r="3.9"><title>WR Age 32: 1.94%</title></circle>
+<circle class="dot" fill="#16a34a" cx="509.00" cy="517.99" r="3.9"><title>WR Age 33: 1.39%</title></circle>
+<circle class="dot" fill="#16a34a" cx="544.92" cy="543.55" r="3.9"><title>WR Age 34: 0.28%</title></circle>
+<circle class="dot" fill="#16a34a" cx="580.83" cy="543.55" r="3.9"><title>WR Age 35: 0.28%</title></circle>
+<circle class="dot" fill="#16a34a" cx="616.75" cy="543.55" r="3.9"><title>WR Age 36: 0.28%</title></circle>
+<path class="rate-line" stroke="#ca8a04" d="M 78.00 524.44 L 113.92 428.42 L 149.83 332.63 L 185.75 306.84 L 221.67 313.28 L 257.58 377.30 L 293.50 370.85 L 329.42 396.41 L 365.33 415.75 L 401.25 447.76 L 437.17 447.76 L 473.08 460.43 L 509.00 473.32 L 544.92 460.43 L 580.83 479.54 L 616.75 485.99 L 652.67 492.43 L 688.58 492.43 L 724.50 511.55 L 760.42 530.89 L 796.33 530.89 L 832.25 537.10 L 868.17 543.55 L 904.08 543.55 L 940.00 543.55"/>
+<circle class="dot" fill="#ca8a04" cx="78.00" cy="524.44" r="3.9"><title>QB Age 21: 1.11%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="113.92" cy="428.42" r="3.9"><title>QB Age 22: 5.28%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="149.83" cy="332.63" r="3.9"><title>QB Age 23: 9.44%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="185.75" cy="306.84" r="3.9"><title>QB Age 24: 10.56%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="221.67" cy="313.28" r="3.9"><title>QB Age 25: 10.28%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="257.58" cy="377.30" r="3.9"><title>QB Age 26: 7.50%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="293.50" cy="370.85" r="3.9"><title>QB Age 27: 7.78%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="329.42" cy="396.41" r="3.9"><title>QB Age 28: 6.67%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="365.33" cy="415.75" r="3.9"><title>QB Age 29: 5.83%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="401.25" cy="447.76" r="3.9"><title>QB Age 30: 4.44%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="437.17" cy="447.76" r="3.9"><title>QB Age 31: 4.44%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="473.08" cy="460.43" r="3.9"><title>QB Age 32: 3.89%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="509.00" cy="473.32" r="3.9"><title>QB Age 33: 3.33%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="544.92" cy="460.43" r="3.9"><title>QB Age 34: 3.89%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="580.83" cy="479.54" r="3.9"><title>QB Age 35: 3.06%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="616.75" cy="485.99" r="3.9"><title>QB Age 36: 2.78%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="652.67" cy="492.43" r="3.9"><title>QB Age 37: 2.50%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="688.58" cy="492.43" r="3.9"><title>QB Age 38: 2.50%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="724.50" cy="511.55" r="3.9"><title>QB Age 39: 1.67%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="760.42" cy="530.89" r="3.9"><title>QB Age 40: 0.83%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="796.33" cy="530.89" r="3.9"><title>QB Age 41: 0.83%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="832.25" cy="537.10" r="3.9"><title>QB Age 42: 0.56%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="868.17" cy="543.55" r="3.9"><title>QB Age 43: 0.28%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="904.08" cy="543.55" r="3.9"><title>QB Age 44: 0.28%</title></circle>
+<circle class="dot" fill="#ca8a04" cx="940.00" cy="543.55" r="3.9"><title>QB Age 45: 0.28%</title></circle>
+<path class="rate-line" stroke="#ea580c" d="M 78.00 505.33 L 113.92 428.42 L 149.83 364.40 L 185.75 313.28 L 221.67 268.61 L 257.58 249.27 L 293.50 351.74 L 329.42 319.73 L 365.33 338.84 L 401.25 415.75 L 437.17 453.98 L 473.08 473.32 L 509.00 485.99 L 544.92 492.43 L 580.83 530.89 L 616.75 537.10 L 652.67 530.89 L 688.58 537.10"/>
+<circle class="dot" fill="#ea580c" cx="78.00" cy="505.33" r="3.9"><title>TE Age 21: 1.94%</title></circle>
+<circle class="dot" fill="#ea580c" cx="113.92" cy="428.42" r="3.9"><title>TE Age 22: 5.28%</title></circle>
+<circle class="dot" fill="#ea580c" cx="149.83" cy="364.40" r="3.9"><title>TE Age 23: 8.06%</title></circle>
+<circle class="dot" fill="#ea580c" cx="185.75" cy="313.28" r="3.9"><title>TE Age 24: 10.28%</title></circle>
+<circle class="dot" fill="#ea580c" cx="221.67" cy="268.61" r="3.9"><title>TE Age 25: 12.22%</title></circle>
+<circle class="dot" fill="#ea580c" cx="257.58" cy="249.27" r="3.9"><title>TE Age 26: 13.06%</title></circle>
+<circle class="dot" fill="#ea580c" cx="293.50" cy="351.74" r="3.9"><title>TE Age 27: 8.61%</title></circle>
+<circle class="dot" fill="#ea580c" cx="329.42" cy="319.73" r="3.9"><title>TE Age 28: 10.00%</title></circle>
+<circle class="dot" fill="#ea580c" cx="365.33" cy="338.84" r="3.9"><title>TE Age 29: 9.17%</title></circle>
+<circle class="dot" fill="#ea580c" cx="401.25" cy="415.75" r="3.9"><title>TE Age 30: 5.83%</title></circle>
+<circle class="dot" fill="#ea580c" cx="437.17" cy="453.98" r="3.9"><title>TE Age 31: 4.17%</title></circle>
+<circle class="dot" fill="#ea580c" cx="473.08" cy="473.32" r="3.9"><title>TE Age 32: 3.33%</title></circle>
+<circle class="dot" fill="#ea580c" cx="509.00" cy="485.99" r="3.9"><title>TE Age 33: 2.78%</title></circle>
+<circle class="dot" fill="#ea580c" cx="544.92" cy="492.43" r="3.9"><title>TE Age 34: 2.50%</title></circle>
+<circle class="dot" fill="#ea580c" cx="580.83" cy="530.89" r="3.9"><title>TE Age 35: 0.83%</title></circle>
+<circle class="dot" fill="#ea580c" cx="616.75" cy="537.10" r="3.9"><title>TE Age 36: 0.56%</title></circle>
+<circle class="dot" fill="#ea580c" cx="652.67" cy="530.89" r="3.9"><title>TE Age 37: 0.83%</title></circle>
+<circle class="dot" fill="#ea580c" cx="688.58" cy="537.10" r="3.9"><title>TE Age 38: 0.56%</title></circle>
+<line x1="974" y1="102" x2="1002" y2="102" stroke="#2563eb" stroke-width="4" stroke-linecap="round"/>
+<text class="legend" x="1012" y="107">RB</text>
+<line x1="974" y1="132" x2="1002" y2="132" stroke="#16a34a" stroke-width="4" stroke-linecap="round"/>
+<text class="legend" x="1012" y="137">WR</text>
+<line x1="974" y1="162" x2="1002" y2="162" stroke="#ca8a04" stroke-width="4" stroke-linecap="round"/>
+<text class="legend" x="1012" y="167">QB</text>
+<line x1="974" y1="192" x2="1002" y2="192" stroke="#ea580c" stroke-width="4" stroke-linecap="round"/>
+<text class="legend" x="1012" y="197">TE</text>
+</svg>

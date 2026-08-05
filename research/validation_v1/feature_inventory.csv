@@ -1,0 +1,16 @@
+feature_name,position_model,what_it_represents,source_or_calculation,objective_or_subjective,pre_draft_available,leakage_risk,missing_value_risk,trust_status
+age,WR/RB,Player age in target season,nflverse rosters/outcome cache,objective,yes,low,medium,trusted
+preseason_adp,WR/RB,Market draft cost before season,historical_adp.csv or historical_market.csv,objective,yes,low,high,investigate
+overall_adp,WR/RB,Overall market draft rank,historical_adp.csv or historical_market.csv,objective,yes,low,high,investigate
+positional_adp,WR/RB,Market rank within position,historical_adp.csv or historical_market.csv,objective,yes,low,high,investigate
+preseason_projection,WR/RB,Projected fantasy points before season,historical_market.csv optional column,objective/mixed,yes,low,high,investigate
+prior_targets,WR,Previous-season WR targets,prior season WR opportunity cache,objective,yes,low,medium,trusted
+prior_target_share,WR,Previous-season share of team targets,prior season WR opportunity cache,objective,yes,low,medium,trusted
+prior_receiving_yards,WR/RB,Previous-season receiving yards,prior season outcome cache,objective,yes,low,medium,trusted
+prior_receiving_tds,WR/RB,Previous-season receiving TDs,prior season outcome cache,objective,yes,low,medium,trusted
+prior_rushing_yards,RB,Previous-season rushing yards,prior season outcome cache,objective,yes,low,medium,trusted
+prior_rushing_tds,RB,Previous-season rushing TDs,prior season outcome cache,objective,yes,low,medium,trusted
+prior_carries,RB,Previous-season carries,not available in current local cache,objective,yes,low,high,investigate
+final_positional_finish,WR/RB,Actual season finish by fantasy points,same-season outcome label,objective,no,high if used as feature,low,label only
+Top24/Top12 labels,WR/RB,Actual top finish labels,same-season outcome label,objective,no,high if used as feature,low,label only
+Underpriced/Beat_ADP labels,WR/RB,Actual finish compared with preseason positional ADP,same-season label plus preseason ADP,objective,label only,medium,high,label only

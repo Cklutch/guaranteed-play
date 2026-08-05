@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="560" viewBox="0 0 1000 560">
+<style>
+text { font-family: Arial, sans-serif; fill: #1f2937; }
+.title { font-size: 28px; font-weight: 700; }
+.label { font-size: 15px; font-weight: 700; }
+.tick { font-size: 12px; fill: #4b5563; }
+.grid { stroke: #e5e7eb; stroke-width: 1; }
+.axis { stroke: #111827; stroke-width: 1.4; }
+.line { fill: none; stroke: #2563eb; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+.dot { fill: #10b981; stroke: #064e3b; stroke-width: 1.5; }
+</style>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text class="title" x="78" y="42">RB #1 Overall Age Share</text>
+<line class="grid" x1="78" y1="490.00" x2="958" y2="490.00"/>
+<text class="tick" x="66" y="494.00" text-anchor="end">0.0%</text>
+<line class="grid" x1="78" y1="386.00" x2="958" y2="386.00"/>
+<text class="tick" x="66" y="390.00" text-anchor="end">5.8%</text>
+<line class="grid" x1="78" y1="282.00" x2="958" y2="282.00"/>
+<text class="tick" x="66" y="286.00" text-anchor="end">11.5%</text>
+<line class="grid" x1="78" y1="178.00" x2="958" y2="178.00"/>
+<text class="tick" x="66" y="182.00" text-anchor="end">17.2%</text>
+<line class="grid" x1="78" y1="74.00" x2="958" y2="74.00"/>
+<text class="tick" x="66" y="78.00" text-anchor="end">23.0%</text>
+<line class="grid" x1="78.00" y1="74" x2="78.00" y2="490"/>
+<text class="tick" x="78.00" y="518" text-anchor="middle">21</text>
+<line class="grid" x1="145.69" y1="74" x2="145.69" y2="490"/>
+<text class="tick" x="145.69" y="518" text-anchor="middle">22</text>
+<line class="grid" x1="213.38" y1="74" x2="213.38" y2="490"/>
+<text class="tick" x="213.38" y="518" text-anchor="middle">23</text>
+<line class="grid" x1="281.08" y1="74" x2="281.08" y2="490"/>
+<text class="tick" x="281.08" y="518" text-anchor="middle">24</text>
+<line class="grid" x1="348.77" y1="74" x2="348.77" y2="490"/>
+<text class="tick" x="348.77" y="518" text-anchor="middle">25</text>
+<line class="grid" x1="416.46" y1="74" x2="416.46" y2="490"/>
+<text class="tick" x="416.46" y="518" text-anchor="middle">26</text>
+<line class="grid" x1="484.15" y1="74" x2="484.15" y2="490"/>
+<text class="tick" x="484.15" y="518" text-anchor="middle">27</text>
+<line class="grid" x1="551.85" y1="74" x2="551.85" y2="490"/>
+<text class="tick" x="551.85" y="518" text-anchor="middle">28</text>
+<line class="grid" x1="619.54" y1="74" x2="619.54" y2="490"/>
+<text class="tick" x="619.54" y="518" text-anchor="middle">29</text>
+<line class="grid" x1="687.23" y1="74" x2="687.23" y2="490"/>
+<text class="tick" x="687.23" y="518" text-anchor="middle">30</text>
+<line class="grid" x1="754.92" y1="74" x2="754.92" y2="490"/>
+<text class="tick" x="754.92" y="518" text-anchor="middle">31</text>
+<line class="grid" x1="822.62" y1="74" x2="822.62" y2="490"/>
+<text class="tick" x="822.62" y="518" text-anchor="middle">32</text>
+<line class="grid" x1="890.31" y1="74" x2="890.31" y2="490"/>
+<text class="tick" x="890.31" y="518" text-anchor="middle">33</text>
+<line class="grid" x1="958.00" y1="74" x2="958.00" y2="490"/>
+<text class="tick" x="958.00" y="518" text-anchor="middle">34</text>
+<line class="axis" x1="78" y1="490" x2="958" y2="490"/>
+<line class="axis" x1="78" y1="74" x2="78" y2="490"/>
+<text class="label" x="500.00" y="548" text-anchor="middle">Age</text>
+<text class="label" transform="translate(22 280.00) rotate(-90)" text-anchor="middle">Share of Top-N Slots</text>
+<line x1="78" y1="360.81" x2="958" y2="360.81" stroke="#9333ea" stroke-width="2" stroke-dasharray="8 6"/>
+<text class="tick" x="954" y="352.81" text-anchor="end">Mean 7.14%</text>
+<path class="line" d="M 78.00 309.13 L 145.69 128.26 L 213.38 128.26 L 281.08 490.00 L 348.77 128.26 L 416.46 490.00 L 484.15 128.26 L 551.85 490.00 L 619.54 309.13 L 687.23 490.00 L 754.92 490.00 L 822.62 490.00 L 890.31 490.00 L 958.00 490.00"/>
+<circle class="dot" cx="78.00" cy="309.13" r="6"><title>Age: 21
+RB seasons at age: 39
+Age count in group: 1
+Share: 10.00%</title></circle>
+<circle class="dot" cx="145.69" cy="128.26" r="6"><title>Age: 22
+RB seasons at age: 131
+Age count in group: 2
+Share: 20.00%</title></circle>
+<circle class="dot" cx="213.38" cy="128.26" r="6"><title>Age: 23
+RB seasons at age: 223
+Age count in group: 2
+Share: 20.00%</title></circle>
+<circle class="dot" cx="281.08" cy="490.00" r="6"><title>Age: 24
+RB seasons at age: 248
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" cx="348.77" cy="128.26" r="6"><title>Age: 25
+RB seasons at age: 237
+Age count in group: 2
+Share: 20.00%</title></circle>
+<circle class="dot" cx="416.46" cy="490.00" r="6"><title>Age: 26
+RB seasons at age: 200
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" cx="484.15" cy="128.26" r="6"><title>Age: 27
+RB seasons at age: 154
+Age count in group: 2
+Share: 20.00%</title></circle>
+<circle class="dot" cx="551.85" cy="490.00" r="6"><title>Age: 28
+RB seasons at age: 101
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" cx="619.54" cy="309.13" r="6"><title>Age: 29
+RB seasons at age: 79
+Age count in group: 1
+Share: 10.00%</title></circle>
+<circle class="dot" cx="687.23" cy="490.00" r="6"><title>Age: 30
+RB seasons at age: 45
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" cx="754.92" cy="490.00" r="6"><title>Age: 31
+RB seasons at age: 33
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" cx="822.62" cy="490.00" r="6"><title>Age: 32
+RB seasons at age: 18
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" cx="890.31" cy="490.00" r="6"><title>Age: 33
+RB seasons at age: 11
+Age count in group: 0
+Share: 0.00%</title></circle>
+<circle class="dot" cx="958.00" cy="490.00" r="6"><title>Age: 34
+RB seasons at age: 4
+Age count in group: 0
+Share: 0.00%</title></circle>
+</svg>

@@ -1,0 +1,470 @@
+{
+  "events": [
+    {
+      "name": "data_loading",
+      "elapsed_ms": 6.7,
+      "metadata": {
+        "pass_name": "cold"
+      }
+    },
+    {
+      "name": "dataframe_filtering",
+      "elapsed_ms": 6.28,
+      "metadata": {
+        "pass_name": "cold"
+      }
+    },
+    {
+      "name": "recommendation_generation",
+      "elapsed_ms": 1116.09,
+      "metadata": {
+        "pass_name": "cold"
+      }
+    },
+    {
+      "name": "roster_construction_evaluation",
+      "elapsed_ms": 57.49,
+      "metadata": {
+        "pass_name": "cold"
+      }
+    },
+    {
+      "name": "conviction_report",
+      "elapsed_ms": 422.39,
+      "metadata": {
+        "pass_name": "cold"
+      }
+    },
+    {
+      "name": "availability_prediction",
+      "elapsed_ms": 118.43,
+      "metadata": {
+        "pass_name": "cold",
+        "simulations": 35
+      }
+    },
+    {
+      "name": "championship_equity_v2",
+      "elapsed_ms": 115.37,
+      "metadata": {
+        "pass_name": "cold",
+        "candidates": 5,
+        "simulations": 35
+      }
+    },
+    {
+      "name": "consensus_generation",
+      "elapsed_ms": 96.27,
+      "metadata": {
+        "pass_name": "cold",
+        "candidates": 12
+      }
+    },
+    {
+      "name": "future_impact_simulation",
+      "elapsed_ms": 6529.33,
+      "metadata": {
+        "pass_name": "cold",
+        "candidates": 5,
+        "simulations": 50
+      }
+    },
+    {
+      "name": "draft_strategy",
+      "elapsed_ms": 53.45,
+      "metadata": {
+        "pass_name": "cold"
+      }
+    },
+    {
+      "name": "rendering_preparation",
+      "elapsed_ms": 1.78,
+      "metadata": {
+        "pass_name": "cold"
+      }
+    },
+    {
+      "name": "data_loading",
+      "elapsed_ms": 0.19,
+      "metadata": {
+        "pass_name": "warm_1"
+      }
+    },
+    {
+      "name": "dataframe_filtering",
+      "elapsed_ms": 3.26,
+      "metadata": {
+        "pass_name": "warm_1"
+      }
+    },
+    {
+      "name": "recommendation_generation",
+      "elapsed_ms": 1037.58,
+      "metadata": {
+        "pass_name": "warm_1"
+      }
+    },
+    {
+      "name": "roster_construction_evaluation",
+      "elapsed_ms": 55.28,
+      "metadata": {
+        "pass_name": "warm_1"
+      }
+    },
+    {
+      "name": "conviction_report",
+      "elapsed_ms": 415.41,
+      "metadata": {
+        "pass_name": "warm_1"
+      }
+    },
+    {
+      "name": "availability_prediction",
+      "elapsed_ms": 120.82,
+      "metadata": {
+        "pass_name": "warm_1",
+        "simulations": 35
+      }
+    },
+    {
+      "name": "championship_equity_v2",
+      "elapsed_ms": 111.36,
+      "metadata": {
+        "pass_name": "warm_1",
+        "candidates": 5,
+        "simulations": 35
+      }
+    },
+    {
+      "name": "consensus_generation",
+      "elapsed_ms": 93.09,
+      "metadata": {
+        "pass_name": "warm_1",
+        "candidates": 12
+      }
+    },
+    {
+      "name": "future_impact_simulation",
+      "elapsed_ms": 6417.76,
+      "metadata": {
+        "pass_name": "warm_1",
+        "candidates": 5,
+        "simulations": 50
+      }
+    },
+    {
+      "name": "draft_strategy",
+      "elapsed_ms": 60.12,
+      "metadata": {
+        "pass_name": "warm_1"
+      }
+    },
+    {
+      "name": "rendering_preparation",
+      "elapsed_ms": 2.22,
+      "metadata": {
+        "pass_name": "warm_1"
+      }
+    },
+    {
+      "name": "data_loading",
+      "elapsed_ms": 0.23,
+      "metadata": {
+        "pass_name": "warm_2"
+      }
+    },
+    {
+      "name": "dataframe_filtering",
+      "elapsed_ms": 3.77,
+      "metadata": {
+        "pass_name": "warm_2"
+      }
+    },
+    {
+      "name": "recommendation_generation",
+      "elapsed_ms": 1050.67,
+      "metadata": {
+        "pass_name": "warm_2"
+      }
+    },
+    {
+      "name": "roster_construction_evaluation",
+      "elapsed_ms": 53.87,
+      "metadata": {
+        "pass_name": "warm_2"
+      }
+    },
+    {
+      "name": "conviction_report",
+      "elapsed_ms": 464.38,
+      "metadata": {
+        "pass_name": "warm_2"
+      }
+    },
+    {
+      "name": "availability_prediction",
+      "elapsed_ms": 116.54,
+      "metadata": {
+        "pass_name": "warm_2",
+        "simulations": 35
+      }
+    },
+    {
+      "name": "championship_equity_v2",
+      "elapsed_ms": 122.34,
+      "metadata": {
+        "pass_name": "warm_2",
+        "candidates": 5,
+        "simulations": 35
+      }
+    },
+    {
+      "name": "consensus_generation",
+      "elapsed_ms": 97.1,
+      "metadata": {
+        "pass_name": "warm_2",
+        "candidates": 12
+      }
+    },
+    {
+      "name": "future_impact_simulation",
+      "elapsed_ms": 6567.78,
+      "metadata": {
+        "pass_name": "warm_2",
+        "candidates": 5,
+        "simulations": 50
+      }
+    },
+    {
+      "name": "draft_strategy",
+      "elapsed_ms": 55.92,
+      "metadata": {
+        "pass_name": "warm_2"
+      }
+    },
+    {
+      "name": "rendering_preparation",
+      "elapsed_ms": 1.59,
+      "metadata": {
+        "pass_name": "warm_2"
+      }
+    },
+    {
+      "name": "draft_lab_batch_10",
+      "elapsed_ms": 4610.32,
+      "metadata": {
+        "simulations": 10
+      }
+    }
+  ],
+  "stats": [
+    {
+      "name": "future_impact_simulation",
+      "runs": 3,
+      "average_ms": 6504.96,
+      "max_ms": 6567.78,
+      "total_ms": 19514.87,
+      "runtime_share_pct": 65.08
+    },
+    {
+      "name": "draft_lab_batch_10",
+      "runs": 1,
+      "average_ms": 4610.32,
+      "max_ms": 4610.32,
+      "total_ms": 4610.32,
+      "runtime_share_pct": 15.38
+    },
+    {
+      "name": "recommendation_generation",
+      "runs": 3,
+      "average_ms": 1068.11,
+      "max_ms": 1116.09,
+      "total_ms": 3204.34,
+      "runtime_share_pct": 10.69
+    },
+    {
+      "name": "conviction_report",
+      "runs": 3,
+      "average_ms": 434.06,
+      "max_ms": 464.38,
+      "total_ms": 1302.18,
+      "runtime_share_pct": 4.34
+    },
+    {
+      "name": "availability_prediction",
+      "runs": 3,
+      "average_ms": 118.6,
+      "max_ms": 120.82,
+      "total_ms": 355.79,
+      "runtime_share_pct": 1.19
+    },
+    {
+      "name": "championship_equity_v2",
+      "runs": 3,
+      "average_ms": 116.36,
+      "max_ms": 122.34,
+      "total_ms": 349.07,
+      "runtime_share_pct": 1.16
+    },
+    {
+      "name": "consensus_generation",
+      "runs": 3,
+      "average_ms": 95.49,
+      "max_ms": 97.1,
+      "total_ms": 286.46,
+      "runtime_share_pct": 0.96
+    },
+    {
+      "name": "draft_strategy",
+      "runs": 3,
+      "average_ms": 56.5,
+      "max_ms": 60.12,
+      "total_ms": 169.49,
+      "runtime_share_pct": 0.57
+    },
+    {
+      "name": "roster_construction_evaluation",
+      "runs": 3,
+      "average_ms": 55.55,
+      "max_ms": 57.49,
+      "total_ms": 166.64,
+      "runtime_share_pct": 0.56
+    },
+    {
+      "name": "dataframe_filtering",
+      "runs": 3,
+      "average_ms": 4.44,
+      "max_ms": 6.28,
+      "total_ms": 13.31,
+      "runtime_share_pct": 0.04
+    },
+    {
+      "name": "data_loading",
+      "runs": 3,
+      "average_ms": 2.37,
+      "max_ms": 6.7,
+      "total_ms": 7.12,
+      "runtime_share_pct": 0.02
+    },
+    {
+      "name": "rendering_preparation",
+      "runs": 3,
+      "average_ms": 1.86,
+      "max_ms": 2.22,
+      "total_ms": 5.59,
+      "runtime_share_pct": 0.02
+    }
+  ],
+  "snapshots": {
+    "cold": {
+      "raw_rows": 3931,
+      "available_rows": 3931,
+      "recommendation_rows": 27,
+      "conviction_rows": 8,
+      "availability_rows": 3931,
+      "championship_rows": 5,
+      "future_impact_rows": 5,
+      "construction_keys": [
+        "bench_pressure",
+        "critical_needs",
+        "flex_slots",
+        "position_pressure",
+        "roster_completeness",
+        "round",
+        "total_players"
+      ],
+      "strategy_keys": [
+        "confidence_drivers",
+        "construction_pressure",
+        "contingency_target",
+        "current_strategy",
+        "next_pick_plan",
+        "passed_targets",
+        "primary_target",
+        "roster_path",
+        "secondary_target",
+        "strategy_confidence",
+        "strategy_confidence_score",
+        "surviving_targets"
+      ],
+      "summary_rows": 8,
+      "board_rows": 25,
+      "consensus_rows": 12
+    },
+    "warm_1": {
+      "raw_rows": 3931,
+      "available_rows": 3931,
+      "recommendation_rows": 27,
+      "conviction_rows": 8,
+      "availability_rows": 3931,
+      "championship_rows": 5,
+      "future_impact_rows": 5,
+      "construction_keys": [
+        "bench_pressure",
+        "critical_needs",
+        "flex_slots",
+        "position_pressure",
+        "roster_completeness",
+        "round",
+        "total_players"
+      ],
+      "strategy_keys": [
+        "confidence_drivers",
+        "construction_pressure",
+        "contingency_target",
+        "current_strategy",
+        "next_pick_plan",
+        "passed_targets",
+        "primary_target",
+        "roster_path",
+        "secondary_target",
+        "strategy_confidence",
+        "strategy_confidence_score",
+        "surviving_targets"
+      ],
+      "summary_rows": 8,
+      "board_rows": 25,
+      "consensus_rows": 12
+    },
+    "warm_2": {
+      "raw_rows": 3931,
+      "available_rows": 3931,
+      "recommendation_rows": 27,
+      "conviction_rows": 8,
+      "availability_rows": 3931,
+      "championship_rows": 5,
+      "future_impact_rows": 5,
+      "construction_keys": [
+        "bench_pressure",
+        "critical_needs",
+        "flex_slots",
+        "position_pressure",
+        "roster_completeness",
+        "round",
+        "total_players"
+      ],
+      "strategy_keys": [
+        "confidence_drivers",
+        "construction_pressure",
+        "contingency_target",
+        "current_strategy",
+        "next_pick_plan",
+        "passed_targets",
+        "primary_target",
+        "roster_path",
+        "secondary_target",
+        "strategy_confidence",
+        "strategy_confidence_score",
+        "surviving_targets"
+      ],
+      "summary_rows": 8,
+      "board_rows": 25,
+      "consensus_rows": 12
+    }
+  },
+  "draft_lab": {
+    "simulations_run": 10,
+    "average_draft_grade": 41.04,
+    "average_championship_equity": 0.0
+  }
+}

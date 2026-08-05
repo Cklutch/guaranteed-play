@@ -1,0 +1,236 @@
+{
+  "wr": {
+    "rows": 936,
+    "fit_rows": 606,
+    "adp_available_any": false,
+    "best": [
+      {
+        "model_name": "adp_prior_production_baseline_logistic",
+        "model_type": "Logistic Regression",
+        "target": "WR_Top24",
+        "avg_model_hit_rate": 0.5148405288753115,
+        "avg_auc": 0.823663636792441,
+        "avg_adp_auc": NaN,
+        "avg_lift": NaN,
+        "seasons": 25,
+        "beats_adp_seasons": 0
+      },
+      {
+        "model_name": "adp_prior_production_team_context_model_logistic",
+        "model_type": "Logistic Regression",
+        "target": "WR_Top24",
+        "avg_model_hit_rate": 0.5148405288753115,
+        "avg_auc": 0.823663636792441,
+        "avg_adp_auc": NaN,
+        "avg_lift": NaN,
+        "seasons": 25,
+        "beats_adp_seasons": 0
+      },
+      {
+        "model_name": "prior_production_only_baseline_logistic",
+        "model_type": "Logistic Regression",
+        "target": "WR_Top24",
+        "avg_model_hit_rate": 0.5148405288753115,
+        "avg_auc": 0.823663636792441,
+        "avg_adp_auc": NaN,
+        "avg_lift": NaN,
+        "seasons": 25,
+        "beats_adp_seasons": 0
+      },
+      {
+        "model_name": "adp_prior_production_baseline_regularized_logistic",
+        "model_type": "Regularized Logistic Regression",
+        "target": "WR_Top24",
+        "avg_model_hit_rate": 0.5131013984405288,
+        "avg_auc": 0.8236026283491181,
+        "avg_adp_auc": NaN,
+        "avg_lift": NaN,
+        "seasons": 25,
+        "beats_adp_seasons": 0
+      },
+      {
+        "model_name": "adp_prior_production_team_context_model_regularized_logistic",
+        "model_type": "Regularized Logistic Regression",
+        "target": "WR_Top24",
+        "avg_model_hit_rate": 0.5131013984405288,
+        "avg_auc": 0.8236026283491181,
+        "avg_adp_auc": NaN,
+        "avg_lift": NaN,
+        "seasons": 25,
+        "beats_adp_seasons": 0
+      },
+      {
+        "model_name": "prior_production_only_baseline_regularized_logistic",
+        "model_type": "Regularized Logistic Regression",
+        "target": "WR_Top24",
+        "avg_model_hit_rate": 0.5131013984405288,
+        "avg_auc": 0.8236026283491181,
+        "avg_adp_auc": NaN,
+        "avg_lift": NaN,
+        "seasons": 25,
+        "beats_adp_seasons": 0
+      },
+      {
+        "model_name": "age_prior_production_baseline_regularized_logistic",
+        "model_type": "Regularized Logistic Regression",
+        "target": "WR_Top24",
+        "avg_model_hit_rate": 0.49688247363216553,
+        "avg_auc": 0.8172482673457748,
+        "avg_adp_auc": NaN,
+        "avg_lift": NaN,
+        "seasons": 26,
+        "beats_adp_seasons": 0
+      },
+      {
+        "model_name": "age_prior_production_baseline_logistic",
+        "model_type": "Logistic Regression",
+        "target": "WR_Top24",
+        "avg_model_hit_rate": 0.4950509718006637,
+        "avg_auc": 0.8163965808921405,
+        "avg_adp_auc": NaN,
+        "avg_lift": NaN,
+        "seasons": 26,
+        "beats_adp_seasons": 0
+      },
+      {
+        "model_name": "age_prior_production_baseline_random_forest",
+        "model_type": "Random Forest",
+        "target": "WR_Top24",
+        "avg_model_hit_rate": 0.4925005301373898,
+        "avg_auc": 0.8109698234925783,
+        "avg_adp_auc": NaN,
+        "avg_lift": NaN,
+        "seasons": 26,
+        "beats_adp_seasons": 0
+      },
+      {
+        "model_name": "adp_prior_production_baseline_random_forest",
+        "model_type": "Random Forest",
+        "target": "WR_Top24",
+        "avg_model_hit_rate": 0.49053253831514704,
+        "avg_auc": 0.8055191708949218,
+        "avg_adp_auc": NaN,
+        "avg_lift": NaN,
+        "seasons": 25,
+        "beats_adp_seasons": 0
+      }
+    ]
+  },
+  "rb": {
+    "rows": 936,
+    "fit_rows": 606,
+    "adp_available_any": false,
+    "best": [
+      {
+        "model_name": "age_prior_production_baseline_random_forest",
+        "model_type": "Random Forest",
+        "target": "RB_Top24",
+        "avg_model_hit_rate": 0.6128789403750704,
+        "avg_auc": 0.7904515867450006,
+        "avg_adp_auc": NaN,
+        "avg_lift": NaN,
+        "seasons": 26,
+        "beats_adp_seasons": 0
+      },
+      {
+        "model_name": "adp_prior_production_baseline_regularized_logistic",
+        "model_type": "Regularized Logistic Regression",
+        "target": "RB_Top24",
+        "avg_model_hit_rate": 0.6083724015922158,
+        "avg_auc": 0.8071689693021631,
+        "avg_adp_auc": NaN,
+        "avg_lift": NaN,
+        "seasons": 25,
+        "beats_adp_seasons": 0
+      },
+      {
+        "model_name": "adp_prior_production_team_context_model_regularized_logistic",
+        "model_type": "Regularized Logistic Regression",
+        "target": "RB_Top24",
+        "avg_model_hit_rate": 0.6083724015922158,
+        "avg_auc": 0.8071689693021631,
+        "avg_adp_auc": NaN,
+        "avg_lift": NaN,
+        "seasons": 25,
+        "beats_adp_seasons": 0
+      },
+      {
+        "model_name": "prior_production_only_baseline_regularized_logistic",
+        "model_type": "Regularized Logistic Regression",
+        "target": "RB_Top24",
+        "avg_model_hit_rate": 0.6083724015922158,
+        "avg_auc": 0.8071689693021631,
+        "avg_adp_auc": NaN,
+        "avg_lift": NaN,
+        "seasons": 25,
+        "beats_adp_seasons": 0
+      },
+      {
+        "model_name": "adp_prior_production_baseline_logistic",
+        "model_type": "Logistic Regression",
+        "target": "RB_Top24",
+        "avg_model_hit_rate": 0.6077374809572952,
+        "avg_auc": 0.8070901903425675,
+        "avg_adp_auc": NaN,
+        "avg_lift": NaN,
+        "seasons": 25,
+        "beats_adp_seasons": 0
+      },
+      {
+        "model_name": "adp_prior_production_team_context_model_logistic",
+        "model_type": "Logistic Regression",
+        "target": "RB_Top24",
+        "avg_model_hit_rate": 0.6077374809572952,
+        "avg_auc": 0.8070901903425675,
+        "avg_adp_auc": NaN,
+        "avg_lift": NaN,
+        "seasons": 25,
+        "beats_adp_seasons": 0
+      },
+      {
+        "model_name": "prior_production_only_baseline_logistic",
+        "model_type": "Logistic Regression",
+        "target": "RB_Top24",
+        "avg_model_hit_rate": 0.6077374809572952,
+        "avg_auc": 0.8070901903425675,
+        "avg_adp_auc": NaN,
+        "avg_lift": NaN,
+        "seasons": 25,
+        "beats_adp_seasons": 0
+      },
+      {
+        "model_name": "adp_prior_production_baseline_random_forest",
+        "model_type": "Random Forest",
+        "target": "RB_Top24",
+        "avg_model_hit_rate": 0.6008607302570151,
+        "avg_auc": 0.7812782928690131,
+        "avg_adp_auc": NaN,
+        "avg_lift": NaN,
+        "seasons": 25,
+        "beats_adp_seasons": 0
+      },
+      {
+        "model_name": "adp_prior_production_team_context_model_random_forest",
+        "model_type": "Random Forest",
+        "target": "RB_Top24",
+        "avg_model_hit_rate": 0.6008607302570151,
+        "avg_auc": 0.7812782928690131,
+        "avg_adp_auc": NaN,
+        "avg_lift": NaN,
+        "seasons": 25,
+        "beats_adp_seasons": 0
+      },
+      {
+        "model_name": "prior_production_only_baseline_random_forest",
+        "model_type": "Random Forest",
+        "target": "RB_Top24",
+        "avg_model_hit_rate": 0.6008607302570151,
+        "avg_auc": 0.7812782928690131,
+        "avg_adp_auc": NaN,
+        "avg_lift": NaN,
+        "seasons": 25,
+        "beats_adp_seasons": 0
+      }
+    ]
+  }
+}

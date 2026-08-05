@@ -1,0 +1,35 @@
+{
+  "duplicate_rows_dropped": 0,
+  "missing_projected_stats_rows": 0,
+  "missing_required_columns_or_empty": [],
+  "normalized_rows": 1473,
+  "projected_stat_columns_present": [
+    "projected_receptions",
+    "projected_receiving_yards",
+    "projected_receiving_tds",
+    "projected_carries",
+    "projected_rushing_yards",
+    "projected_rushing_tds",
+    "projected_total_tds"
+  ],
+  "projection_file_used": "C:\\Users\\cklut\\Desktop\\Projects\\Guaranteed Play\\research\\validation_v1\\historical_projections.csv",
+  "projection_source": "FantasyPros_Wayback",
+  "raw_rows": 1473,
+  "rb_projection_rows": 748,
+  "seasons_covered": [
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "suspicious_projection_rows": 0,
+  "unmatched_projection_rows": 1473,
+  "wr_projection_rows": 725
+}

@@ -1,0 +1,170 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="590" viewBox="0 0 1100 590">
+<style>
+text { font-family: Arial, sans-serif; fill: #1f2937; }
+.title { font-size: 27px; font-weight: 800; }
+.subtitle { font-size: 14px; fill: #64748b; }
+.label { font-size: 15px; font-weight: 700; }
+.tick { font-size: 12px; fill: #4b5563; }
+.grid { stroke: #e5e7eb; stroke-width: 1; }
+.axis { stroke: #111827; stroke-width: 1.4; }
+.rush-line { fill: none; stroke: #7c3aed; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.dot { fill: #7c3aed; stroke: #ffffff; stroke-width: 1.4; }
+.note { font-size: 12px; fill: #475569; font-weight: 700; }
+</style>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text class="title" x="78" y="38">Mobile QB Rushing Yards by Age</text>
+<text class="subtitle" x="78" y="62">Qualified QBs come from the provided 15+ rushing yards per game mobile-QB list</text>
+<line class="grid" x1="78" y1="522.00" x2="910" y2="522.00"/>
+<text class="tick" x="66" y="526.00" text-anchor="end">0</text>
+<line class="grid" x1="78" y1="413.00" x2="910" y2="413.00"/>
+<text class="tick" x="66" y="417.00" text-anchor="end">141</text>
+<line class="grid" x1="78" y1="304.00" x2="910" y2="304.00"/>
+<text class="tick" x="66" y="308.00" text-anchor="end">281</text>
+<line class="grid" x1="78" y1="195.00" x2="910" y2="195.00"/>
+<text class="tick" x="66" y="199.00" text-anchor="end">422</text>
+<line class="grid" x1="78" y1="86.00" x2="910" y2="86.00"/>
+<text class="tick" x="66" y="90.00" text-anchor="end">562</text>
+<line class="grid" x1="78.00" y1="86" x2="78.00" y2="522"/>
+<text class="tick" x="78.00" y="550" text-anchor="middle">21</text>
+<line class="grid" x1="130.00" y1="86" x2="130.00" y2="522"/>
+<text class="tick" x="130.00" y="550" text-anchor="middle">22</text>
+<line class="grid" x1="182.00" y1="86" x2="182.00" y2="522"/>
+<text class="tick" x="182.00" y="550" text-anchor="middle">23</text>
+<line class="grid" x1="234.00" y1="86" x2="234.00" y2="522"/>
+<text class="tick" x="234.00" y="550" text-anchor="middle">24</text>
+<line class="grid" x1="286.00" y1="86" x2="286.00" y2="522"/>
+<text class="tick" x="286.00" y="550" text-anchor="middle">25</text>
+<line class="grid" x1="338.00" y1="86" x2="338.00" y2="522"/>
+<text class="tick" x="338.00" y="550" text-anchor="middle">26</text>
+<line class="grid" x1="390.00" y1="86" x2="390.00" y2="522"/>
+<text class="tick" x="390.00" y="550" text-anchor="middle">27</text>
+<line class="grid" x1="442.00" y1="86" x2="442.00" y2="522"/>
+<text class="tick" x="442.00" y="550" text-anchor="middle">28</text>
+<line class="grid" x1="494.00" y1="86" x2="494.00" y2="522"/>
+<text class="tick" x="494.00" y="550" text-anchor="middle">29</text>
+<line class="grid" x1="546.00" y1="86" x2="546.00" y2="522"/>
+<text class="tick" x="546.00" y="550" text-anchor="middle">30</text>
+<line class="grid" x1="598.00" y1="86" x2="598.00" y2="522"/>
+<text class="tick" x="598.00" y="550" text-anchor="middle">31</text>
+<line class="grid" x1="650.00" y1="86" x2="650.00" y2="522"/>
+<text class="tick" x="650.00" y="550" text-anchor="middle">32</text>
+<line class="grid" x1="702.00" y1="86" x2="702.00" y2="522"/>
+<text class="tick" x="702.00" y="550" text-anchor="middle">33</text>
+<line class="grid" x1="754.00" y1="86" x2="754.00" y2="522"/>
+<text class="tick" x="754.00" y="550" text-anchor="middle">34</text>
+<line class="grid" x1="806.00" y1="86" x2="806.00" y2="522"/>
+<text class="tick" x="806.00" y="550" text-anchor="middle">35</text>
+<line class="grid" x1="858.00" y1="86" x2="858.00" y2="522"/>
+<text class="tick" x="858.00" y="550" text-anchor="middle">36</text>
+<line class="grid" x1="910.00" y1="86" x2="910.00" y2="522"/>
+<text class="tick" x="910.00" y="550" text-anchor="middle">37</text>
+<line class="axis" x1="78" y1="522" x2="910" y2="522"/>
+<line class="axis" x1="78" y1="86" x2="78" y2="522"/>
+<text class="label" x="494.00" y="578" text-anchor="middle">Age</text>
+<text class="label" transform="translate(22 295.00) rotate(-90)" text-anchor="middle">Avg Rush Yards / Season</text>
+<path class="rush-line" d="M 78.00 199.77 L 130.00 192.90 L 182.00 142.87 L 234.00 184.83 L 286.00 198.61 L 338.00 220.56 L 390.00 235.06 L 442.00 280.81 L 494.00 276.80 L 546.00 409.07 L 598.00 353.40 L 650.00 334.97 L 702.00 364.83 L 754.00 356.04 L 806.00 384.73 L 858.00 444.19 L 910.00 439.80"/>
+<circle class="dot" cx="78.00" cy="199.77" r="4.8"><title>Mobile QB rushing yards by age
+Age: 21
+Average rush yards: 415.5
+Median rush yards: 415.5
+Player-seasons: 2
+Qualified QBs: 2</title></circle>
+<circle class="dot" cx="130.00" cy="192.90" r="4.8"><title>Mobile QB rushing yards by age
+Age: 22
+Average rush yards: 424.4
+Median rush yards: 387.0
+Player-seasons: 14
+Qualified QBs: 14</title></circle>
+<circle class="dot" cx="182.00" cy="142.87" r="4.8"><title>Mobile QB rushing yards by age
+Age: 23
+Average rush yards: 488.9
+Median rush yards: 418.5
+Player-seasons: 16
+Qualified QBs: 16</title></circle>
+<circle class="dot" cx="234.00" cy="184.83" r="4.8"><title>Mobile QB rushing yards by age
+Age: 24
+Average rush yards: 434.8
+Median rush yards: 383.0
+Player-seasons: 17
+Qualified QBs: 17</title></circle>
+<circle class="dot" cx="286.00" cy="198.61" r="4.8"><title>Mobile QB rushing yards by age
+Age: 25
+Average rush yards: 417.0
+Median rush yards: 356.0
+Player-seasons: 15
+Qualified QBs: 15</title></circle>
+<circle class="dot" cx="338.00" cy="220.56" r="4.8"><title>Mobile QB rushing yards by age
+Age: 26
+Average rush yards: 388.7
+Median rush yards: 359.0
+Player-seasons: 13
+Qualified QBs: 13</title></circle>
+<circle class="dot" cx="390.00" cy="235.06" r="4.8"><title>Mobile QB rushing yards by age
+Age: 27
+Average rush yards: 370.0
+Median rush yards: 358.5
+Player-seasons: 14
+Qualified QBs: 14</title></circle>
+<circle class="dot" cx="442.00" cy="280.81" r="4.8"><title>Mobile QB rushing yards by age
+Age: 28
+Average rush yards: 311.0
+Median rush yards: 259.0
+Player-seasons: 11
+Qualified QBs: 11</title></circle>
+<circle class="dot" cx="494.00" cy="276.80" r="4.8"><title>Mobile QB rushing yards by age
+Age: 29
+Average rush yards: 316.2
+Median rush yards: 307.0
+Player-seasons: 11
+Qualified QBs: 11</title></circle>
+<circle class="dot" cx="546.00" cy="409.07" r="4.8"><title>Mobile QB rushing yards by age
+Age: 30
+Average rush yards: 145.6
+Median rush yards: 60.5
+Player-seasons: 8
+Qualified QBs: 8</title></circle>
+<circle class="dot" cx="598.00" cy="353.40" r="4.8"><title>Mobile QB rushing yards by age
+Age: 31
+Average rush yards: 217.4
+Median rush yards: 92.0
+Player-seasons: 5
+Qualified QBs: 5</title></circle>
+<circle class="dot" cx="650.00" cy="334.97" r="4.8"><title>Mobile QB rushing yards by age
+Age: 32
+Average rush yards: 241.2
+Median rush yards: 203.5
+Player-seasons: 6
+Qualified QBs: 6</title></circle>
+<circle class="dot" cx="702.00" cy="364.83" r="4.8"><title>Mobile QB rushing yards by age
+Age: 33
+Average rush yards: 202.7
+Median rush yards: 183.0
+Player-seasons: 3
+Qualified QBs: 3</title></circle>
+<circle class="dot" cx="754.00" cy="356.04" r="4.8"><title>Mobile QB rushing yards by age
+Age: 34
+Average rush yards: 214.0
+Median rush yards: 197.0
+Player-seasons: 3
+Qualified QBs: 3</title></circle>
+<circle class="dot" cx="806.00" cy="384.73" r="4.8"><title>Mobile QB rushing yards by age
+Age: 35
+Average rush yards: 177.0
+Median rush yards: 177.0
+Player-seasons: 2
+Qualified QBs: 2</title></circle>
+<circle class="dot" cx="858.00" cy="444.19" r="4.8"><title>Mobile QB rushing yards by age
+Age: 36
+Average rush yards: 100.3
+Median rush yards: 143.0
+Player-seasons: 3
+Qualified QBs: 3</title></circle>
+<circle class="dot" cx="910.00" cy="439.80" r="4.8"><title>Mobile QB rushing yards by age
+Age: 37
+Average rush yards: 106.0
+Median rush yards: 106.0
+Player-seasons: 1
+Qualified QBs: 1</title></circle>
+<text class="note" x="940" y="98">Qualified QBs: 27</text>
+<text class="note" x="940" y="118">Source: provided qualifier list</text>
+</svg>

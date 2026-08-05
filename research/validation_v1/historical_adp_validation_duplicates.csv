@@ -1,0 +1,9 @@
+season,player_name,position,overall_adp,positional_adp,preseason_projection,projection_source,adp_source,half_ppr_adp,ppr_adp,standard_adp,_input_file,player_key,initial_last_key
+2010,Mike Williams,WR,120.6,47.0,,,FantasyFootballCalculator,,120.6,,research\validation_v1\source_adp_raw\ffcalc_ppr_2010.csv,mike williams,m williams
+2010,Mike Williams,WR,150.6,62.0,,,FantasyFootballCalculator,,150.6,,research\validation_v1\source_adp_raw\ffcalc_ppr_2010.csv,mike williams,m williams
+2010,Steve Smith,WR,32.1,14.0,,,FantasyFootballCalculator,,32.1,,research\validation_v1\source_adp_raw\ffcalc_ppr_2010.csv,steve smith,s smith
+2010,Steve Smith,WR,36.0,15.0,,,FantasyFootballCalculator,,36.0,,research\validation_v1\source_adp_raw\ffcalc_ppr_2010.csv,steve smith,s smith
+2011,Mike Williams,WR,42.1,16.0,,,FantasyFootballCalculator,,42.1,,research\validation_v1\source_adp_raw\ffcalc_ppr_2011.csv,mike williams,m williams
+2011,Mike Williams,WR,156.0,62.0,,,FantasyFootballCalculator,,156.0,,research\validation_v1\source_adp_raw\ffcalc_ppr_2011.csv,mike williams,m williams
+2011,Steve Smith,WR,102.5,39.0,,,FantasyFootballCalculator,,102.5,,research\validation_v1\source_adp_raw\ffcalc_ppr_2011.csv,steve smith,s smith
+2011,Steve Smith,WR,154.1,60.0,,,FantasyFootballCalculator,,154.1,,research\validation_v1\source_adp_raw\ffcalc_ppr_2011.csv,steve smith,s smith

@@ -1,0 +1,8 @@
+{
+  "sportsbook_data_file_used": "not_found",
+  "sportsbook_source": "not_found",
+  "raw_rows": 0,
+  "normalized_rows": 0,
+  "unmatched_player_examples_rows": 0,
+  "unsupported_market_example_rows": 0
+}

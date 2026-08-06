@@ -1,0 +1,31 @@
+pbp 1999: 553 player rows aggregated
+pbp 2000: 541 player rows aggregated
+pbp 2001: 542 player rows aggregated
+pbp 2002: 614 player rows aggregated
+pbp 2003: 608 player rows aggregated
+pbp 2004: 550 player rows aggregated
+pbp 2005: 535 player rows aggregated
+pbp 2006: 523 player rows aggregated
+pbp 2007: 544 player rows aggregated
+pbp 2008: 538 player rows aggregated
+pbp 2009: 560 player rows aggregated
+pbp 2010: 571 player rows aggregated
+pbp 2011: 585 player rows aggregated
+pbp 2012: 587 player rows aggregated
+pbp 2013: 586 player rows aggregated
+pbp 2014: 585 player rows aggregated
+pbp 2015: 605 player rows aggregated
+pbp 2016: 598 player rows aggregated
+pbp 2017: 587 player rows aggregated
+pbp 2018: 620 player rows aggregated
+pbp 2019: 624 player rows aggregated
+pbp 2020: 643 player rows aggregated
+pbp 2021: 661 player rows aggregated
+pbp 2022: 629 player rows aggregated
+pbp 2023: 591 player rows aggregated
+pbp 2024: 606 player rows aggregated
+pbp 2025: 617 player rows aggregated
+Red zone / air yards dataset written: C:\Users\cklut\Desktop\Projects\Guaranteed Play\research\validation_v1\data\redzone_airyards_player_seasons.csv
+Rows: 15803
+Non-null prior_redzone_target_share: 15803
+Non-null prior_air_yards_share: 11860

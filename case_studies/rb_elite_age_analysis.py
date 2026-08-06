@@ -71,13 +71,36 @@ def _safe_col(df: pd.DataFrame, candidates) -> Optional[str]:
     return None
 
 
+def _github_auth_headers() -> Dict[str, str]:
+    """
+    Optional GitHub token support to raise the unauthenticated 60-req/hour
+    API rate limit to 5,000/hour. Looks for NFLVERSE_GITHUB_TOKEN/GITHUB_TOKEN
+    env vars first, then a gitignored `.github_token` file at the repo root
+    (never committed -- see .gitignore). No token means no auth header and
+    the original unauthenticated behavior, unchanged.
+    """
+    import os
+
+    token = os.environ.get("NFLVERSE_GITHUB_TOKEN") or os.environ.get("GITHUB_TOKEN")
+    if not token:
+        token_file = Path(__file__).resolve().parents[1] / ".github_token"
+        if token_file.exists():
+            token = token_file.read_text(encoding="utf-8").strip()
+    if not token:
+        return {}
+    return {"Authorization": f"token {token}"}
+
+
 def _fetch_release_assets(tag: str) -> List[Dict[str, str]]:
+    auth_headers = _github_auth_headers()
+
     def _get_json(url: str):
         request = Request(
             url,
             headers={
                 "Accept": "application/vnd.github+json",
                 "User-Agent": "guaranteed-play-rb-age-study",
+                **auth_headers,
             },
         )
         with urlopen(request, timeout=30) as response:
@@ -88,6 +111,7 @@ def _fetch_release_assets(tag: str) -> List[Dict[str, str]]:
         headers={
             "Accept": "application/vnd.github+json",
             "User-Agent": "guaranteed-play-rb-age-study",
+            **auth_headers,
         },
     )
     try:

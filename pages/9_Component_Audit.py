@@ -2,6 +2,7 @@ import pandas as pd
 import streamlit as st
 
 from draftkit.championship_equity import build_championship_equity_df
+from draftkit.data_pipeline import validate_player_data
 from draftkit.draft_analysis import build_recommendation_rankings_df
 from draftkit.draft_simulation import calculate_availability_probability
 from draftkit.draft_state import init_session_state, keep_session_state_alive
@@ -20,6 +21,34 @@ st.caption(
     "Ranks current scoring features by average influence and flags components "
     "responsible for more than 20% of final-score variance."
 )
+
+
+@st.cache_data(show_spinner=False, max_entries=4)
+def _cached_data_validation():
+    return validate_player_data()
+
+
+_validation = _cached_data_validation()
+if not _validation.get("projection_coverage_ok", True):
+    st.error(
+        "Data quality: only {0}% of {1} ranked players (real ADP/tier/expert "
+        "rank present) have a real projection ({2}% required). Recommendations "
+        "below are not trustworthy until a real projections export is added to "
+        "data/raw/.".format(
+            _validation.get("ranked_projection_coverage", 0.0),
+            _validation.get("ranked_player_count", 0),
+            _validation.get("projection_coverage_min_pct", 90.0),
+        )
+    )
+if _validation.get("missing_data_counts", {}).get("adp", 0) and _validation.get("ranked_player_count", 0):
+    ranked = _validation.get("ranked_player_count", 0)
+    missing_adp = _validation["missing_data_counts"]["adp"]
+    if missing_adp >= ranked:
+        st.warning(
+            "Data quality: no real ADP data is loaded (0 of {0} ranked players "
+            "have ADP). ADP-value scoring and ADP-based validation are not "
+            "meaningful until a real ADP export is added to data/raw/.".format(ranked)
+        )
 
 
 @st.cache_data(show_spinner=False, max_entries=8)

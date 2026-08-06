@@ -1,0 +1,47 @@
+pbp 1999: 553 player rows aggregated
+pbp 2000: 541 player rows aggregated
+pbp 2001: 542 player rows aggregated
+pbp 2002: 614 player rows aggregated
+pbp 2003: 608 player rows aggregated
+pbp 2004: 550 player rows aggregated
+pbp 2005: 535 player rows aggregated
+Traceback (most recent call last):
+  File "C:\Users\cklut\Desktop\Projects\Guaranteed Play\case_studies\rb_elite_age_analysis.py", line 105, in _fetch_release_assets
+    page_assets = _get_json(f"{assets_url}?per_page=100&page={page}")
+  File "C:\Users\cklut\Desktop\Projects\Guaranteed Play\case_studies\rb_elite_age_analysis.py", line 83, in _get_json
+    with urlopen(request, timeout=30) as response:
+         ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\cklut\AppData\Local\Programs\Python\Python314\Lib\urllib\request.py", line 187, in urlopen
+    return opener.open(url, data, timeout)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\cklut\AppData\Local\Programs\Python\Python314\Lib\urllib\request.py", line 493, in open
+    response = meth(req, response)
+  File "C:\Users\cklut\AppData\Local\Programs\Python\Python314\Lib\urllib\request.py", line 602, in http_response
+    response = self.parent.error(
+        'http', request, response, code, msg, hdrs)
+  File "C:\Users\cklut\AppData\Local\Programs\Python\Python314\Lib\urllib\request.py", line 531, in error
+    return self._call_chain(*args)
+           ~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\cklut\AppData\Local\Programs\Python\Python314\Lib\urllib\request.py", line 464, in _call_chain
+    result = func(*args)
+  File "C:\Users\cklut\AppData\Local\Programs\Python\Python314\Lib\urllib\request.py", line 611, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 403: rate limit exceeded
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\cklut\Desktop\Projects\Guaranteed Play\research\validation_v1\build_redzone_airyards_features_v1.py", line 153, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\cklut\Desktop\Projects\Guaranteed Play\research\validation_v1\build_redzone_airyards_features_v1.py", line 142, in main
+    dataset = build_redzone_airyards_dataset()
+  File "C:\Users\cklut\Desktop\Projects\Guaranteed Play\research\validation_v1\build_redzone_airyards_features_v1.py", line 91, in build_redzone_airyards_dataset
+    agg = _aggregate_one_season(season)
+  File "C:\Users\cklut\Desktop\Projects\Guaranteed Play\research\validation_v1\build_redzone_airyards_features_v1.py", line 37, in _aggregate_one_season
+    url = _season_asset_url(season)
+  File "C:\Users\cklut\Desktop\Projects\Guaranteed Play\research\validation_v1\build_redzone_airyards_features_v1.py", line 24, in _season_asset_url
+    assets = fetch_release_assets(PBP_TAG)
+  File "C:\Users\cklut\Desktop\Projects\Guaranteed Play\case_studies\rb_elite_age_analysis.py", line 113, in _fetch_release_assets
+    raise RuntimeError(f"Unable to pull nflverse release assets for {tag}: {exc}") from exc
+RuntimeError: Unable to pull nflverse release assets for pbp: HTTP Error 403: rate limit exceeded

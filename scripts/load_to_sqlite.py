@@ -1,10 +1,14 @@
+# Dev/demo script only. Loads hand-authored SAMPLE data into a sqlite db that
+# is not read by the live Streamlit app (see draftkit/data_access.py::get_db_path
+# candidates, which do not include guaranteed_play.db). Do not treat this data
+# as real projections/ADP.
 from pathlib import Path
 import sqlite3
 import pandas as pd
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DATA_PATH = PROJECT_ROOT / "data" / "players_cleaned.csv"
+DATA_PATH = PROJECT_ROOT / "data" / "samples" / "players_cleaned_SAMPLE_DO_NOT_USE.csv"
 DB_PATH = PROJECT_ROOT / "guaranteed_play.db"
 TABLE_NAME = "players"
 

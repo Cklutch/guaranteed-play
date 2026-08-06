@@ -16,6 +16,7 @@ from validation_utils import (
     top_pick_rows,
 )
 from build_predraft_dataset import build_dataset
+from workload_feature_groups import workload_feature_groups
 
 POSITION = "WR"
 TARGETS = ["WR_Top24", "WR_Top12", "WR_Underpriced_Top24", "WR_Underpriced_Top12", "WR_Beat_ADP_By_12"]
@@ -122,6 +123,7 @@ FEATURE_GROUPS.update({
     "adp_projection_expanded_features": ADP_FEATURES + PROJECTION_VOLUME_FEATURES + EXPANDED_FEATURES,
     "adp_all_available_predraft_safe_features": ADP_FEATURES + PROJECTION_VOLUME_FEATURES + PRIOR_FEATURES + EXPANDED_FEATURES,
 })
+FEATURE_GROUPS.update(workload_feature_groups(POSITION, PRIOR_FEATURES))
 REQUIRED_OUTPUT_COLUMNS = [
     "test_season", "target", "model_name", "model_type", "feature_group", "status", "sample_size", "positive_rate",
     "baseline_hit_rate", "model_hit_rate", "lift_over_baseline", "auc", "adp_auc", "top_decile_hit_rate", "adp_available", "beats_adp",
@@ -201,7 +203,10 @@ def evaluate(dataset: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.Data
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Evaluate WR pre-draft validation models with walk-forward validation.")
-    parser.add_argument("--dataset", default=str(VALIDATION_DIR / "predraft_validation_dataset_projected.csv"))
+    # See the same note in evaluate_rb_models.py -- defaults to the Step 3a
+    # workload dataset (base + new opportunity features, all four positions),
+    # not the stale WR/RB-only projected chain file.
+    parser.add_argument("--dataset", default=str(VALIDATION_DIR / "predraft_validation_dataset_divergence_v1.csv"))
     args = parser.parse_args()
     dataset = load_dataset(Path(args.dataset))
     results, buckets, top_picks, signals = evaluate(dataset)

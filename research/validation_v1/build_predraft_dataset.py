@@ -27,17 +27,30 @@ MARKET_COLS = [
 ]
 PRIOR_COLS = [
     "prior_targets", "prior_receptions", "prior_receiving_yards", "prior_receiving_tds", "prior_carries",
-    "prior_rushing_yards", "prior_rushing_tds", "prior_total_tds", "prior_fantasy_points", "prior_fantasy_ppg",
+    "prior_rushing_yards", "prior_rushing_tds", "prior_passing_yards", "prior_passing_tds", "prior_total_tds",
+    "prior_fantasy_points", "prior_fantasy_ppg",
     "prior_games", "prior_target_share", "prior_air_yards", "prior_routes", "prior_snap_share",
     "prior_route_participation", "prior_red_zone_usage", "prior_goal_line_usage", "prior_team_pass_attempts",
     "prior_team_rush_attempts", "prior_team_scoring", "qb_team_continuity", "oc_hc_continuity",
     "vacated_targets", "vacated_touches", "depth_chart_competition",
 ]
+# Positional finish thresholds used for the Top-N outcome labels. WR/RB use the
+# original 24/12 lines (deep-starter / true-starter). QB/TE only have ~1
+# fantasy-relevant starter per team, so 24/12 would be meaningless -- use
+# 12/6 instead (backup-relevant / true-starter for those positions).
+POSITION_TOP_N_THRESHOLDS = {
+    "WR": (24, 12),
+    "RB": (24, 12),
+    "QB": (12, 6),
+    "TE": (12, 6),
+}
 OUTCOME_COLS = [
     "final_fantasy_points", "final_fantasy_ppg", "final_positional_finish", "games_played",
     "Top24", "Top12", "Underpriced_Top24", "Underpriced_Top12", "Beat_ADP_By_12",
     "WR_Top24", "WR_Top12", "WR_Underpriced_Top24", "WR_Underpriced_Top12", "WR_Beat_ADP_By_12",
     "RB_Top24", "RB_Top12", "RB_Underpriced_Top24", "RB_Underpriced_Top12", "RB_Beat_ADP_By_12",
+    "QB_Top12", "QB_Top6", "QB_Underpriced_Top12", "QB_Underpriced_Top6", "QB_Beat_ADP_By_12",
+    "TE_Top12", "TE_Top6", "TE_Underpriced_Top12", "TE_Underpriced_Top6", "TE_Beat_ADP_By_12",
 ]
 
 
@@ -92,8 +105,13 @@ def _load_wr_opportunity_prior() -> pd.DataFrame:
         return pd.DataFrame()
     df = pd.read_csv(WR_OPPORTUNITY_SOURCE)
     df["season"] = pd.to_numeric(df["season"], errors="coerce").astype("Int64")
-    df["player_key"] = df["player_name"].apply(clean_name)
-    cols = ["season", "player_key", "targets", "receiving_tds", "fantasy_points", "fantasy_ppg", "games", "target_share", "team_targets"]
+    # Joined on player_id (gsis_id), not player_key: this source uses real
+    # full names ("Mike Evans") while the base outcome dataset uses
+    # PFR-style abbreviated names ("M.Evans") -- clean_name()/player_key
+    # never matched between them, which silently left prior_target_share at
+    # 0% coverage. Both files share the same gsis_id player_id format, which
+    # is a more reliable join than any name-matching anyway.
+    cols = ["season", "player_id", "targets", "receiving_tds", "fantasy_points", "fantasy_ppg", "games", "target_share", "team_targets"]
     df = ensure_columns(df, cols)
     df = df[cols].copy()
     return df.rename(columns={
@@ -175,15 +193,17 @@ def _load_market() -> pd.DataFrame:
 
 def _build_prior_features(outcomes: pd.DataFrame) -> pd.DataFrame:
     base = outcomes.copy()
-    base = base[base["position"].isin(["WR", "RB"])].copy()
+    base = base[base["position"].isin(["WR", "RB", "QB", "TE"])].copy()
     base["receiving_yards"] = _safe_numeric(base, "receiving_yards")
     base["receiving_tds"] = _safe_numeric(base, "receiving_tds")
     base["rushing_yards"] = _safe_numeric(base, "rushing_yards")
     base["rushing_tds"] = _safe_numeric(base, "rushing_tds")
+    base["passing_yards"] = _safe_numeric(base, "passing_yards")
+    base["passing_tds"] = _safe_numeric(base, "passing_tds")
     base["prior_source_season"] = base["season"] + 1
     prior = base[[
-        "prior_source_season", "player_key", "position", "final_fantasy_points", "final_fantasy_ppg", "games_played",
-        "receiving_yards", "receiving_tds", "rushing_yards", "rushing_tds",
+        "prior_source_season", "player_key", "player_id", "position", "final_fantasy_points", "final_fantasy_ppg", "games_played",
+        "receiving_yards", "receiving_tds", "rushing_yards", "rushing_tds", "passing_yards", "passing_tds",
     ]].copy()
     prior = prior.rename(columns={
         "prior_source_season": "season",
@@ -194,12 +214,22 @@ def _build_prior_features(outcomes: pd.DataFrame) -> pd.DataFrame:
         "receiving_tds": "prior_receiving_tds",
         "rushing_yards": "prior_rushing_yards",
         "rushing_tds": "prior_rushing_tds",
+        "passing_yards": "prior_passing_yards",
+        "passing_tds": "prior_passing_tds",
     })
-    prior["prior_total_tds"] = prior["prior_receiving_tds"].fillna(0) + prior["prior_rushing_tds"].fillna(0)
+    # QB fantasy production is passing+rushing TDs; WR/RB/TE is receiving+rushing.
+    # total_tds intentionally excludes passing_tds for non-QB rows (passing_tds
+    # is 0 for them in the source data already, so summing all three is
+    # equivalent and simpler than branching on position here).
+    prior["prior_total_tds"] = (
+        prior["prior_receiving_tds"].fillna(0)
+        + prior["prior_rushing_tds"].fillna(0)
+        + prior["prior_passing_tds"].fillna(0)
+    )
     wr_prior = _load_wr_opportunity_prior()
     if not wr_prior.empty:
         wr_prior["season"] = wr_prior["season"] + 1
-        prior = prior.merge(wr_prior, on=["season", "player_key"], how="left")
+        prior = prior.merge(wr_prior, on=["season", "player_id"], how="left")
         prior["prior_targets"] = prior["source_targets"]
         prior["prior_target_share"] = prior["source_target_share"]
         prior["prior_team_pass_attempts"] = prior["source_team_targets"]
@@ -207,6 +237,28 @@ def _build_prior_features(outcomes: pd.DataFrame) -> pd.DataFrame:
         prior["prior_fantasy_points"] = prior["prior_fantasy_points"].fillna(prior["source_fantasy_points"])
         prior["prior_fantasy_ppg"] = prior["prior_fantasy_ppg"].fillna(prior["source_fantasy_ppg"])
         prior["prior_games"] = prior["prior_games"].fillna(prior["source_games"])
+    # player_id was only needed here to join wr_prior above. Drop it before
+    # returning: build_dataset()'s `current` frame (built straight from
+    # outcomes) already carries the authoritative real player_id, and
+    # merging two frames that both have a "player_id" column produces
+    # player_id_x/player_id_y -- ensure_columns() then "fixes" the now-
+    # missing plain "player_id" name by fabricating a fresh all-NaN one.
+    # Hit this exact bug wiring up the fix above; keep player_id single-
+    # sourced from `current` to avoid it recurring.
+    # Deduplicate on the key the caller merges by. The upstream outcome
+    # source has genuinely ambiguous rows -- 588 rows share a (season,
+    # player_id) with a *different* player (e.g. 2017 has two distinct RBs
+    # both carrying gsis_id 00-0032257, "D.Johnson" and "D.Johnson Jr."),
+    # and abbreviated names collapse further on player_key. Left unhandled,
+    # the current<->prior merge cross-products and silently invents rows
+    # (measured: +403 phantom rows, 15,068 -> 15,471). Keep the
+    # highest-production row per key so the survivor is the real starter
+    # rather than an arbitrary pick. This masks, but does not fix, the
+    # upstream ID-assignment bug -- worth fixing at the source separately.
+    prior = prior.sort_values("prior_fantasy_points", ascending=False, na_position="last")
+    prior = prior.drop_duplicates(["season", "player_id", "position"], keep="first")
+    prior = prior.drop(columns=["player_id"])
+    prior = prior.drop_duplicates(["season", "player_key", "position"], keep="first")
     return prior
 
 
@@ -244,7 +296,7 @@ def build_dataset() -> tuple[pd.DataFrame, dict[str, object]]:
     prior = _build_prior_features(outcomes)
     market = _load_market()
 
-    current = outcomes[outcomes["position"].isin(["WR", "RB"])].copy()
+    current = outcomes[outcomes["position"].isin(["WR", "RB", "QB", "TE"])].copy()
     keep_current = [
         "season", "player_name", "player_id", "player_key", "position", "team", "age", "final_fantasy_points",
         "final_fantasy_ppg", "final_positional_finish", "games_played",
@@ -277,6 +329,11 @@ def build_dataset() -> tuple[pd.DataFrame, dict[str, object]]:
     dataset["estimated_draft_round"] = np.ceil(dataset["overall_adp"] / 12.0)
     dataset.loc[dataset["estimated_draft_round"].isna() & dataset["preseason_adp"].notna(), "estimated_draft_round"] = np.ceil(dataset["preseason_adp"] / 12.0)
 
+    # Generic Top24/Top12/Underpriced/Beat_ADP columns kept for backward
+    # compatibility with existing WR/RB consumers -- these always use the
+    # 24/12 finish lines regardless of position, so they're only meaningful
+    # for WR/RB. QB/TE consumers should use the position-specific
+    # QB_Top12/QB_Top6/TE_Top12/TE_Top6 columns built below instead.
     dataset["Top24"] = (dataset["final_positional_finish"] <= 24).astype(int)
     dataset["Top12"] = (dataset["final_positional_finish"] <= 12).astype(int)
     dataset["Underpriced_Top24"] = ((dataset["final_positional_finish"] <= 24) & (dataset["positional_adp"] > 24)).astype(float)
@@ -284,13 +341,23 @@ def build_dataset() -> tuple[pd.DataFrame, dict[str, object]]:
     dataset["Beat_ADP_By_12"] = ((dataset["positional_adp"] - dataset["final_positional_finish"]) >= 12).astype(float)
     dataset.loc[dataset["positional_adp"].isna(), ["Underpriced_Top24", "Underpriced_Top12", "Beat_ADP_By_12"]] = np.nan
 
-    for pos in ["WR", "RB"]:
+    for pos, (primary_n, secondary_n) in POSITION_TOP_N_THRESHOLDS.items():
         mask = dataset["position"].eq(pos)
-        dataset.loc[mask, f"{pos}_Top24"] = dataset.loc[mask, "Top24"]
-        dataset.loc[mask, f"{pos}_Top12"] = dataset.loc[mask, "Top12"]
-        dataset.loc[mask, f"{pos}_Underpriced_Top24"] = dataset.loc[mask, "Underpriced_Top24"]
-        dataset.loc[mask, f"{pos}_Underpriced_Top12"] = dataset.loc[mask, "Underpriced_Top12"]
-        dataset.loc[mask, f"{pos}_Beat_ADP_By_12"] = dataset.loc[mask, "Beat_ADP_By_12"]
+        finish = dataset["final_positional_finish"]
+        adp = dataset["positional_adp"]
+
+        top_primary = (finish <= primary_n).astype(int)
+        top_secondary = (finish <= secondary_n).astype(int)
+        underpriced_primary = ((finish <= primary_n) & (adp > primary_n)).astype(float)
+        underpriced_secondary = ((finish <= secondary_n) & (adp > secondary_n)).astype(float)
+        beat_adp = ((adp - finish) >= 12).astype(float)
+        no_adp = adp.isna()
+
+        dataset.loc[mask, f"{pos}_Top{primary_n}"] = top_primary[mask]
+        dataset.loc[mask, f"{pos}_Top{secondary_n}"] = top_secondary[mask]
+        dataset.loc[mask, f"{pos}_Underpriced_Top{primary_n}"] = underpriced_primary.where(~no_adp)[mask]
+        dataset.loc[mask, f"{pos}_Underpriced_Top{secondary_n}"] = underpriced_secondary.where(~no_adp)[mask]
+        dataset.loc[mask, f"{pos}_Beat_ADP_By_12"] = beat_adp.where(~no_adp)[mask]
 
     dataset = ensure_columns(dataset, IDENTITY_COLS + MARKET_COLS + PRIOR_COLS + OUTCOME_COLS)
     ordered = IDENTITY_COLS + MARKET_COLS + PRIOR_COLS + OUTCOME_COLS
@@ -300,6 +367,8 @@ def build_dataset() -> tuple[pd.DataFrame, dict[str, object]]:
     has_adp = _adp_present(dataset)
     wr_mask = dataset["position"].eq("WR")
     rb_mask = dataset["position"].eq("RB")
+    qb_mask = dataset["position"].eq("QB")
+    te_mask = dataset["position"].eq("TE")
     coverage_by_season = (
         dataset.assign(has_adp=has_adp)
         .groupby("season", dropna=False)["has_adp"]
@@ -324,6 +393,12 @@ def build_dataset() -> tuple[pd.DataFrame, dict[str, object]]:
         "rb_rows_with_adp": int((rb_mask & has_adp).sum()),
         "wr_adp_coverage_pct": round(float((wr_mask & has_adp).sum() / max(wr_mask.sum(), 1) * 100.0), 2),
         "rb_adp_coverage_pct": round(float((rb_mask & has_adp).sum() / max(rb_mask.sum(), 1) * 100.0), 2),
+        "qb_rows": int(qb_mask.sum()),
+        "te_rows": int(te_mask.sum()),
+        "qb_rows_with_adp": int((qb_mask & has_adp).sum()),
+        "te_rows_with_adp": int((te_mask & has_adp).sum()),
+        "qb_adp_coverage_pct": round(float((qb_mask & has_adp).sum() / max(qb_mask.sum(), 1) * 100.0), 2),
+        "te_adp_coverage_pct": round(float((te_mask & has_adp).sum() / max(te_mask.sum(), 1) * 100.0), 2),
         "adp_coverage_by_season": coverage_by_season.reset_index().to_dict("records"),
         "unmatched_player_examples": dataset.loc[~has_adp, ["season", "player_name", "position", "team"]].head(20).to_dict("records"),
     }
@@ -348,6 +423,10 @@ def write_feature_inventory(path: Path) -> None:
         ("final_positional_finish", "WR/RB", "Actual season finish by fantasy points", "same-season outcome label", "objective", "no", "high if used as feature", "low", "label only"),
         ("Top24/Top12 labels", "WR/RB", "Actual top finish labels", "same-season outcome label", "objective", "no", "high if used as feature", "low", "label only"),
         ("Underpriced/Beat_ADP labels", "WR/RB", "Actual finish compared with preseason positional ADP", "same-season label plus preseason ADP", "objective", "label only", "medium", "high", "label only"),
+        ("prior_passing_yards", "QB", "Previous-season passing yards", "prior season outcome cache", "objective", "yes", "low", "medium", "trusted"),
+        ("prior_passing_tds", "QB", "Previous-season passing TDs", "prior season outcome cache", "objective", "yes", "low", "medium", "trusted"),
+        ("QB_Top12/QB_Top6 labels", "QB", "Actual top finish labels using QB-appropriate thresholds (12/6, not 24/12)", "same-season outcome label", "objective", "no", "high if used as feature", "low", "label only"),
+        ("TE_Top12/TE_Top6 labels", "TE", "Actual top finish labels using TE-appropriate thresholds (12/6, not 24/12)", "same-season outcome label", "objective", "no", "high if used as feature", "low", "label only"),
     ]
     cols = ["feature_name", "position_model", "what_it_represents", "source_or_calculation", "objective_or_subjective", "pre_draft_available", "leakage_risk", "missing_value_risk", "trust_status"]
     pd.DataFrame(rows, columns=cols).to_csv(path, index=False)
@@ -388,6 +467,10 @@ def main() -> None:
     print(f"WR rows with ADP: {metadata['wr_rows_with_adp']} ({metadata['wr_adp_coverage_pct']}%)")
     print(f"RB rows: {metadata['rb_rows']}")
     print(f"RB rows with ADP: {metadata['rb_rows_with_adp']} ({metadata['rb_adp_coverage_pct']}%)")
+    print(f"QB rows: {metadata['qb_rows']}")
+    print(f"QB rows with ADP: {metadata['qb_rows_with_adp']} ({metadata['qb_adp_coverage_pct']}%)")
+    print(f"TE rows: {metadata['te_rows']}")
+    print(f"TE rows with ADP: {metadata['te_rows_with_adp']} ({metadata['te_adp_coverage_pct']}%)")
     print("ADP coverage by season written: research/validation_v1/adp_merge_coverage_by_season.csv")
     print("Unmatched player examples written: research/validation_v1/adp_unmatched_player_examples.csv")
     if metadata["rows_with_adp"] == 0:

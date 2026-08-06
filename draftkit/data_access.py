@@ -24,13 +24,14 @@ def get_db_path():
 def get_csv_path():
     candidates = [
         Path("data/processed/master_players.csv"),
-        Path("data/players.csv"),
-        Path("players.csv"),
         Path("data/rankings.csv"),
         Path("rankings.csv"),
         Path("data/draft_board.csv"),
         Path("draft_board.csv"),
     ]
+    # Intentionally excludes "data/players.csv" / "players.csv" -- that path is
+    # a hand-authored sample file (see data/samples/), not a real data source.
+    # It must never become the app's main dataset by silent fallback.
 
     for path in candidates:
         if path.exists():

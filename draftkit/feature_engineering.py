@@ -131,7 +131,11 @@ def _build_feature_context(df, columns):
 
 def calculate_durability_grade(player_row, columns=None, context=None):
     """
-    Estimate durability on a 0-100 scale. Higher means safer availability.
+    Estimate durability on a 0-100 scale from real data only. Higher means
+    safer availability. Returns None when no real durability/games-played/
+    missed-games data exists for this player -- a prior version returned a
+    flat 70.0 constant here, which shipped as if it were a per-player
+    measurement when it was actually "no data at all."
     """
     direct_value = _get_row_value(player_row, columns, "durability_col")
     if direct_value is not None:
@@ -145,12 +149,16 @@ def calculate_durability_grade(player_row, columns=None, context=None):
     if missed_games is not None:
         return _clamp_score(92.0 - (_safe_float(missed_games, 0.0) * 5.0), 70.0)
 
-    return 70.0
+    return None
 
 
 def calculate_injury_risk(player_row, columns=None, context=None):
     """
-    Estimate injury risk on a 0-100 scale. Higher means more risk.
+    Estimate injury risk on a 0-100 scale from real data only. Higher means
+    more risk. The direct-value, missed-games, and injury-status branches are
+    all real signal. Returns None when none of those exist -- a prior version
+    fell back to guessing risk purely from age, then to a flat 50.0 constant,
+    both of which are not injury data and were removed.
     """
     direct_value = _get_row_value(player_row, columns, "injury_risk_col")
     if direct_value is not None:
@@ -169,140 +177,105 @@ def calculate_injury_risk(player_row, columns=None, context=None):
         if any(term in status for term in ["probable", "active", "healthy"]):
             return 30.0
 
-    age = _get_row_value(player_row, columns, "age_col")
-    if age is not None:
-        age_value = _safe_float(age, 27.0)
-        if age_value >= 32:
-            return 62.0
-        if age_value >= 29:
-            return 55.0
-        if age_value <= 23:
-            return 42.0
-
-    return 50.0
+    return None
 
 
 def calculate_volatility_score(player_row, columns=None, context=None):
     """
-    Estimate week-to-week volatility on a 0-100 scale.
+    Return a real volatility score on a 0-100 scale if a direct source
+    column exists. Returns None otherwise -- a prior version derived this
+    from projection-percentile-vs-ADP when no direct column existed, which
+    made "volatility" a re-expression of projection/ADP rather than an
+    independent signal, and let it silently feed boom/bust/stability below.
     """
-    context = context or {}
     direct_value = _get_row_value(player_row, columns, "volatility_col")
     if direct_value is not None:
         return _clamp_score(direct_value, 50.0)
 
-    projection = _safe_float(
-        _get_row_value(player_row, columns, "projection_col"),
-        context.get("projection_median", 0.0),
-    )
-    adp = _safe_float(
-        _get_row_value(player_row, columns, "adp_col"),
-        context.get("adp_median", 100.0),
-    )
-
-    projection_percentile = _percentile_score(
-        projection,
-        context.get("projection_low", 0.0),
-        context.get("projection_high", 0.0),
-        50.0,
-    )
-
-    volatility = 45.0
-    if projection_percentile >= 75 and adp > context.get("adp_median", 100.0):
-        volatility += 18.0
-    elif projection_percentile >= 65:
-        volatility += 8.0
-    elif projection_percentile <= 30:
-        volatility += 10.0
-
-    if adp >= context.get("adp_late", 100.0):
-        volatility += 8.0
-
-    return _clamp_score(volatility, 50.0)
+    return None
 
 
 def calculate_boom_score(player_row, columns=None, context=None):
     """
-    Estimate ceiling upside on a 0-100 scale.
+    Return a real boom/ceiling score on a 0-100 scale if a direct source
+    column exists. Returns None otherwise (see calculate_volatility_score).
     """
-    context = context or {}
     direct_value = _get_row_value(player_row, columns, "boom_col")
     if direct_value is not None:
         return _clamp_score(direct_value, 50.0)
 
-    projection = _safe_float(
-        _get_row_value(player_row, columns, "projection_col"),
-        context.get("projection_median", 0.0),
-    )
-    projection_percentile = _percentile_score(
-        projection,
-        context.get("projection_low", 0.0),
-        context.get("projection_high", 0.0),
-        50.0,
-    )
-    volatility = calculate_volatility_score(player_row, columns, context)
-
-    return _clamp_score((projection_percentile * 0.70) + (volatility * 0.30), 50.0)
+    return None
 
 
 def calculate_bust_score(player_row, columns=None, context=None):
     """
-    Estimate downside risk on a 0-100 scale.
+    Return a real bust/downside score on a 0-100 scale if a direct source
+    column exists. Returns None otherwise -- a prior version derived this
+    from injury_risk/volatility/durability, several of which were themselves
+    fabricated defaults, compounding the circularity.
     """
-    context = context or {}
     direct_value = _get_row_value(player_row, columns, "bust_col")
     if direct_value is not None:
         return _clamp_score(direct_value, 50.0)
 
-    injury_risk = calculate_injury_risk(player_row, columns, context)
-    volatility = calculate_volatility_score(player_row, columns, context)
-    durability = calculate_durability_grade(player_row, columns, context)
-
-    return _clamp_score(
-        (injury_risk * 0.40)
-        + (volatility * 0.35)
-        + ((100.0 - durability) * 0.25),
-        50.0,
-    )
+    return None
 
 
 def calculate_stability_score(player_row, columns=None, context=None):
     """
-    Estimate dependability on a 0-100 scale.
+    Combine real durability/injury-risk/volatility into a dependability score
+    on a 0-100 scale. Returns None if none of the three inputs are real data
+    (rather than silently substituting fabricated defaults for the missing
+    ones, which a prior version did).
     """
     durability = calculate_durability_grade(player_row, columns, context)
     injury_risk = calculate_injury_risk(player_row, columns, context)
     volatility = calculate_volatility_score(player_row, columns, context)
 
-    return _clamp_score(
-        (durability * 0.45)
-        + ((100.0 - injury_risk) * 0.35)
-        + ((100.0 - volatility) * 0.20),
-        50.0,
-    )
+    # durability is "higher is better"; injury_risk and volatility are
+    # "lower is better", so they're inverted before weighting.
+    weighted_parts = [
+        (durability, 0.45),
+        (None if injury_risk is None else (100.0 - injury_risk), 0.35),
+        (None if volatility is None else (100.0 - volatility), 0.20),
+    ]
+    present = [(value, weight) for value, weight in weighted_parts if value is not None]
+    if not present:
+        return None
+
+    total_weight = sum(weight for _, weight in present)
+    weighted = sum(value * weight for value, weight in present)
+    return _clamp_score(weighted / total_weight, 50.0)
 
 
 def assign_player_archetype(player_row, columns=None, context=None):
     """
     Assign an explainable player archetype from engineered feature scores.
+    Returns "UNKNOWN" (not a guessed label) when there isn't enough real
+    data to support any of the archetype rules.
     """
     boom_score = calculate_boom_score(player_row, columns, context)
     bust_score = calculate_bust_score(player_row, columns, context)
     stability_score = calculate_stability_score(player_row, columns, context)
     injury_risk = calculate_injury_risk(player_row, columns, context)
 
-    if injury_risk >= 70 or bust_score >= 68:
-        return "RISKY"
-    if stability_score >= 72 and bust_score <= 42:
-        return "SAFE"
-    if boom_score >= 72 and stability_score >= 55:
-        return "UPSIDE"
-    if boom_score >= 65 and bust_score >= 50:
-        return "BOOM"
-    if stability_score >= 60:
-        return "STEADY"
+    if injury_risk is None and bust_score is None and stability_score is None and boom_score is None:
+        return "UNKNOWN"
 
-    return "RISKY" if bust_score > boom_score else "BOOM"
+    if (injury_risk is not None and injury_risk >= 70) or (bust_score is not None and bust_score >= 68):
+        return "RISKY"
+    if stability_score is not None and bust_score is not None and stability_score >= 72 and bust_score <= 42:
+        return "SAFE"
+    if boom_score is not None and stability_score is not None and boom_score >= 72 and stability_score >= 55:
+        return "UPSIDE"
+    if boom_score is not None and bust_score is not None and boom_score >= 65 and bust_score >= 50:
+        return "BOOM"
+    if stability_score is not None and stability_score >= 60:
+        return "STEADY"
+    if bust_score is not None and boom_score is not None:
+        return "RISKY" if bust_score > boom_score else "BOOM"
+
+    return "UNKNOWN"
 
 
 def build_player_features_df(players_df=None):

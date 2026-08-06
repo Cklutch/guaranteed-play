@@ -39,10 +39,15 @@ st.set_page_config(page_title="Draft Command Center", layout="wide")
 init_session_state()
 keep_session_state_alive()
 
-sidebar_position_map = dict(st.session_state.get("player_position_map", {}))
-st.session_state["player_position_map"] = {}
+# This previously blanked player_position_map to {} before rendering the
+# sidebar and restored it afterward. The sidebar's My Team list reads that
+# map (ui_helpers.py: player_positions.get(player, "Unknown")), so blanking
+# it meant every rostered player rendered as "Unknown" here -- while the
+# same player showed his real position on other pages. The blank/restore
+# also had no upside: render_league_settings_sidebar() calls
+# get_player_position_map() with no dataframe, which only reads and writes
+# back the same map, so there was nothing to protect against.
 render_league_settings_sidebar()
-st.session_state["player_position_map"] = sidebar_position_map
 
 st.title("Draft Command Center")
 st.caption("Track your roster, draft status, and next pick from one room.")

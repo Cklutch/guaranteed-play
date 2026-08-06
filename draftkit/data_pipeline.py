@@ -26,6 +26,8 @@ CANONICAL_COLUMNS = [
     "floor_projection",
     "adp",
     "adp_rank",
+    "expert_rank",
+    "projection_source",
     "injury_risk",
     "durability_grade",
     "boom_score",
@@ -35,7 +37,11 @@ CANONICAL_COLUMNS = [
 ]
 SCORABLE_POSITIONS = ["QB", "RB", "WR", "TE"]
 MASTER_OUTPUT_PATH = Path("data/processed/master_players.csv")
-LOCAL_PROJECTION_FALLBACK_PATH = Path("data/players.csv")
+# Minimum acceptable share of ranked players (real ADP/tier/expert rank present)
+# that must also have a real projection. Below this, validate_player_data()
+# marks the dataset invalid -- this is the guard against a repeat of the
+# 27-of-3931 projection-coverage collapse found in the technical audit.
+PROJECTION_COVERAGE_MIN_PCT = 90.0
 
 
 def normalize_player_name(name):
@@ -290,65 +296,6 @@ def _attach_engineered_features(master_df):
     return out
 
 
-def _load_local_projection_fallback():
-    if not LOCAL_PROJECTION_FALLBACK_PATH.exists():
-        return pd.DataFrame()
-
-    try:
-        fallback_df = pd.read_csv(LOCAL_PROJECTION_FALLBACK_PATH)
-    except Exception:
-        return pd.DataFrame()
-
-    if fallback_df.empty or "player_name" not in fallback_df.columns:
-        return pd.DataFrame()
-
-    out = fallback_df.copy()
-    out["player_key"] = out["player_name"].apply(normalize_player_name)
-    return out
-
-
-def _fill_projection_fallback(master_df):
-    if master_df.empty:
-        return master_df
-
-    if "projection_points" in master_df.columns and master_df["projection_points"].notna().any():
-        return master_df
-
-    fallback_df = _load_local_projection_fallback()
-    if fallback_df.empty:
-        return master_df
-
-    projection_lookup = {}
-    for _, row in fallback_df.iterrows():
-        player_key = row.get("player_key")
-        if not player_key:
-            continue
-        projection_lookup[player_key] = {
-            "projection_points": row.get("projection_points"),
-            "projection_rank": row.get("projection_rank"),
-            "ceiling_projection": row.get("ceiling_projection"),
-            "floor_projection": row.get("floor_projection"),
-        }
-
-    out = master_df.copy()
-    for idx, row in out.iterrows():
-        fallback = projection_lookup.get(row.get("player_key"))
-        if not fallback:
-            continue
-
-        for column in [
-            "projection_points",
-            "projection_rank",
-            "ceiling_projection",
-            "floor_projection",
-        ]:
-            if column in out.columns:
-                out.at[idx, column] = _combine_values(row.get(column), fallback.get(column))
-
-    out.attrs["projection_fallback_path"] = str(LOCAL_PROJECTION_FALLBACK_PATH)
-    return out
-
-
 def merge_player_sources(sleeper_df=None, fantasypros_df=None, underdog_df=None):
     """
     Merge Sleeper, FantasyPros, and Underdog data into one canonical dataframe.
@@ -392,7 +339,6 @@ def merge_player_sources(sleeper_df=None, fantasypros_df=None, underdog_df=None)
         out = _canonical_empty_df()
     else:
         base_df = _attach_engineered_features(base_df)
-        base_df = _fill_projection_fallback(base_df)
         out = _ensure_canonical_columns(base_df)
         out["player_key"] = out["player_name"].apply(normalize_player_name)
         out = out[out["position"].astype(str).str.upper().isin(SCORABLE_POSITIONS)].copy()
@@ -409,6 +355,7 @@ def merge_player_sources(sleeper_df=None, fantasypros_df=None, underdog_df=None)
             "floor_projection",
             "adp",
             "adp_rank",
+            "expert_rank",
             "injury_risk",
             "durability_grade",
             "boom_score",
@@ -417,6 +364,10 @@ def merge_player_sources(sleeper_df=None, fantasypros_df=None, underdog_df=None)
         ]
         for column in numeric_cols:
             out[column] = pd.to_numeric(out[column], errors="coerce")
+
+        out["projection_source"] = out["projection_points"].notna().map(
+            {True: "real", False: None}
+        )
 
         if out["projection_rank"].isna().all() and out["projection_points"].notna().any():
             out["projection_rank"] = out["projection_points"].rank(
@@ -512,6 +463,22 @@ def validate_player_data(master_df=None):
         if column in master_df.columns
     }
 
+    # A player is "ranked" if any external source placed them on a board at
+    # all (real ADP or a FantasyPros tier/expert rank). Coverage is measured
+    # against this group, not the full Sleeper-metadata pool of thousands of
+    # bench/practice-squad players who were never going to have projections.
+    ranked_mask = pd.Series(False, index=master_df.index)
+    for column in ["adp", "tier", "expert_rank"]:
+        if column in master_df.columns:
+            ranked_mask = ranked_mask | master_df[column].notna()
+    ranked_count = int(ranked_mask.sum())
+    ranked_projection_coverage = (
+        round(float(master_df.loc[ranked_mask, "projection_points"].notna().mean()) * 100.0, 2)
+        if ranked_count and "projection_points" in master_df.columns
+        else 0.0
+    )
+    coverage_ok = ranked_count == 0 or ranked_projection_coverage >= PROJECTION_COVERAGE_MIN_PCT
+
     messages = []
     if missing_columns:
         messages.append("One or more canonical columns are missing.")
@@ -520,14 +487,27 @@ def validate_player_data(master_df=None):
     if duplicate_normalized_names:
         messages.append("Duplicate normalized player names detected.")
     if missing_data_counts.get("projection_points", 0) > 0:
-        messages.append("Some players are missing FantasyPros projection points.")
+        messages.append("Some players are missing real projection points.")
     if missing_data_counts.get("adp", 0) > 0:
-        messages.append("Some players are missing Underdog ADP.")
+        messages.append("Some players are missing real ADP.")
     if missing_data_counts.get("position", 0) > 0:
         messages.append("Some players are missing position.")
+    if not coverage_ok:
+        messages.append(
+            "CRITICAL: only {0}% of the {1} ranked players (real ADP/tier/expert "
+            "rank present) have a real projection. The recommendation engine "
+            "will be effectively blind for most of the ranked player pool "
+            "until a real projections export is added to data/raw/. Threshold "
+            "is {2}%.".format(ranked_projection_coverage, ranked_count, PROJECTION_COVERAGE_MIN_PCT)
+        )
 
     return {
-        "is_valid": not missing_columns and not duplicate_player_ids and not duplicate_normalized_names,
+        "is_valid": (
+            not missing_columns
+            and not duplicate_player_ids
+            and not duplicate_normalized_names
+            and coverage_ok
+        ),
         "row_count": int(len(master_df)),
         "missing_columns": missing_columns,
         "duplicate_player_ids": duplicate_player_ids,
@@ -535,6 +515,10 @@ def validate_player_data(master_df=None):
         "missing_data_counts": missing_data_counts,
         "source_duplicates": master_df.attrs.get("source_duplicates", {}),
         "unmatched_players": master_df.attrs.get("unmatched_players", {}),
+        "ranked_player_count": ranked_count,
+        "ranked_projection_coverage": ranked_projection_coverage,
+        "projection_coverage_ok": coverage_ok,
+        "projection_coverage_min_pct": PROJECTION_COVERAGE_MIN_PCT,
         "projection_coverage": round(
             float(master_df["projection_points"].notna().mean()) * 100.0,
             2,

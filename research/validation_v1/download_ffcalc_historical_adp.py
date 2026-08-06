@@ -25,7 +25,7 @@ def season_rows(payload: dict, season: int, scoring: str) -> list[dict]:
     rows = []
     for player in payload.get("players", []) or []:
         position = str(player.get("position", "")).upper()
-        if position not in {"WR", "RB"}:
+        if position not in {"WR", "RB", "QB", "TE"}:
             continue
         adp = player.get("adp")
         row = {
@@ -95,14 +95,14 @@ def main() -> None:
             "output_file": str(out_path),
         })
         total_rows += len(rows)
-        print(f"{season}: {len(rows)} WR/RB rows, window {meta.get('start_date')} to {meta.get('end_date')}")
+        print(f"{season}: {len(rows)} WR/RB/QB/TE rows, window {meta.get('start_date')} to {meta.get('end_date')}")
         if args.sleep:
             time.sleep(args.sleep)
 
     manifest_path = output_dir / f"ffcalc_{args.scoring.replace('-', '_')}_manifest.csv"
     pd.DataFrame(manifest).to_csv(manifest_path, index=False)
     print(f"Manifest written: {manifest_path}")
-    print(f"Total WR/RB rows: {total_rows}")
+    print(f"Total WR/RB/QB/TE rows: {total_rows}")
 
 
 if __name__ == "__main__":

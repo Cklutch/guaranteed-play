@@ -38,7 +38,7 @@ COLUMN_CANDIDATES = {
     "standard_adp": ["standard_adp", "std_adp", "standard", "standard adp"],
 }
 
-VALID_POSITIONS = {"WR", "RB"}
+VALID_POSITIONS = {"WR", "RB", "QB", "TE"}
 
 
 def _find_input_files(input_paths: list[str], input_dir: str | None) -> list[Path]:
@@ -99,7 +99,7 @@ def _coerce_and_standardize(df: pd.DataFrame, scoring: str) -> pd.DataFrame:
     out = df.copy()
     out["season"] = pd.to_numeric(out["season"], errors="coerce").astype("Int64")
     out["player_name"] = out["player_name"].astype(str).str.strip()
-    out["position"] = out["position"].astype(str).str.upper().str.extract(r"(WR|RB)", expand=False)
+    out["position"] = out["position"].astype(str).str.upper().str.extract(r"(WR|RB|QB|TE)", expand=False)
     for col in ["overall_adp", "positional_adp", "preseason_projection", "half_ppr_adp", "ppr_adp", "standard_adp"]:
         out[col] = pd.to_numeric(out[col], errors="coerce")
     score_col = {
@@ -139,7 +139,7 @@ def _load_outcome_keys() -> pd.DataFrame:
     if not path.exists():
         return pd.DataFrame(columns=["season", "position", "player_key"])
     df = pd.read_csv(path, usecols=lambda c: c in {"season", "position", "player_name"})
-    df = df[df["position"].isin(["WR", "RB"])].copy()
+    df = df[df["position"].isin(["WR", "RB", "QB", "TE"])].copy()
     df["season"] = pd.to_numeric(df["season"], errors="coerce").astype("Int64")
     df["position"] = df["position"].astype(str).str.upper()
     df["player_key"] = df["player_name"].apply(clean_name)
@@ -252,6 +252,8 @@ def main() -> None:
     print(f"Seasons covered: {sorted(normalized['season'].dropna().astype(int).unique().tolist())}")
     print(f"WR rows: {int(normalized['position'].eq('WR').sum())}")
     print(f"RB rows: {int(normalized['position'].eq('RB').sum())}")
+    print(f"QB rows: {int(normalized['position'].eq('QB').sum())}")
+    print(f"TE rows: {int(normalized['position'].eq('TE').sum())}")
     print(f"Duplicate rows before dedupe: {len(duplicates)}")
     print(f"Missing overall ADP rows: {len(tables['missing_adp'])}")
     print(f"Invalid position rows: {len(tables['invalid_positions'])}")

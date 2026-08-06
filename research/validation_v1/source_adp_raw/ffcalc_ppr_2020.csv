@@ -18,8 +18,12 @@ season,player_name,position,overall_adp,positional_adp,adp_source,source_scoring
 2020,Nick Chubb,RB,16.3,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2863,CLE,910,8,24,3.1,16.3
 2020,Aaron Jones Sr.,RB,17.5,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2507,GB,976,9,28,2.9,17.5
 2020,DeAndre Hopkins,WR,18.5,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,1975,ARI,931,9,28,3.4,18.5
+2020,Patrick Mahomes,QB,18.7,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2462,KC,674,4,34,5.4,18.7
+2020,Travis Kelce,TE,19.9,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,1989,KC,877,9,33,3.9,19.9
 2020,Chris Godwin Jr.,WR,21.5,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2465,TB,910,13,33,3.0,21.5
 2020,James Conner,RB,22.4,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2470,PIT,852,13,37,3.4,22.4
+2020,Lamar Jackson,QB,22.7,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2888,BAL,765,8,34,5.6,22.7
+2020,George Kittle,TE,24.4,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2499,SF,816,14,35,3.9,24.4
 2020,Kenny Golladay,WR,25.8,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2488,DET,820,17,35,3.1,25.8
 2020,Chris Carson,RB,26.4,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2518,SEA,883,15,37,4.0,26.4
 2020,Mike Evans,WR,27.9,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2111,TB,782,19,37,3.2,27.9
@@ -37,6 +41,7 @@ season,player_name,position,overall_adp,positional_adp,adp_source,source_scoring
 2020,Melvin Gordon III,RB,39.4,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2282,DEN,861,26,55,4.9,39.4
 2020,Cooper Kupp,WR,40.3,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2449,LAR,805,29,51,4.3,40.3
 2020,Calvin Ridley,WR,40.9,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2866,ATL,906,29,55,4.2,40.9
+2020,Mark Andrews,TE,42.4,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2872,BAL,508,26,60,6.3,42.4
 2020,Robert Woods,WR,42.4,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,1981,LAR,795,33,54,3.6,42.4
 2020,Mark Ingram II,RB,42.5,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,1800,BAL,759,29,58,5.1,42.5
 2020,A.J. Brown,WR,44.4,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,3247,TEN,588,33,57,4.0,44.4
@@ -45,73 +50,102 @@ season,player_name,position,overall_adp,positional_adp,adp_source,source_scoring
 2020,DJ Chark,WR,47.5,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2912,JAX,754,35,63,4.7,47.5
 2020,Raheem Mostert,RB,49.4,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2737,SF,776,33,69,6.1,49.4
 2020,Tyler Lockett,WR,49.9,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2304,SEA,701,38,67,4.3,49.9
+2020,Zach Ertz,TE,50.6,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,1978,PHI,627,32,69,6.9,50.6
 2020,Terry McLaurin,WR,50.8,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,3449,WAS,667,40,67,3.9,50.8
 2020,Cam Akers,RB,52.8,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,4881,LAR,809,37,68,5.7,52.8
 2020,Kareem Hunt,RB,53.1,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2450,CLE,835,37,68,6.0,53.1
 2020,Keenan Allen,WR,53.5,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,1992,LAC,845,41,72,4.7,53.5
+2020,Dak Prescott,QB,54.7,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2377,DAL,444,34,74,7.6,54.7
 2020,Ronald Jones,RB,56.5,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2867,TB,838,42,72,5.5,56.5
 2020,T.Y. Hilton,WR,57.5,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,1935,IND,685,44,78,5.0,57.5
 2020,Courtland Sutton,WR,58.1,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2862,DEN,825,43,72,5.5,58.1
 2020,David Montgomery,RB,59.7,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,3238,CHI,504,43,76,6.4,59.7
 2020,Hollywood Brown,WR,60.0,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,3249,BAL,684,45,77,5.5,60.0
 2020,D'Andre Swift,RB,61.4,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,4862,DET,556,47,75,5.5,61.4
+2020,Darren Waller,TE,61.6,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2322,LV,564,45,89,6.4,61.6
+2020,Russell Wilson,QB,62.0,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,1904,SEA,588,40,82,8.1,62.0
+2020,Kyler Murray,QB,62.6,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,3299,ARI,408,41,86,8.1,62.6
 2020,Stefon Diggs,WR,65.0,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2316,BUF,885,49,82,5.8,65.0
 2020,DeVante Parker,WR,66.7,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2279,MIA,754,51,86,5.8,66.7
 2020,J.K. Dobbins,RB,67.0,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,4888,BAL,498,53,83,5.2,67.0
+2020,Deshaun Watson,QB,69.3,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2444,HOU,595,52,92,6.4,69.3
 2020,A.J. Green,WR,69.8,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,1795,CIN,791,53,97,6.4,69.8
+2020,Rob Gronkowski,TE,70.4,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,1740,TB,348,46,96,9.3,70.4
 2020,Will Fuller,WR,70.5,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2345,HOU,854,54,95,6.1,70.5
 2020,Michael Gallup,WR,72.2,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2879,DAL,833,54,96,6.7,72.2
 2020,James White,RB,72.7,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2154,NE,585,54,93,6.8,72.7
 2020,Marlon Mack,RB,74.6,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2469,IND,522,52,93,8.3,74.6
+2020,Evan Engram,TE,74.8,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2451,NYG,446,57,100,6.8,74.8
 2020,Julian Edelman,WR,77.2,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,1708,NE,709,59,97,6.7,77.2
 2020,Tyler Boyd,WR,78.5,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2359,CIN,873,60,96,7.0,78.5
 2020,Antonio Gibson,RB,79.0,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,5008,WAS,464,62,97,6.5,79.0
+2020,Hayden Hurst,TE,79.4,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2889,ATL,410,61,103,6.9,79.4
 2020,Jordan Howard,RB,80.0,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2384,PHI,502,61,98,7.2,80.0
+2020,Drew Brees,QB,80.1,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,127,NO,386,56,105,9.2,80.1
 2020,Brandin Cooks,WR,81.5,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2114,HOU,751,63,99,7.1,81.5
 2020,Zack Moss,RB,83.7,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,4877,BUF,657,64,99,7.4,83.7
 2020,Phillip Lindsay,RB,83.8,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,3032,DEN,601,63,99,7.6,83.8
 2020,Tarik Cohen,RB,84.6,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2493,CHI,595,66,105,6.8,84.6
+2020,Matt Ryan,QB,84.8,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,1342,ATL,433,62,111,8.7,84.8
 2020,Jarvis Landry,WR,85.5,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2132,CLE,733,65,104,7.6,85.5
+2020,Tom Brady,QB,88.0,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,119,TB,381,63,115,9.5,88.0
 2020,Deebo Samuel Sr.,WR,89.1,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,3246,SF,608,67,110,8.3,89.1
 2020,Diontae Johnson,WR,89.4,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,3419,PIT,503,70,106,7.2,89.4
+2020,Tyler Higbee,TE,89.7,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2370,LAR,370,64,116,9.7,89.7
 2020,Matt Breida,RB,90.5,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2525,MIA,456,71,112,7.5,90.5
 2020,CeeDee Lamb,WR,93.2,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,4869,DAL,611,72,112,8.0,93.2
+2020,Aaron Rodgers,QB,94.3,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,1004,GB,376,70,122,9.1,94.3
 2020,Latavius Murray,RB,94.9,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2023,NO,489,76,108,7.2,94.9
 2020,Marvin Jones Jr.,WR,95.1,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2061,DET,665,75,112,7.7,95.1
 2020,Tevin Coleman,RB,96.4,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2289,SF,389,77,111,7.2,96.4
 2020,Alexander Mattison,RB,96.7,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,3458,MIN,350,77,111,7.4,96.7
 2020,Kerryon Johnson,RB,97.2,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2868,DET,525,77,118,7.7,97.2
+2020,Hunter Henry,TE,98.0,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2354,LAC,406,69,137,10.9,98.0
 2020,Emmanuel Sanders,WR,100.0,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,1762,NO,549,79,119,7.8,100.0
 2020,Chase Edmonds,RB,101.1,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2980,ARI,446,81,120,7.4,101.1
 2020,Damien Harris,RB,101.1,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,3243,NE,324,83,121,6.7,101.1
+2020,Josh Allen,QB,101.5,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2885,BUF,484,75,129,10.0,101.5
 2020,Jamison Crowder,WR,102.6,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2331,NYJ,596,83,119,7.2,102.6
 2020,Henry Ruggs III,WR,104.5,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,4874,LV,463,84,130,7.6,104.5
 2020,Mecole Hardman Jr.,WR,106.1,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,3426,KC,330,82,122,9.1,106.1
 2020,Sony Michel,RB,107.4,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2865,NE,342,82,127,9.4,107.4
+2020,Carson Wentz,QB,107.9,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2352,PHI,438,83,127,9.4,107.9
 2020,Jalen Reagor,WR,109.5,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,4879,PHI,303,92,132,6.4,109.5
+2020,Matthew Stafford,QB,111.3,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,1664,DET,569,90,131,8.1,111.3
 2020,AJ Dillon,RB,111.9,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,4886,GB,262,91,138,8.0,111.9
 2020,Jerry Jeudy,WR,112.3,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,4861,DEN,444,92,128,7.7,112.3
 2020,Darius Slayton,WR,113.2,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,3437,NYG,334,93,128,7.5,113.2
 2020,Darrell Henderson Jr.,RB,114.1,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,3253,LAR,274,95,132,7.3,114.1
+2020,Jared Cook,TE,115.2,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,1658,NO,483,75,161,15.3,115.2
 2020,Christian Kirk,WR,116.9,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2870,ARI,446,97,132,7.6,116.9
 2020,Adrian Peterson,RB,118.4,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,925,DET,296,95,142,8.7,118.4
 2020,Sterling Shepard,WR,118.9,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2349,NYG,512,95,148,9.2,118.9
 2020,Tony Pollard,RB,119.4,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,3435,DAL,266,96,143,8.7,119.4
+2020,Noah Fant,TE,119.6,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,3251,DEN,555,83,151,13.7,119.6
 2020,Boston Scott,RB,120.1,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2994,PHI,442,96,148,9.1,120.1
+2020,Cam Newton,QB,120.7,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,1794,NE,530,97,143,8.9,120.7
 2020,Justin Jefferson,WR,121.5,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,4876,MIN,297,94,138,10.3,121.5
+2020,Daniel Jones,QB,125.4,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,3264,NYG,331,101,144,9.3,125.4
 2020,Bryce Love,RB,126.8,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,3259,WAS,206,103,147,8.9,126.8
 2020,Anthony Miller,WR,126.9,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2878,CHI,357,105,145,8.4,126.9
 2020,DeSean Jackson,WR,127.1,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,1357,PHI,339,102,150,9.3,127.1
+2020,Ben Roethlisberger,QB,129.5,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,1006,PIT,364,102,148,10.6,129.5
 2020,Preston Williams,WR,130.9,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,3588,MIA,233,107,145,9.1,130.9
 2020,Duke Johnson,RB,131.0,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2285,HOU,390,102,169,11.0,131.0
 2020,Allen Lazard,WR,131.0,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,3077,GB,296,108,148,8.7,131.0
 2020,Ke'Shawn Vaughn,RB,134.4,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,4899,TB,221,106,166,10.6,134.4
 2020,Ryquell Armstead,RB,135.3,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,3473,JAX,134,65,187,26.8,135.3
+2020,Joe Burrow,QB,135.7,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,4882,CIN,295,111,168,9.2,135.7
 2020,Brandon Aiyuk,WR,135.9,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,4891,SF,190,111,165,9.4,135.9
+2020,Austin Hooper,TE,136.7,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2361,CLE,708,87,178,18.8,136.7
 2020,Justin Jackson,RB,137.6,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2970,LAC,298,104,180,12.9,137.6
 2020,Nyheim Hines,RB,139.9,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2948,IND,337,101,179,14.6,139.9
 2020,Sammy Watkins,WR,140.5,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2109,KC,229,110,166,11.6,140.5
+2020,T.J. Hockenson,TE,143.1,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,3307,DET,648,97,178,17.4,143.1
+2020,Baker Mayfield,QB,144.7,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2886,CLE,298,114,175,11.6,144.7
 2020,Golden Tate,WR,145.3,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,1730,NYG,228,108,175,14.2,145.3
+2020,Mike Gesicki,TE,146.5,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2906,MIA,511,95,180,19.5,146.5
+2020,Jared Goff,QB,147.2,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2351,LAR,357,110,175,14.1,147.2
 2020,John Brown,WR,149.1,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2138,BUF,275,112,176,14.0,149.1
 2020,Chris Thompson,RB,149.6,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2793,JAX,419,93,180,21.4,149.6
 2020,Michael Pittman Jr.,WR,151.7,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,4880,IND,203,118,176,12.7,151.7
@@ -119,13 +153,22 @@ season,player_name,position,overall_adp,positional_adp,adp_source,source_scoring
 2020,Jerick McKinnon,RB,152.3,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2140,SF,333,112,184,15.4,152.3
 2020,Benny Snell Jr.,RB,152.9,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,3420,PIT,125,103,188,19.0,152.9
 2020,Breshad Perriman,WR,153.0,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2286,NYJ,182,116,178,13.9,153.0
+2020,Jonnu Smith,TE,153.6,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2490,TEN,361,110,183,16.5,153.6
+2020,Jack Doyle,TE,153.7,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2430,IND,87,103,191,19.2,153.7
+2020,Chris Herndon,TE,153.9,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2958,NYJ,315,108,186,17.6,153.9
+2020,Blake Jarwin,TE,154.4,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2643,DAL,228,103,180,19.5,154.4
 2020,Joshua Kelley,RB,154.5,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,5031,LAC,159,117,186,16.1,154.5
 2020,LeSean McCoy,RB,156.0,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,1645,TB,254,108,186,18.3,156.0
+2020,Ryan Tannehill,QB,156.4,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,1899,TEN,227,120,180,13.9,156.4
 2020,Carlos Hyde,RB,156.5,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2129,SEA,290,114,180,16.2,156.5
+2020,Jimmy Garoppolo,QB,157.2,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2131,SF,104,112,183,17.0,157.2
 2020,Parris Campbell,WR,158.4,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,3411,IND,146,117,187,15.6,158.4
 2020,N'Keal Harry,WR,159.0,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,3237,NE,207,122,185,14.1,159.0
+2020,Gardner Minshew II,QB,159.2,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,3474,JAX,122,120,183,15.0,159.2
+2020,Philip Rivers,QB,159.6,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,995,IND,162,118,181,16.0,159.6
 2020,DeAndre Washington,RB,161.4,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2382,MIA,85,119,185,16.1,161.4
 2020,Mike Williams,WR,161.9,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2436,LAC,79,123,180,14.9,161.9
+2020,Drew Lock,QB,162.4,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,3263,DEN,86,122,181,15.4,162.4
 2020,Larry Fitzgerald,WR,162.8,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,374,ARI,248,123,182,15.1,162.8
 2020,Curtis Samuel,WR,163.9,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2443,CAR,67,136,180,11.5,163.9
 2020,Robbie Chosen,WR,163.9,,FantasyFootballCalculator,ppr,12,15,2403,2020-08-30,2020-09-01,2523,CAR,117,117,189,17.8,163.9

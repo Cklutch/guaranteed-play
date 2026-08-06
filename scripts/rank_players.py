@@ -1,3 +1,7 @@
+# Dev/demo script only, over SAMPLE data (see scripts/load_to_sqlite.py). The
+# value_score formula here (projection_points - adp * 10) is an arbitrary,
+# unvalidated heuristic kept for historical reference -- do not port it into
+# draftkit/draft_analysis.py or treat its output as a real ranking.
 import sqlite3
 
 conn = sqlite3.connect("../guaranteed_play.db")

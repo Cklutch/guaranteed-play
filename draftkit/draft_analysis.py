@@ -42,7 +42,11 @@ POSITION_URGENCY_MULTIPLIERS = {
 RB_WR_BALANCE_MANDATE_THRESHOLD = 3
 CONSTRUCTION_MANDATE_BOOST = 15.0
 CONSTRUCTION_MANDATE_NON_TARGET_MULTIPLIER = 0.35
-SINGLE_QB_SCORE_CAP = 50.0
+# Smooth multipliers replacing the old flat SINGLE_QB_SCORE_CAP -- see
+# apply_single_qb_value_adjustments() for why a hard cap was removed.
+SINGLE_QB_BASE_MULTIPLIER = 0.72
+SINGLE_QB_HIGH_PRESSURE_MULTIPLIER = 0.85
+SINGLE_QB_SEVERE_PRESSURE_MULTIPLIER = 0.92
 DEFAULT_MASTER_COMPONENT_WEIGHTS = {
     "projection": 0.30,
     "position_need": 0.25,
@@ -202,6 +206,48 @@ def derive_player_archetype(player_row, columns=None, context=None):
     return "SAFE"
 
 
+def fill_missing_projection_points(df, pos_col, proj_col):
+    """
+    Fill missing projection_points with a per-position replacement-level
+    estimate instead of dropping the player from every ranking/tier table.
+
+    A player with no real projection but real ADP/tier data (e.g. a rookie
+    a full projections export hasn't caught up to yet) should still show up
+    in the board -- ranked conservatively -- rather than vanish silently.
+    Uses 90% of the *worst* real projection at that position as the fallback
+    anchor, so unprojected players can never accidentally outrank a real,
+    worse-projected player. (An earlier version used the 25th percentile,
+    which broke down when the only "real" data available was an elite-only
+    sample -- the 25th percentile of an elite-only sample is still elite,
+    not replacement level.)
+
+    Adds a 'projection_source' column: 'real' or 'replacement_fallback'.
+    """
+    df = df.copy()
+    df[proj_col] = pd.to_numeric(df[proj_col], errors="coerce")
+    df["projection_source"] = df[proj_col].apply(
+        lambda value: "real" if pd.notna(value) else "replacement_fallback"
+    )
+
+    position_fallback = {}
+    for position in SCORABLE_POSITIONS:
+        real_values = df.loc[
+            (df[pos_col].astype(str).str.upper() == position) & df[proj_col].notna(),
+            proj_col,
+        ]
+        if not real_values.empty:
+            position_fallback[position] = float(real_values.min()) * 0.9
+
+    def _fallback_value(row):
+        if pd.notna(row[proj_col]):
+            return row[proj_col]
+        position = str(row[pos_col]).upper()
+        return position_fallback.get(position, 0.0)
+
+    df[proj_col] = df.apply(_fallback_value, axis=1)
+    return df
+
+
 def _prep_ranked_df():
     df = get_available_players_df().copy()
     if df.empty:
@@ -217,8 +263,7 @@ def _prep_ranked_df():
         return pd.DataFrame(), None, None, None, None, None
 
     df = df[df[pos_col].astype(str).isin(["QB", "RB", "WR", "TE"])].copy()
-    df[proj_col] = pd.to_numeric(df[proj_col], errors="coerce")
-    df = df.dropna(subset=[proj_col]).copy()
+    df = fill_missing_projection_points(df, pos_col, proj_col)
     df = df.sort_values([pos_col, proj_col], ascending=[True, False]).reset_index(drop=True)
 
     return df, player_col, pos_col, team_col, proj_col, adp_col
@@ -735,11 +780,14 @@ def build_adp_value_rankings_df():
     if df.empty:
         return pd.DataFrame()
 
-    df[proj_col] = pd.to_numeric(df[proj_col], errors="coerce")
+    # A player genuinely needs real ADP to get an ADP-value score, so that
+    # drop stays -- but missing projection_points gets a replacement-level
+    # fallback instead of dropping the player (see fill_missing_projection_points).
     df[adp_col] = pd.to_numeric(df[adp_col], errors="coerce")
-    df = df.dropna(subset=[proj_col, adp_col]).copy()
+    df = df.dropna(subset=[adp_col]).copy()
     if df.empty:
         return pd.DataFrame()
+    df = fill_missing_projection_points(df, pos_col, proj_col)
 
     current_pick = get_current_pick_number()
     next_pick_distance = get_next_pick_distance()
@@ -785,6 +833,7 @@ def build_adp_value_rankings_df():
             "value_score": row["value_score"],
             "value_tier": row["value_tier"],
             "fall_risk": row["fall_risk"],
+            "projection_source": row.get("projection_source", "real"),
         })
 
     rankings_df = pd.DataFrame(rows)
@@ -864,24 +913,17 @@ def calculate_tier_bonus(player_name, position, tiers_df=None, tier_summary_df=N
     return 1.0
 
 
-def calculate_recommendation_score(
-    projection_score,
-    need_bonus,
-    adp_bonus,
-    tier_bonus,
-    team_fit_bonus,
-):
-    """
-    Transparent final recommendation score.
-    """
-    score = (
-        _safe_float(projection_score, 0.0)
-        * _safe_float(need_bonus, 1.0)
-        * _safe_float(adp_bonus, 1.0)
-        * _safe_float(tier_bonus, 1.0)
-        * _safe_float(team_fit_bonus, 1.0)
-    )
-    return round(score, 2)
+# NOTE: this file used to also define calculate_recommendation_score(), a
+# second multiplicative scoring formula computed inside
+# _build_base_recommendation_rankings_df() below. Its output was immediately
+# and unconditionally overwritten by calculate_final_recommendation_score()
+# in build_master_recommendations_df() before ever reaching a caller --
+# _build_base_recommendation_rankings_df() has exactly one caller, and that
+# caller always re-scores every row. It was removed rather than fixed
+# because keeping two silently-conflicting scoring formulas in the same file
+# is itself the bug: calculate_final_recommendation_score() (see
+# DEFAULT_MASTER_COMPONENT_WEIGHTS) is the one formula that actually drives
+# every ranking the app displays.
 
 
 def build_position_replacement_baselines(df, pos_col, proj_col):
@@ -951,10 +993,7 @@ def _build_base_recommendation_rankings_df():
     if df.empty:
         return pd.DataFrame()
 
-    df[proj_col] = pd.to_numeric(df[proj_col], errors="coerce")
-    df = df.dropna(subset=[proj_col]).copy()
-    if df.empty:
-        return pd.DataFrame()
+    df = fill_missing_projection_points(df, pos_col, proj_col)
 
     if adp_col is not None:
         df[adp_col] = pd.to_numeric(df[adp_col], errors="coerce")
@@ -994,13 +1033,6 @@ def _build_base_recommendation_rankings_df():
             columns=columns,
             context=context,
         )
-        final_score = calculate_recommendation_score(
-            position_value_score,
-            need_bonus,
-            adp_bonus,
-            tier_bonus,
-            team_fit_bonus,
-        )
         archetype = derive_player_archetype(row, columns, context)
 
         rows.append({
@@ -1018,15 +1050,19 @@ def _build_base_recommendation_rankings_df():
             "adp_bonus": adp_bonus,
             "tier_bonus": tier_bonus,
             "team_fit_bonus": team_fit_bonus,
-            "final_score": final_score,
+            "projection_source": row.get("projection_source", "real"),
         })
 
     rankings_df = pd.DataFrame(rows)
     if rankings_df.empty:
         return rankings_df
 
+    # This is an intermediate table: build_master_recommendations_df() (the
+    # only caller) computes the real final_score via
+    # calculate_final_recommendation_score() and re-sorts fully afterward, so
+    # this ordering only affects tie-breaking before that happens.
     return rankings_df.sort_values(
-        ["final_score", "position_value_score", "projection_points"],
+        ["position_value_score", "projection_points"],
         ascending=False,
     ).reset_index(drop=True)
 
@@ -1216,7 +1252,17 @@ def apply_signal_trust_adjustments(recommendations_df):
 
 def apply_single_qb_value_adjustments(recommendations_df):
     """
-    Guard against raw QB fantasy points overpowering RB/WR economics in 1-QB leagues.
+    Guard against raw QB fantasy points overpowering RB/WR economics in 1-QB
+    leagues, via a smooth multiplier rather than a hard score cap.
+
+    A prior version clamped every non-elite QB's final_score to a flat
+    constant (SINGLE_QB_SCORE_CAP = 50.0), which meant any two QBs without
+    SEVERE/HIGH position pressure scored identically regardless of how far
+    apart their ADP or projection actually was -- e.g. a QB going 26th
+    overall and one going 139th both landed on exactly 50.00. That flattening
+    was itself dragging down correlation to ADP for the whole QB position.
+    Applying a multiplier instead discounts QBs as a group (the actual
+    intent) while preserving their relative order.
     """
     if recommendations_df.empty:
         return recommendations_df.copy()
@@ -1236,25 +1282,19 @@ def apply_single_qb_value_adjustments(recommendations_df):
     if not qb_mask.any():
         return adjusted_df
 
-    score_before = adjusted_df.loc[qb_mask, "final_score"].copy()
-    qb_caps = adjusted_df.loc[qb_mask, "position_pressure"].map(
-        lambda level: 58.0
+    qb_multipliers = adjusted_df.loc[qb_mask, "position_pressure"].map(
+        lambda level: SINGLE_QB_SEVERE_PRESSURE_MULTIPLIER
         if str(level).upper() == "SEVERE"
-        else 55.0
+        else SINGLE_QB_HIGH_PRESSURE_MULTIPLIER
         if str(level).upper() == "HIGH"
-        else SINGLE_QB_SCORE_CAP
+        else SINGLE_QB_BASE_MULTIPLIER
     )
     adjusted_df.loc[qb_mask, "final_score"] = (
-        adjusted_df.loc[qb_mask, "final_score"]
-        .combine(qb_caps, min)
-        .round(2)
-    )
-    applied_mask = qb_mask & (
-        adjusted_df["final_score"].round(2) < score_before.reindex(adjusted_df.index).round(2)
-    )
-    adjusted_df.loc[applied_mask, "single_qb_adjustment_applied"] = True
-    adjusted_df.loc[applied_mask, "single_qb_adjustment_reason"] = (
-        "single-QB positional value cap"
+        adjusted_df.loc[qb_mask, "final_score"] * qb_multipliers
+    ).round(2)
+    adjusted_df.loc[qb_mask, "single_qb_adjustment_applied"] = True
+    adjusted_df.loc[qb_mask, "single_qb_adjustment_reason"] = (
+        "single-QB positional value discount"
     )
 
     return adjusted_df

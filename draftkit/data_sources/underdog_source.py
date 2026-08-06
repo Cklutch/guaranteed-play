@@ -1,8 +1,48 @@
+from datetime import datetime
 from pathlib import Path
+import re
 
 import pandas as pd
 
 from draftkit.data_access import safe_col
+
+
+# Underdog's real "Draft Table" export doesn't use a plain "ADP" header --
+# it has one or more dated snapshot columns like "ADP on August  5" (and
+# often a stale earlier snapshot alongside it, e.g. "ADP on April 25").
+# Always prefer the most recent snapshot over a stale one.
+_ADP_ON_PATTERN = re.compile(r"^adp on\s+(.+)$", re.IGNORECASE)
+_ADP_ON_DATE_FORMATS = ("%B %d", "%b %d", "%m/%d/%Y", "%m/%d")
+
+
+def _find_latest_adp_on_column(columns):
+    candidates = []
+    for column in columns:
+        match = _ADP_ON_PATTERN.match(str(column).strip())
+        if match:
+            candidates.append((column, match.group(1).strip()))
+
+    if not candidates:
+        return None
+
+    dated = []
+    for column, label in candidates:
+        parsed_date = None
+        for fmt in _ADP_ON_DATE_FORMATS:
+            try:
+                parsed_date = datetime.strptime(label, fmt)
+                break
+            except ValueError:
+                continue
+        if parsed_date is not None:
+            dated.append((column, parsed_date))
+
+    if dated:
+        return max(dated, key=lambda item: item[1])[0]
+
+    # Couldn't parse any label as a date -- fall back to the last matching
+    # column in file order (Underdog exports place the newest snapshot last).
+    return candidates[-1][0]
 
 
 CANONICAL_COLUMNS = [
@@ -26,10 +66,16 @@ CANONICAL_COLUMNS = [
 
 UNDERDOG_SOURCE_CANDIDATES = [
     Path("data/raw/underdog_adp.csv"),
+    Path("data/raw/real_adp.csv"),
+    Path("data/raw/current_adp.csv"),
     Path("data/underdog_adp.csv"),
     Path("data/adp.csv"),
-    Path("data/players.csv"),
 ]
+# Intentionally excludes any sample/placeholder file. A prior version fell
+# back to "data/players.csv" (a 27-row hand-authored sample) when none of the
+# real candidates existed, which silently made that sample file the source of
+# "ADP" for the entire app. If no real ADP export is present, this loader
+# must return empty rather than fabricate one.
 
 
 def _empty_canonical_df():
@@ -51,7 +97,11 @@ def _read_first_existing_csv():
 
 def load_underdog_adp():
     """
-    Load Underdog ADP data into the canonical player schema.
+    Load a real ADP export (Underdog, Sleeper mock drafts, FantasyFootballCalculator,
+    etc.) into the canonical player schema. This reads whichever manually-provided
+    CSV matches UNDERDOG_SOURCE_CANDIDATES -- it does not call any live API despite
+    the module name. Returns an empty frame if no real export is present; callers
+    must not treat that as "ADP is 0/unknown," it means no ADP data was provided.
     """
     df, source_path = _read_first_existing_csv()
     if df.empty:
@@ -63,7 +113,7 @@ def load_underdog_adp():
     name_col = safe_col(df, ["player_name", "Player", "player", "name", "full_name"])
     position_col = safe_col(df, ["position", "pos", "Position"])
     team_col = safe_col(df, ["team", "Team", "team_abbr"])
-    adp_col = safe_col(df, ["adp", "ADP", "consensus_adp"])
+    adp_col = safe_col(df, ["adp", "ADP", "consensus_adp"]) or _find_latest_adp_on_column(df.columns)
     adp_rank_col = safe_col(df, ["adp_rank", "ADP Rank", "rank", "Rank"])
 
     rows = []

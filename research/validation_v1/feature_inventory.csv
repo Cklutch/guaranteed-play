@@ -14,3 +14,7 @@ prior_carries,RB,Previous-season carries,not available in current local cache,ob
 final_positional_finish,WR/RB,Actual season finish by fantasy points,same-season outcome label,objective,no,high if used as feature,low,label only
 Top24/Top12 labels,WR/RB,Actual top finish labels,same-season outcome label,objective,no,high if used as feature,low,label only
 Underpriced/Beat_ADP labels,WR/RB,Actual finish compared with preseason positional ADP,same-season label plus preseason ADP,objective,label only,medium,high,label only
+prior_passing_yards,QB,Previous-season passing yards,prior season outcome cache,objective,yes,low,medium,trusted
+prior_passing_tds,QB,Previous-season passing TDs,prior season outcome cache,objective,yes,low,medium,trusted
+QB_Top12/QB_Top6 labels,QB,"Actual top finish labels using QB-appropriate thresholds (12/6, not 24/12)",same-season outcome label,objective,no,high if used as feature,low,label only
+TE_Top12/TE_Top6 labels,TE,"Actual top finish labels using TE-appropriate thresholds (12/6, not 24/12)",same-season outcome label,objective,no,high if used as feature,low,label only

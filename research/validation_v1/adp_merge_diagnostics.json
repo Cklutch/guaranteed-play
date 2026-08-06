@@ -3,7 +3,7 @@
   "adp_file_used": "C:\\Users\\cklut\\Desktop\\Projects\\Guaranteed Play\\research\\validation_v1\\historical_adp.csv",
   "adp_source": "FantasyFootballCalculator",
   "market_source_found": true,
-  "market_raw_rows": 1834,
+  "market_raw_rows": 2667,
   "market_duplicate_rows_dropped": 0,
   "seasons": [
     1999,
@@ -34,176 +34,182 @@
     2024,
     2025
   ],
-  "total_rows": 10131,
-  "wr_rows": 6008,
-  "rb_rows": 4123,
-  "rows_with_adp": 1900,
-  "wr_rows_with_adp": 1029,
-  "rb_rows_with_adp": 871,
-  "wr_adp_coverage_pct": 17.13,
-  "rb_adp_coverage_pct": 21.13,
+  "total_rows": 15068,
+  "wr_rows": 5780,
+  "rb_rows": 3982,
+  "rows_with_adp": 2621,
+  "wr_rows_with_adp": 1040,
+  "rb_rows_with_adp": 902,
+  "wr_adp_coverage_pct": 17.99,
+  "rb_adp_coverage_pct": 22.65,
+  "qb_rows": 2115,
+  "te_rows": 3191,
+  "qb_rows_with_adp": 376,
+  "te_rows_with_adp": 303,
+  "qb_adp_coverage_pct": 17.78,
+  "te_adp_coverage_pct": 9.5,
   "adp_coverage_by_season": [
     {
       "season": 1999,
-      "rows": 320,
+      "rows": 509,
       "rows_with_adp": 0,
       "adp_coverage_pct": 0.0
     },
     {
       "season": 2000,
-      "rows": 328,
+      "rows": 501,
       "rows_with_adp": 0,
       "adp_coverage_pct": 0.0
     },
     {
       "season": 2001,
-      "rows": 342,
+      "rows": 514,
       "rows_with_adp": 0,
       "adp_coverage_pct": 0.0
     },
     {
       "season": 2002,
-      "rows": 401,
+      "rows": 605,
       "rows_with_adp": 0,
       "adp_coverage_pct": 0.0
     },
     {
       "season": 2003,
-      "rows": 408,
+      "rows": 611,
       "rows_with_adp": 0,
       "adp_coverage_pct": 0.0
     },
     {
       "season": 2004,
-      "rows": 350,
+      "rows": 528,
       "rows_with_adp": 0,
       "adp_coverage_pct": 0.0
     },
     {
       "season": 2005,
-      "rows": 347,
+      "rows": 523,
       "rows_with_adp": 0,
       "adp_coverage_pct": 0.0
     },
     {
       "season": 2006,
-      "rows": 350,
+      "rows": 519,
       "rows_with_adp": 0,
       "adp_coverage_pct": 0.0
     },
     {
       "season": 2007,
-      "rows": 341,
+      "rows": 523,
       "rows_with_adp": 0,
       "adp_coverage_pct": 0.0
     },
     {
       "season": 2008,
-      "rows": 361,
+      "rows": 523,
       "rows_with_adp": 0,
       "adp_coverage_pct": 0.0
     },
     {
       "season": 2009,
-      "rows": 339,
+      "rows": 506,
       "rows_with_adp": 0,
       "adp_coverage_pct": 0.0
     },
     {
       "season": 2010,
-      "rows": 349,
-      "rows_with_adp": 136,
-      "adp_coverage_pct": 38.96848137535817
+      "rows": 533,
+      "rows_with_adp": 183,
+      "adp_coverage_pct": 34.33395872420263
     },
     {
       "season": 2011,
-      "rows": 356,
-      "rows_with_adp": 120,
-      "adp_coverage_pct": 33.70786516853933
+      "rows": 536,
+      "rows_with_adp": 159,
+      "adp_coverage_pct": 29.66417910447761
     },
     {
       "season": 2012,
-      "rows": 371,
-      "rows_with_adp": 80,
-      "adp_coverage_pct": 21.563342318059302
+      "rows": 541,
+      "rows_with_adp": 95,
+      "adp_coverage_pct": 17.56007393715342
     },
     {
       "season": 2013,
-      "rows": 369,
-      "rows_with_adp": 117,
-      "adp_coverage_pct": 31.70731707317073
+      "rows": 543,
+      "rows_with_adp": 159,
+      "adp_coverage_pct": 29.2817679558011
     },
     {
       "season": 2014,
-      "rows": 375,
-      "rows_with_adp": 130,
-      "adp_coverage_pct": 34.66666666666667
+      "rows": 557,
+      "rows_with_adp": 165,
+      "adp_coverage_pct": 29.622980251346497
     },
     {
       "season": 2015,
-      "rows": 390,
-      "rows_with_adp": 134,
-      "adp_coverage_pct": 34.35897435897436
+      "rows": 567,
+      "rows_with_adp": 169,
+      "adp_coverage_pct": 29.80599647266314
     },
     {
       "season": 2016,
-      "rows": 386,
-      "rows_with_adp": 133,
-      "adp_coverage_pct": 34.4559585492228
+      "rows": 563,
+      "rows_with_adp": 163,
+      "adp_coverage_pct": 28.95204262877442
     },
     {
       "season": 2017,
-      "rows": 378,
-      "rows_with_adp": 131,
-      "adp_coverage_pct": 34.65608465608466
+      "rows": 555,
+      "rows_with_adp": 159,
+      "adp_coverage_pct": 28.64864864864865
     },
     {
       "season": 2018,
-      "rows": 393,
-      "rows_with_adp": 128,
-      "adp_coverage_pct": 32.56997455470738
+      "rows": 579,
+      "rows_with_adp": 166,
+      "adp_coverage_pct": 28.670120898100173
     },
     {
       "season": 2019,
-      "rows": 403,
-      "rows_with_adp": 135,
-      "adp_coverage_pct": 33.49875930521092
+      "rows": 586,
+      "rows_with_adp": 172,
+      "adp_coverage_pct": 29.351535836177472
     },
     {
       "season": 2020,
-      "rows": 429,
-      "rows_with_adp": 147,
-      "adp_coverage_pct": 34.26573426573427
+      "rows": 614,
+      "rows_with_adp": 173,
+      "adp_coverage_pct": 28.175895765472315
     },
     {
       "season": 2021,
-      "rows": 452,
-      "rows_with_adp": 142,
-      "adp_coverage_pct": 31.41592920353982
+      "rows": 639,
+      "rows_with_adp": 176,
+      "adp_coverage_pct": 27.54303599374022
     },
     {
       "season": 2022,
-      "rows": 418,
-      "rows_with_adp": 107,
-      "adp_coverage_pct": 25.598086124401913
+      "rows": 610,
+      "rows_with_adp": 139,
+      "adp_coverage_pct": 22.78688524590164
     },
     {
       "season": 2023,
-      "rows": 384,
-      "rows_with_adp": 126,
-      "adp_coverage_pct": 32.8125
+      "rows": 579,
+      "rows_with_adp": 169,
+      "adp_coverage_pct": 29.18825561312608
     },
     {
       "season": 2024,
-      "rows": 391,
-      "rows_with_adp": 134,
-      "adp_coverage_pct": 34.271099744245525
+      "rows": 591,
+      "rows_with_adp": 176,
+      "adp_coverage_pct": 29.780033840947546
     },
     {
       "season": 2025,
-      "rows": 400,
-      "rows_with_adp": 0,
-      "adp_coverage_pct": 0.0
+      "rows": 613,
+      "rows_with_adp": 198,
+      "adp_coverage_pct": 32.30016313213703
     }
   ],
   "unmatched_player_examples": [
@@ -215,8 +221,26 @@
     },
     {
       "season": 1999,
+      "player_name": "T.Gonzalez",
+      "position": "TE",
+      "team": NaN
+    },
+    {
+      "season": 1999,
       "player_name": "M.Harrison",
       "position": "WR",
+      "team": NaN
+    },
+    {
+      "season": 1999,
+      "player_name": "K.Warner",
+      "position": "QB",
+      "team": NaN
+    },
+    {
+      "season": 1999,
+      "player_name": "S.Beuerlein",
+      "position": "QB",
       "team": NaN
     },
     {
@@ -233,6 +257,18 @@
     },
     {
       "season": 1999,
+      "player_name": "W.Walls",
+      "position": "TE",
+      "team": NaN
+    },
+    {
+      "season": 1999,
+      "player_name": "R.Gannon",
+      "position": "QB",
+      "team": NaN
+    },
+    {
+      "season": 1999,
       "player_name": "E.George",
       "position": "RB",
       "team": NaN
@@ -245,8 +281,20 @@
     },
     {
       "season": 1999,
+      "player_name": "F.Wycheck",
+      "position": "TE",
+      "team": NaN
+    },
+    {
+      "season": 1999,
       "player_name": "C.Carter",
       "position": "WR",
+      "team": NaN
+    },
+    {
+      "season": 1999,
+      "player_name": "R.Dudley",
+      "position": "TE",
       "team": NaN
     },
     {
@@ -257,74 +305,32 @@
     },
     {
       "season": 1999,
+      "player_name": "P.Manning",
+      "position": "QB",
+      "team": NaN
+    },
+    {
+      "season": 1999,
       "player_name": "S.Davis",
       "position": "RB",
       "team": NaN
     },
     {
       "season": 1999,
+      "player_name": "B.Johnson",
+      "position": "QB",
+      "team": NaN
+    },
+    {
+      "season": 1999,
+      "player_name": "F.Jones",
+      "position": "TE",
+      "team": NaN
+    },
+    {
+      "season": 1999,
       "player_name": "M.Robinson",
       "position": "WR",
-      "team": NaN
-    },
-    {
-      "season": 1999,
-      "player_name": "C.Garner",
-      "position": "RB",
-      "team": NaN
-    },
-    {
-      "season": 1999,
-      "player_name": "M.Muhammad",
-      "position": "WR",
-      "team": NaN
-    },
-    {
-      "season": 1999,
-      "player_name": "T.Brown",
-      "position": "WR",
-      "team": NaN
-    },
-    {
-      "season": 1999,
-      "player_name": "E.Smith",
-      "position": "RB",
-      "team": NaN
-    },
-    {
-      "season": 1999,
-      "player_name": "G.Crowell",
-      "position": "WR",
-      "team": NaN
-    },
-    {
-      "season": 1999,
-      "player_name": "C.Martin",
-      "position": "RB",
-      "team": NaN
-    },
-    {
-      "season": 1999,
-      "player_name": "K.Johnson",
-      "position": "WR",
-      "team": NaN
-    },
-    {
-      "season": 1999,
-      "player_name": "R.Watters",
-      "position": "RB",
-      "team": NaN
-    },
-    {
-      "season": 1999,
-      "player_name": "I.Bruce",
-      "position": "WR",
-      "team": NaN
-    },
-    {
-      "season": 1999,
-      "player_name": "D.Staley",
-      "position": "RB",
       "team": NaN
     }
   ]

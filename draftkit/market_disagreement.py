@@ -28,13 +28,11 @@ PROJECTION_RANK_COLS = [
     "Projection Rank",
 ]
 FANTASYPROS_RANK_COLS = [
+    "expert_rank",
     "fantasypros_rank",
     "fantasypros_ecr",
     "expert_consensus_rank",
     "consensus_rank",
-    "rank",
-    "Rank",
-    "RK",
 ]
 ADP_RANK_COLS = ["adp_rank", "ADP Rank", "consensus_adp_rank"]
 ADP_COLS = ["adp", "ADP", "consensus_adp"]

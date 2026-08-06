@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.venv/
+.idea/
+.github_token
+*.token
+
+# Regenerable nflverse download caches. All of these are rebuilt by re-running
+# the research/validation_v1/build_*_features_v1.py scripts; committing them
+# just bloats the repo (raw_snap_counts alone is ~325k lines).
+research/validation_v1/data/raw_*.csv
+research/validation_v1/data/redzone_airyards_by_season/
+research/validation_v1/data/stats_player_reg_by_season/
+research/validation_v1/data/roster_*.csv

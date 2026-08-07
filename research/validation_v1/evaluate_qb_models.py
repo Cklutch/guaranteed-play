@@ -133,7 +133,7 @@ def evaluate(dataset: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.Data
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Evaluate QB pre-draft validation models with walk-forward validation.")
-    parser.add_argument("--dataset", default=str(VALIDATION_DIR / "predraft_validation_dataset_divergence_v1.csv"))
+    parser.add_argument("--dataset", default=str(VALIDATION_DIR / "predraft_validation_dataset_archetypes_v1.csv"))
     args = parser.parse_args()
     dataset = load_dataset(Path(args.dataset))
     results, buckets, top_picks, signals = evaluate(dataset)

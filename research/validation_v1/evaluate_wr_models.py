@@ -206,7 +206,7 @@ def main() -> None:
     # See the same note in evaluate_rb_models.py -- defaults to the Step 3a
     # workload dataset (base + new opportunity features, all four positions),
     # not the stale WR/RB-only projected chain file.
-    parser.add_argument("--dataset", default=str(VALIDATION_DIR / "predraft_validation_dataset_divergence_v1.csv"))
+    parser.add_argument("--dataset", default=str(VALIDATION_DIR / "predraft_validation_dataset_archetypes_v1.csv"))
     args = parser.parse_args()
     dataset = load_dataset(Path(args.dataset))
     results, buckets, top_picks, signals = evaluate(dataset)

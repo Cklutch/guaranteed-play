@@ -26,7 +26,7 @@ MIN_MEANINGFUL_DELTA = 0.01
 MIN_SEASON_WIN_RATE = 0.5
 
 # Feature blocks under test, as opposed to the pre-existing baselines.
-CANDIDATE_MARKERS = ("workload", "divergence")
+CANDIDATE_MARKERS = ("workload", "divergence", "archetype", "adp_all_v1")
 
 
 def _strip_model_suffix(name: str) -> str:

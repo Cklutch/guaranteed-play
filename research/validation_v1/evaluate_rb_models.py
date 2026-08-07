@@ -209,7 +209,7 @@ def main() -> None:
     # the prior_target_share join fix) and WR/RB-only. Feature groups whose
     # columns aren't present are skipped as "skipped_no_features", so the
     # comparison here is deliberately ADP-baseline vs. new workload data.
-    parser.add_argument("--dataset", default=str(VALIDATION_DIR / "predraft_validation_dataset_divergence_v1.csv"))
+    parser.add_argument("--dataset", default=str(VALIDATION_DIR / "predraft_validation_dataset_archetypes_v1.csv"))
     args = parser.parse_args()
     dataset = load_dataset(Path(args.dataset))
     results, buckets, top_picks, signals = evaluate(dataset)

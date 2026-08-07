@@ -75,14 +75,24 @@ def _pct(df: pd.DataFrame, col: str) -> pd.Series:
     return values.groupby([df["season"], df["position"]]).rank(pct=True)
 
 
-def _squash(*components: pd.Series) -> pd.Series:
+def _squash(*components: pd.Series, min_components: int = 2) -> pd.Series:
     """
     Combine percentile components into a 0-1 membership score by averaging
-    whichever are present. Missing components are skipped rather than
-    treated as zero -- absent data is not evidence of a low value.
+    whichever are present.
+
+    Missing components are skipped rather than treated as zero -- absent
+    data is not evidence of a low value. But a score built from ONE
+    component must not compete on equal footing with one built from three:
+    that let players with snap share but no play-by-play data score a
+    perfect 1.0 bellcow while Christian McCaffrey (288 carries, 142
+    targets) ranked below them. So a row needs at least `min_components`
+    present, or it scores NaN and stays unclassified.
+
+    Single-component archetypes pass min_components=1 explicitly.
     """
     frame = pd.concat(components, axis=1)
-    return frame.mean(axis=1, skipna=True)
+    enough = frame.notna().sum(axis=1) >= min(min_components, frame.shape[1])
+    return frame.mean(axis=1, skipna=True).where(enough)
 
 
 def build_archetypes(df: pd.DataFrame) -> pd.DataFrame:

@@ -58,8 +58,23 @@ DIVERGENCE = [
 ]
 
 
+# Step 4c: archetype membership scores. Only the archetypes belonging to the
+# position are passed -- an RB's arch_deep_threat_wr is always NaN and would
+# just be median-imputed noise.
+POSITION_ARCHETYPE_FEATURES = {
+    "QB": ["arch_dual_threat_qb", "arch_pocket_passer_qb"],
+    "RB": [
+        "arch_bellcow_rb", "arch_receiving_back_rb", "arch_early_down_rb",
+        "arch_long_run_rb", "arch_goal_line_rb",
+    ],
+    "WR": ["arch_deep_threat_wr", "arch_possession_wr", "arch_alpha_wr"],
+    "TE": ["arch_red_zone_te", "arch_receiving_te", "arch_blocking_te"],
+}
+
+
 def workload_feature_groups(position: str, prior_production: list[str]) -> dict[str, list[str]]:
     workload = POSITION_WORKLOAD_FEATURES[position]
+    archetypes = POSITION_ARCHETYPE_FEATURES[position]
     return {
         "workload_v2_only": workload,
         "adp_workload_v2": ADP_BASELINE + workload,
@@ -70,4 +85,10 @@ def workload_feature_groups(position: str, prior_production: list[str]) -> dict[
         "adp_divergence_v1": ADP_BASELINE + DIVERGENCE,
         "adp_workload_divergence_v1": ADP_BASELINE + workload + DIVERGENCE,
         "adp_prior_production_divergence_v1": ADP_BASELINE + prior_production + DIVERGENCE,
+        # Step 4c archetype groups, again incremental so the archetype
+        # scores' own contribution is readable.
+        "archetype_v1_only": archetypes,
+        "adp_archetype_v1": ADP_BASELINE + archetypes,
+        "adp_workload_archetype_v1": ADP_BASELINE + workload + archetypes,
+        "adp_all_v1": ADP_BASELINE + prior_production + workload + DIVERGENCE + archetypes,
     }

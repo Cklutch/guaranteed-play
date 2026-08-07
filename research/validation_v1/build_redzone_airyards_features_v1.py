@@ -15,9 +15,17 @@ PBP_USECOLS = [
     "yardline_100", "play_type",
     "pass_attempt", "rush_attempt", "complete_pass",
     "air_yards", "pass_touchdown", "rush_touchdown",
+    "yards_gained", "rushing_yards", "receiving_yards",
     "receiver_player_id", "receiver_player_name",
     "rusher_player_id", "rusher_player_name",
 ]
+
+# "Explosive play" thresholds. 15+ rushing yards and 20+ receiving yards are
+# the conventional public-analytics cutoffs; using the standard lines keeps
+# the resulting archetypes comparable to outside work rather than tuned to
+# this dataset (which would risk fitting noise).
+EXPLOSIVE_RUSH_YARDS = 15
+EXPLOSIVE_REC_YARDS = 20
 
 
 def _season_asset_url(season: int, assets: list) -> str | None:
@@ -47,25 +55,36 @@ def _aggregate_one_season(season: int, assets: list) -> pd.DataFrame:
     df["yardline_100"] = pd.to_numeric(df["yardline_100"], errors="coerce")
     df["is_red_zone"] = df["yardline_100"] <= RED_ZONE_YARDLINE_100
 
-    # Receiving side: targets, red zone targets, air yards.
+    # Receiving side: targets, red zone targets, air yards, explosive catches.
     targets = df[df["pass_attempt"].fillna(0).astype(int).eq(1) & df["receiver_player_id"].notna()].copy()
+    targets["rec_yards_play"] = pd.to_numeric(targets.get("receiving_yards"), errors="coerce")
+    if targets["rec_yards_play"].isna().all():
+        targets["rec_yards_play"] = pd.to_numeric(targets.get("yards_gained"), errors="coerce")
+    targets["is_explosive_rec"] = targets["rec_yards_play"] >= EXPLOSIVE_REC_YARDS
     receiver_agg = targets.groupby(["receiver_player_id", "receiver_player_name", "posteam"]).agg(
         targets=("receiver_player_id", "size"),
         redzone_targets=("is_red_zone", "sum"),
         air_yards_total=("air_yards", "sum"),
         receiving_tds=("pass_touchdown", "sum"),
+        explosive_receptions=("is_explosive_rec", "sum"),
     ).reset_index().rename(columns={
         "receiver_player_id": "player_id",
         "receiver_player_name": "player_name",
         "posteam": "team",
     })
 
-    # Rushing side: carries, red zone carries.
+    # Rushing side: carries, red zone carries, explosive runs.
     carries = df[df["rush_attempt"].fillna(0).astype(int).eq(1) & df["rusher_player_id"].notna()].copy()
+    carries["rush_yards_play"] = pd.to_numeric(carries.get("rushing_yards"), errors="coerce")
+    if carries["rush_yards_play"].isna().all():
+        carries["rush_yards_play"] = pd.to_numeric(carries.get("yards_gained"), errors="coerce")
+    carries["is_explosive_run"] = carries["rush_yards_play"] >= EXPLOSIVE_RUSH_YARDS
     rusher_agg = carries.groupby(["rusher_player_id", "rusher_player_name", "posteam"]).agg(
         carries=("rusher_player_id", "size"),
         redzone_carries=("is_red_zone", "sum"),
         rushing_tds=("rush_touchdown", "sum"),
+        explosive_runs=("is_explosive_run", "sum"),
+        rush_yards_total=("rush_yards_play", "sum"),
     ).reset_index().rename(columns={
         "rusher_player_id": "player_id",
         "rusher_player_name": "player_name",
@@ -120,7 +139,11 @@ def build_redzone_airyards_dataset(force_refresh: bool = False) -> pd.DataFrame:
         ])
 
     df = raw.copy()
-    for col in ["targets", "redzone_targets", "air_yards_total", "receiving_tds", "carries", "redzone_carries", "rushing_tds"]:
+    for col in [
+        "targets", "redzone_targets", "air_yards_total", "receiving_tds",
+        "carries", "redzone_carries", "rushing_tds",
+        "explosive_receptions", "explosive_runs", "rush_yards_total",
+    ]:
         if col not in df.columns:
             df[col] = np.nan
         df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0.0)
@@ -128,6 +151,14 @@ def build_redzone_airyards_dataset(force_refresh: bool = False) -> pd.DataFrame:
     df["redzone_target_share"] = df["redzone_targets"] / df["team_redzone_targets"].replace(0, np.nan)
     df["redzone_carry_share"] = df["redzone_carries"] / df["team_redzone_carries"].replace(0, np.nan)
     df["air_yards_share"] = df["air_yards_total"] / df["team_air_yards_total"].replace(0, np.nan)
+
+    # aDOT (average depth of target) -- the standard separator between deep
+    # threats and possession/slot receivers.
+    df["adot"] = df["air_yards_total"] / df["targets"].replace(0, np.nan)
+    # Explosive-play rates: the "long run" / big-play dimension.
+    df["explosive_run_rate"] = df["explosive_runs"] / df["carries"].replace(0, np.nan)
+    df["explosive_rec_rate"] = df["explosive_receptions"] / df["targets"].replace(0, np.nan)
+    df["yards_per_carry"] = df["rush_yards_total"] / df["carries"].replace(0, np.nan)
 
     df["player_key"] = df["player_name"].apply(clean_name)
     # pbp's receiver/rusher name fields are PFR-style abbreviated
@@ -149,6 +180,10 @@ def build_redzone_airyards_dataset(force_refresh: bool = False) -> pd.DataFrame:
         "air_yards_share": "prior_air_yards_share",
         "targets": "prior_targets_pbp",
         "carries": "prior_carries_pbp",
+        "adot": "prior_adot",
+        "explosive_run_rate": "prior_explosive_run_rate",
+        "explosive_rec_rate": "prior_explosive_rec_rate",
+        "yards_per_carry": "prior_yards_per_carry",
         "player_id": "player_id_gsis_lookalike",
     })
     keep_cols = [
@@ -156,6 +191,8 @@ def build_redzone_airyards_dataset(force_refresh: bool = False) -> pd.DataFrame:
         "prior_redzone_target_share", "prior_redzone_carry_share",
         "prior_air_yards", "prior_air_yards_share",
         "prior_targets_pbp", "prior_carries_pbp",
+        "prior_adot", "prior_explosive_run_rate", "prior_explosive_rec_rate",
+        "prior_yards_per_carry",
     ]
     out = out[keep_cols].reset_index(drop=True)
     return out

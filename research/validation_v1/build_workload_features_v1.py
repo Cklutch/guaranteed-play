@@ -82,6 +82,11 @@ def _load_redzone_airyards() -> pd.DataFrame:
         "prior_redzone_target_share", "prior_redzone_carry_share",
         "prior_air_yards", "prior_air_yards_share",
         "prior_targets_pbp", "prior_carries_pbp",
+        # Play-level rates used by the archetype engine: aDOT separates deep
+        # threats from possession receivers, explosive rates are the
+        # big-play / "long run" dimension.
+        "prior_adot", "prior_explosive_run_rate", "prior_explosive_rec_rate",
+        "prior_yards_per_carry",
     ]
     df = df[cols].copy()
     # A handful of (season, initial_last_key, team) combos can collide

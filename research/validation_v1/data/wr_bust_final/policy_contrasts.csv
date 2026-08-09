@@ -1,0 +1,7 @@
+contrast,metric,seasons,mean,ci_lo,ci_hi,seasons_positive,excludes_zero,component,spec
+2_modelfade_randrepl - 4_randfade_randrepl,vor,7,20.807,-3.707,42.431,0.714,False,FADE selection,FULL
+3_randfade_modelrepl - 4_randfade_randrepl,vor,7,21.929,-6.057,47.034,0.714,False,REPLACEMENT selection,FULL
+1_modelfade_modelrepl - 4_randfade_randrepl,vor,7,37.004,-2.24,72.699,0.857,False,FULL policy,FULL
+2_modelfade_randrepl - 4_randfade_randrepl,vor,10,33.913,22.526,44.927,1.0,True,FADE selection,CORE
+3_randfade_modelrepl - 4_randfade_randrepl,vor,10,16.59,4.003,28.318,0.6,True,REPLACEMENT selection,CORE
+1_modelfade_modelrepl - 4_randfade_randrepl,vor,10,46.76,25.161,67.701,0.9,True,FULL policy,CORE

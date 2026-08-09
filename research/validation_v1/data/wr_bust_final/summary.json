@@ -1,0 +1,214 @@
+{
+  "metadata": {
+    "generated_utc": "2026-08-09T00:43:30.236033+00:00",
+    "seed": 17,
+    "n_random_reps": 1000,
+    "n_season_bootstrap": 5000,
+    "fade_threshold": 0.15,
+    "adp_max": 150,
+    "eligibility_rule": "replacement_ADP >= faded_ADP",
+    "rows": 925,
+    "seasons": [
+      2010,
+      2011,
+      2012,
+      2013,
+      2014,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ]
+  },
+  "nested": [
+    {
+      "spec": "FULL",
+      "start_season": 2017,
+      "test_seasons": 7,
+      "features": [
+        "overall_adp",
+        "prior_snap_share",
+        "prior_targets_per_route_run",
+        "div_opportunity_minus_efficiency",
+        "prior_garbage_time_share",
+        "prior_route_participation_rate",
+        "prior_durability_score",
+        "age"
+      ],
+      "auc_delta": {
+        "mean": 0.0255,
+        "ci_lo": -0.0115,
+        "ci_hi": 0.0594,
+        "seasons_improved": 0.714,
+        "excludes_zero": false
+      },
+      "brier_delta": {
+        "mean": -0.0094,
+        "ci_lo": -0.0227,
+        "ci_hi": 0.0046,
+        "seasons_improved": 0.714,
+        "excludes_zero": false
+      },
+      "logloss_delta": {
+        "mean": -0.0239,
+        "ci_lo": -0.054,
+        "ci_hi": 0.01,
+        "seasons_improved": 0.714,
+        "excludes_zero": false
+      },
+      "auc_base_pooled": 0.7376,
+      "auc_exp_pooled": 0.7631,
+      "calibration": {
+        "n": 415,
+        "brier": 0.2001,
+        "intercept": 0.1647,
+        "slope": 0.9081,
+        "mean_pred": 0.4913,
+        "actual_rate": 0.5253
+      },
+      "mean_train_missing_pct": {
+        "age": 0.0,
+        "div_opportunity_minus_efficiency": 19.2,
+        "overall_adp": 0.0,
+        "prior_durability_score": 16.5,
+        "prior_garbage_time_share": 9.8,
+        "prior_route_participation_rate": 9.4,
+        "prior_snap_share": 7.2,
+        "prior_targets_per_route_run": 12.4
+      }
+    },
+    {
+      "spec": "CORE",
+      "start_season": 2014,
+      "test_seasons": 10,
+      "features": [
+        "overall_adp",
+        "prior_snap_share",
+        "div_opportunity_minus_efficiency",
+        "prior_garbage_time_share",
+        "prior_durability_score",
+        "age"
+      ],
+      "auc_delta": {
+        "mean": 0.0377,
+        "ci_lo": 0.0109,
+        "ci_hi": 0.0611,
+        "seasons_improved": 0.8,
+        "excludes_zero": true
+      },
+      "brier_delta": {
+        "mean": -0.0144,
+        "ci_lo": -0.0229,
+        "ci_hi": -0.0053,
+        "seasons_improved": 0.8,
+        "excludes_zero": true
+      },
+      "logloss_delta": {
+        "mean": -0.0327,
+        "ci_lo": -0.0535,
+        "ci_hi": -0.0096,
+        "seasons_improved": 0.7,
+        "excludes_zero": true
+      },
+      "auc_base_pooled": 0.7318,
+      "auc_exp_pooled": 0.7695,
+      "calibration": {
+        "n": 599,
+        "brier": 0.1975,
+        "intercept": 0.0744,
+        "slope": 1.0334,
+        "mean_pred": 0.5176,
+        "actual_rate": 0.5326
+      },
+      "mean_train_missing_pct": {
+        "age": 0.0,
+        "div_opportunity_minus_efficiency": 22.8,
+        "overall_adp": 0.0,
+        "prior_durability_score": 22.5,
+        "prior_garbage_time_share": 12.8,
+        "prior_snap_share": 9.8
+      }
+    }
+  ],
+  "policy_contrasts": [
+    {
+      "contrast": "2_modelfade_randrepl - 4_randfade_randrepl",
+      "metric": "vor",
+      "seasons": 7,
+      "mean": 20.807,
+      "ci_lo": -3.707,
+      "ci_hi": 42.431,
+      "seasons_positive": 0.714,
+      "excludes_zero": false,
+      "component": "FADE selection",
+      "spec": "FULL"
+    },
+    {
+      "contrast": "3_randfade_modelrepl - 4_randfade_randrepl",
+      "metric": "vor",
+      "seasons": 7,
+      "mean": 21.929,
+      "ci_lo": -6.057,
+      "ci_hi": 47.034,
+      "seasons_positive": 0.714,
+      "excludes_zero": false,
+      "component": "REPLACEMENT selection",
+      "spec": "FULL"
+    },
+    {
+      "contrast": "1_modelfade_modelrepl - 4_randfade_randrepl",
+      "metric": "vor",
+      "seasons": 7,
+      "mean": 37.004,
+      "ci_lo": -2.24,
+      "ci_hi": 72.699,
+      "seasons_positive": 0.857,
+      "excludes_zero": false,
+      "component": "FULL policy",
+      "spec": "FULL"
+    },
+    {
+      "contrast": "2_modelfade_randrepl - 4_randfade_randrepl",
+      "metric": "vor",
+      "seasons": 10,
+      "mean": 33.913,
+      "ci_lo": 22.526,
+      "ci_hi": 44.927,
+      "seasons_positive": 1.0,
+      "excludes_zero": true,
+      "component": "FADE selection",
+      "spec": "CORE"
+    },
+    {
+      "contrast": "3_randfade_modelrepl - 4_randfade_randrepl",
+      "metric": "vor",
+      "seasons": 10,
+      "mean": 16.59,
+      "ci_lo": 4.003,
+      "ci_hi": 28.318,
+      "seasons_positive": 0.6,
+      "excludes_zero": true,
+      "component": "REPLACEMENT selection",
+      "spec": "CORE"
+    },
+    {
+      "contrast": "1_modelfade_modelrepl - 4_randfade_randrepl",
+      "metric": "vor",
+      "seasons": 10,
+      "mean": 46.76,
+      "ci_lo": 25.161,
+      "ci_hi": 67.701,
+      "seasons_positive": 0.9,
+      "excludes_zero": true,
+      "component": "FULL policy",
+      "spec": "CORE"
+    }
+  ]
+}

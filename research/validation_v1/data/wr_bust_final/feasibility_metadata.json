@@ -1,0 +1,23 @@
+{
+  "timestamp_utc": "2026-08-09T01:12:15.382981+00:00",
+  "command": "python research/validation_v1/wr_bust_policy_feasibility.py",
+  "git_commit": "6fa5c778ef6d84262ccbcb26a6eff93b9f1e2bed",
+  "git_dirty": true,
+  "python": "3.14.0",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "packages": {
+    "numpy": "2.4.6",
+    "pandas": "3.0.3",
+    "sklearn": "1.9.0",
+    "scipy": "1.17.1"
+  },
+  "seeds": {
+    "SEED": 17
+  },
+  "input_data": {
+    "predraft_validation_dataset_archetypes_v1.csv": "79146abe3e538ef6"
+  },
+  "fade_threshold": 0.15,
+  "adp_match_tolerance": 6,
+  "note": "Feasibility audit only. No policy outcomes computed."
+}

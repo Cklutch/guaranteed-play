@@ -19,5 +19,23 @@
   },
   "fade_threshold": 0.15,
   "adp_match_tolerance": 6,
-  "note": "Feasibility audit only. No policy outcomes computed."
+  "note": "Feasibility audit only. No policy outcomes computed.",
+  "analysis_commit": "8d2862ae6bcbc2ec2aec6c3134eec270b9a7439b",
+  "analysis_commit_dirty": false,
+  "metadata_commit_note": "This metadata file is committed separately after the frozen analysis snapshot. The analysis_commit identifies the repository snapshot containing the exact research code, artifacts, archive, and normalized input-data blob.",
+  "input_data_repository_identity": {
+    "path": "research/validation_v1/predraft_validation_dataset_archetypes_v1.csv",
+    "commit": "8d2862ae6bcbc2ec2aec6c3134eec270b9a7439b",
+    "git_object_format": "sha1",
+    "git_blob_oid": "49fd3275a8d114be3c35a3d744631e0327509177",
+    "git_blob_size_bytes": 6406622,
+    "repository_line_endings": "LF"
+  },
+  "input_data_working_tree_identity": {
+    "sha256": "79146abe3e538ef604e4f2645b07a15cfb3dded9c82dbac905029d9c932964d5",
+    "size_bytes": 6421691,
+    "line_endings": "CRLF",
+    "hash_scope": "Pre-freeze working-tree bytes used by the analysis before Git text normalization"
+  },
+  "line_ending_normalization_note": "Git stored the CSV with LF line endings because core.autocrlf=true and no path-specific attributes were present. The repository blob is identified by git_blob_oid; the original analysis-input bytes are identified by the working-tree SHA-256. Converting the blob from LF to CRLF reproduces the recorded SHA-256 exactly, confirming line-ending normalization and nothing else accounts for the difference."
 }

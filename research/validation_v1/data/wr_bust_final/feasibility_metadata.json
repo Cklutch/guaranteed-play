@@ -37,5 +37,11 @@
     "line_endings": "CRLF",
     "hash_scope": "Pre-freeze working-tree bytes used by the analysis before Git text normalization"
   },
-  "line_ending_normalization_note": "Git stored the CSV with LF line endings because core.autocrlf=true and no path-specific attributes were present. The repository blob is identified by git_blob_oid; the original analysis-input bytes are identified by the working-tree SHA-256. Converting the blob from LF to CRLF reproduces the recorded SHA-256 exactly, confirming line-ending normalization and nothing else accounts for the difference."
+  "line_ending_normalization_note": "Git stored the CSV with LF line endings because core.autocrlf=true and no path-specific attributes were present. The repository blob is identified by git_blob_oid; the original analysis-input bytes are identified by the working-tree SHA-256. Converting the blob from LF to CRLF reproduces the recorded SHA-256 exactly, confirming line-ending normalization and nothing else accounts for the difference.",
+  "frozen_package_clean_at_freeze": true,
+  "frozen_package_cleanliness_scope": "Only the approved WR-bust research package paths committed in analysis_commit.",
+  "repository_worktree_globally_clean_at_freeze": false,
+  "repository_worktree_note": "Unrelated modified or untracked project paths were intentionally excluded from the frozen WR-bust research package. Their presence does not affect reproducibility of the committed analysis package.",
+  "provenance_clarification_note": "analysis_commit identifies an immutable Git snapshot of the frozen WR-bust package. Cleanliness claims apply to that package scope, not to the repository-wide working tree.",
+  "analysis_commit_dirty_scope_note": "analysis_commit_dirty is PACKAGE-SCOPED, not repository-scoped: it records that every path committed in analysis_commit matched its committed state, and makes no claim about unrelated paths elsewhere in the working tree. See repository_worktree_globally_clean_at_freeze."
 }

@@ -10,12 +10,13 @@ import numpy as np
 import pandas as pd
 
 try:
-    from sklearn.ensemble import RandomForestClassifier
+    from sklearn.ensemble import HistGradientBoostingClassifier, RandomForestClassifier
     from sklearn.linear_model import LogisticRegression
     from sklearn.metrics import roc_auc_score
     from sklearn.pipeline import Pipeline
     from sklearn.preprocessing import StandardScaler
 except Exception:  # pragma: no cover - scripts must still explain missing sklearn
+    HistGradientBoostingClassifier = None
     RandomForestClassifier = None
     LogisticRegression = None
     Pipeline = None
@@ -133,6 +134,29 @@ def model_specs(feature_groups: dict[str, list[str]], include_random_forest: boo
     return specs
 
 
+# Extra model kinds run ONLY for the comprehensive stacked feature group
+# (adp_all_v1), not every group. "regularized_logistic" above uses sklearn's
+# default L2 penalty, which shrinks coefficients but never actually drops
+# one -- so a large stacked group gets no real feature selection, just
+# dilution from whichever sparse/noisy features are in the mix. lasso_logistic
+# (L1) genuinely zeroes out unhelpful features. hist_gradient_boosting
+# handles missing values natively instead of median-imputing them, which
+# matters here because several stacked features are >60-90% NaN. Scoped to
+# one group rather than all of them because every evaluator run already
+# takes 5+ minutes across ~12 groups x 3 kinds -- the question being asked
+# is specifically about the full stack, not every individual block.
+STACKED_WEIGHT_KINDS = ("lasso_logistic", "hist_gradient_boosting")
+
+
+def stacked_model_specs(group_name: str, features: list[str]) -> list[dict[str, object]]:
+    if not features:
+        return []
+    return [
+        {"model_name": f"{group_name}_lasso_logistic", "model_type": "Lasso Logistic Regression", "features": features, "kind": "lasso_logistic"},
+        {"model_name": f"{group_name}_hist_gradient_boosting", "model_type": "Histogram Gradient Boosting", "features": features, "kind": "hist_gradient_boosting"},
+    ]
+
+
 def build_estimator(kind: str):
     if kind in {"logistic", "regularized_logistic"}:
         if LogisticRegression is None or Pipeline is None or StandardScaler is None:
@@ -142,11 +166,71 @@ def build_estimator(kind: str):
             ("scale", StandardScaler()),
             ("model", LogisticRegression(C=c_value, max_iter=1000, class_weight="balanced", solver="liblinear")),
         ])
+    if kind == "lasso_logistic":
+        if LogisticRegression is None or Pipeline is None or StandardScaler is None:
+            return None
+        # l1_ratio=1.0 (not penalty="l1") -- this sklearn version deprecated
+        # the `penalty` kwarg in favor of `l1_ratio`; passing both raises a
+        # FutureWarning and an inconsistent-values warning.
+        return Pipeline([
+            ("scale", StandardScaler()),
+            ("model", LogisticRegression(l1_ratio=1.0, C=0.35, max_iter=1000, class_weight="balanced", solver="liblinear")),
+        ])
     if kind == "random_forest":
         if RandomForestClassifier is None:
             return None
         return RandomForestClassifier(n_estimators=250, min_samples_leaf=8, random_state=42, class_weight="balanced_subsample")
+    if kind == "hist_gradient_boosting":
+        if HistGradientBoostingClassifier is None:
+            return None
+        return HistGradientBoostingClassifier(max_iter=200, min_samples_leaf=15, random_state=42)
     return None
+
+
+def _extract_feature_weights(estimator, feature_names: list[str], kind: str) -> dict[str, float] | None:
+    """
+    Per-feature weight/importance for the stacked-model introspection CSV.
+
+    Only lasso_logistic is supported: its L1 coefficients are a direct,
+    cheap answer to "did this feature earn real weight in combination."
+    hist_gradient_boosting has no equivalent built-in attribute (unlike
+    RandomForestClassifier, sklearn's HistGradientBoostingClassifier does
+    not expose feature_importances_) -- getting importances out of it would
+    require sklearn.inspection.permutation_importance, which refits/scores
+    repeatedly per season and wasn't worth the added runtime for a model
+    that's already being tested purely for whether its lift beats ADP, not
+    for interpretability.
+    """
+    if kind != "lasso_logistic":
+        return None
+    try:
+        model = estimator.named_steps["model"] if hasattr(estimator, "named_steps") else estimator
+        coefs = model.coef_[0]
+        return {name: float(c) for name, c in zip(feature_names, coefs)}
+    except Exception:
+        return None
+
+
+def append_stacked_weight_rows(weight_rows: list[dict[str, object]], position: str) -> None:
+    """
+    Read-filter-concat-write into one shared CSV across all 4 position
+    evaluators, same pattern as build_workload_features_v1.py's
+    _append_feature_inventory_rows() -- each position's rows replace only
+    that position's prior rows, so re-running one evaluator doesn't lose
+    the others' results.
+    """
+    if not weight_rows:
+        return
+    out_path = VALIDATION_DIR / "data" / "stacked_model_feature_weights.csv"
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    new_rows = pd.DataFrame(weight_rows)
+    if out_path.exists():
+        existing = pd.read_csv(out_path)
+        existing = existing[existing["position"] != position]
+        combined = pd.concat([existing, new_rows], ignore_index=True)
+    else:
+        combined = new_rows
+    combined.to_csv(out_path, index=False)
 
 
 def simple_score(df: pd.DataFrame, features: list[str]) -> pd.Series:
@@ -163,30 +247,45 @@ def simple_score(df: pd.DataFrame, features: list[str]) -> pd.Series:
     return ranked.mean(axis=1)
 
 
-def fit_predict(train: pd.DataFrame, test: pd.DataFrame, target: str, features: list[str], kind: str) -> tuple[pd.Series, str]:
+def fit_predict(train: pd.DataFrame, test: pd.DataFrame, target: str, features: list[str], kind: str, collect_weights: bool = False):
+    """
+    Returns (scores, status) normally, or (scores, status, weights) when
+    collect_weights=True -- weights is a {feature: weight} dict for
+    lasso_logistic, else None. Variable-arity return so every existing
+    2-value-unpacking call site keeps working unchanged; only call sites
+    that explicitly request weights need to unpack 3 values.
+    """
+    def _return(scores: pd.Series, status: str, weights: dict[str, float] | None = None):
+        return (scores, status, weights) if collect_weights else (scores, status)
+
     available = [f for f in features if f in train.columns and train[f].notna().any() and test[f].notna().any()]
     if not available:
-        return pd.Series(np.nan, index=test.index), "skipped_no_features"
+        return _return(pd.Series(np.nan, index=test.index), "skipped_no_features")
     train_y = pd.to_numeric(train[target], errors="coerce")
     if train_y.nunique(dropna=True) < 2:
-        return pd.Series(np.nan, index=test.index), "skipped_one_class_train"
+        return _return(pd.Series(np.nan, index=test.index), "skipped_one_class_train")
     train_x = train[available].apply(pd.to_numeric, errors="coerce")
     test_x = test[available].apply(pd.to_numeric, errors="coerce")
-    medians = train_x.median(numeric_only=True).fillna(0.0)
-    train_x = train_x.fillna(medians)
-    test_x = test_x.fillna(medians)
+    # hist_gradient_boosting handles NaN natively -- median-imputing ahead of
+    # it would defeat the entire point of using it (see stacked_model_specs()
+    # docstring), so it gets the raw frame instead of the filled one.
+    if kind != "hist_gradient_boosting":
+        medians = train_x.median(numeric_only=True).fillna(0.0)
+        train_x = train_x.fillna(medians)
+        test_x = test_x.fillna(medians)
     estimator = build_estimator(kind)
     if estimator is None:
-        return simple_score(test, available), "fallback_rank_score_no_sklearn"
+        return _return(simple_score(test, available), "fallback_rank_score_no_sklearn")
     try:
         estimator.fit(train_x, train_y)
         if hasattr(estimator, "predict_proba"):
             scores = estimator.predict_proba(test_x)[:, 1]
         else:
             scores = estimator.predict(test_x)
-        return pd.Series(scores, index=test.index), "fit"
+        weights = _extract_feature_weights(estimator, available, kind) if collect_weights else None
+        return _return(pd.Series(scores, index=test.index), "fit", weights)
     except Exception as exc:
-        return simple_score(test, available), f"fallback_rank_score_error:{exc.__class__.__name__}"
+        return _return(simple_score(test, available), f"fallback_rank_score_error:{exc.__class__.__name__}")
 
 
 def adp_baseline_scores(df: pd.DataFrame) -> pd.Series:

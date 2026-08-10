@@ -45,6 +45,15 @@ OUTPUT_PATH = VALIDATION_DIR / "predraft_validation_dataset_archetypes_v1.csv"
 MIN_TARGETS_FOR_RATE = 30
 MIN_CARRIES_FOR_RATE = 75
 
+# The QB archetypes split on rushing share, which makes "pocket passer" an
+# inverse score -- and an inverse score rewards the mere ABSENCE of rushing.
+# Without a volume floor it filled with backups who barely played (Nick
+# Mullens, Cooper Rush, Philip Rivers) and, worse, labeled Anthony
+# Richardson a pocket passer off an injury-shortened season, which inverts
+# his actual profile. Roughly half a season of starter passing volume is
+# the floor for the split to describe a real role.
+MIN_PASSING_YARDS_FOR_QB = 1500
+
 # Percentile cutoffs used across archetype rules.
 HIGH = 0.70
 VERY_HIGH = 0.80
@@ -138,8 +147,10 @@ def build_archetypes(df: pd.DataFrame) -> pd.DataFrame:
     is_qb, is_rb, is_wr, is_te = pos.eq("QB"), pos.eq("RB"), pos.eq("WR"), pos.eq("TE")
 
     # ================= QB =================
-    out["arch_dual_threat_qb"] = _squash(p_qb_rush, p_rush_yds).where(is_qb)
-    out["arch_pocket_passer_qb"] = (1 - _squash(p_qb_rush, p_rush_yds)).where(is_qb)
+    enough_passing = pass_yds >= MIN_PASSING_YARDS_FOR_QB
+    qb_split = _squash(p_qb_rush, p_rush_yds)
+    out["arch_dual_threat_qb"] = qb_split.where(is_qb & enough_passing)
+    out["arch_pocket_passer_qb"] = (1 - qb_split).where(is_qb & enough_passing)
 
     # ================= RB =================
     # Bellcow: dominant snaps AND carries AND real passing-down usage.

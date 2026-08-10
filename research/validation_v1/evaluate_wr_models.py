@@ -6,12 +6,15 @@ import numpy as np
 import pandas as pd
 
 from validation_utils import (
+    STACKED_WEIGHT_KINDS,
     VALIDATION_DIR,
     adp_baseline_scores,
+    append_stacked_weight_rows,
     bucket_rows,
     ensure_columns,
     fit_predict,
     model_specs,
+    stacked_model_specs,
     summarize_model,
     top_pick_rows,
 )
@@ -138,15 +141,17 @@ def load_dataset(path: Path) -> pd.DataFrame:
     return df
 
 
-def evaluate(dataset: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+def evaluate(dataset: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, list[dict[str, object]]]:
     df = dataset[dataset["position"].eq(POSITION)].copy()
     df["season"] = pd.to_numeric(df["season"], errors="coerce")
     seasons = sorted(df["season"].dropna().astype(int).unique().tolist())
     specs = model_specs(FEATURE_GROUPS)
+    specs += stacked_model_specs("adp_all_v1", FEATURE_GROUPS.get("adp_all_v1", []))
     result_rows: list[dict[str, object]] = []
     bucket_result_rows: list[dict[str, object]] = []
     top_pick_frames: list[pd.DataFrame] = []
     signal_frames: list[pd.DataFrame] = []
+    weight_rows: list[dict[str, object]] = []
 
     for target in TARGETS:
         if target not in df.columns:
@@ -160,16 +165,24 @@ def evaluate(dataset: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.Data
             baseline = adp_baseline_scores(test)
             for spec in specs:
                 features = [f for f in spec["features"] if f in df.columns]
+                kind = str(spec["kind"])
+                collect = kind in STACKED_WEIGHT_KINDS and target == f"{POSITION}_Top24"
+                weights: dict[str, float] | None = None
                 if target.startswith(f"{POSITION}_Underpriced") or target.endswith("Beat_ADP_By_12"):
                     if df.get("positional_adp", pd.Series(np.nan, index=df.index)).notna().sum() == 0:
                         status = "skipped_target_requires_historical_adp"
                         scores = pd.Series(np.nan, index=test.index)
+                    elif collect:
+                        scores, status, weights = fit_predict(train, test, target, features, kind, collect_weights=True)
                     else:
-                        scores, status = fit_predict(train, test, target, features, str(spec["kind"]))
-                elif str(spec["feature_group"] if "feature_group" in spec else spec["model_name"]).startswith("adp"):
-                    scores, status = fit_predict(train, test, target, features, str(spec["kind"]))
+                        scores, status = fit_predict(train, test, target, features, kind)
+                elif collect:
+                    scores, status, weights = fit_predict(train, test, target, features, kind, collect_weights=True)
                 else:
-                    scores, status = fit_predict(train, test, target, features, str(spec["kind"]))
+                    scores, status = fit_predict(train, test, target, features, kind)
+                if weights:
+                    for feat, w in weights.items():
+                        weight_rows.append({"position": POSITION, "test_season": test_season, "kind": kind, "feature": feat, "weight": w})
                 result_rows.append(summarize_model(
                     test, target, scores, baseline, test_season, str(spec["model_name"]), str(spec["model_type"]), str(spec["model_name"]).rsplit("_", 2)[0], status
                 ))
@@ -198,7 +211,7 @@ def evaluate(dataset: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.Data
     buckets = pd.DataFrame(bucket_result_rows)
     top_picks = pd.concat(top_pick_frames, ignore_index=True) if top_pick_frames else pd.DataFrame()
     signals = pd.concat(signal_frames, ignore_index=True) if signal_frames else pd.DataFrame()
-    return results, buckets, top_picks, signals
+    return results, buckets, top_picks, signals, weight_rows
 
 
 def main() -> None:
@@ -209,7 +222,8 @@ def main() -> None:
     parser.add_argument("--dataset", default=str(VALIDATION_DIR / "predraft_validation_dataset_archetypes_v1.csv"))
     args = parser.parse_args()
     dataset = load_dataset(Path(args.dataset))
-    results, buckets, top_picks, signals = evaluate(dataset)
+    results, buckets, top_picks, signals, weight_rows = evaluate(dataset)
+    append_stacked_weight_rows(weight_rows, POSITION)
     results.to_csv(VALIDATION_DIR / "wr_validation_results.csv", index=False)
     buckets.to_csv(VALIDATION_DIR / "wr_adp_bucket_results.csv", index=False)
     top_picks.to_csv(VALIDATION_DIR / "wr_top_model_picks.csv", index=False)

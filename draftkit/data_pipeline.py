@@ -28,6 +28,8 @@ CANONICAL_COLUMNS = [
     "adp_rank",
     "expert_rank",
     "projection_source",
+    "archetype_primary",
+    "archetype_confidence",
     "injury_risk",
     "durability_grade",
     "boom_score",
@@ -296,6 +298,45 @@ def _attach_engineered_features(master_df):
     return out
 
 
+ARCHETYPE_SOURCE_PATH = Path("research/validation_v1/data/current_season_archetypes.csv")
+
+
+def _attach_current_archetypes(master_df):
+    """
+    Attach draft-time player archetypes (bellcow RB, deep threat WR, etc.).
+
+    These are for roster construction and explanation only -- they are
+    deliberately NOT part of scoring. Validation showed archetype features
+    do not beat ADP as model inputs, so wiring them into the score would be
+    adding unproven signal. What they're for is telling the drafter what
+    kind of player, and what kind of risk, they're taking on.
+
+    Regenerate with:
+        research/validation_v1/build_current_season_archetypes.py
+    """
+    out = master_df.copy()
+    out["archetype_primary"] = None
+    out["archetype_confidence"] = None
+
+    if not ARCHETYPE_SOURCE_PATH.exists():
+        return out
+
+    try:
+        archetypes = pd.read_csv(ARCHETYPE_SOURCE_PATH)
+    except Exception:
+        return out
+
+    if archetypes.empty or "player_name" not in archetypes.columns:
+        return out
+
+    archetypes = archetypes[["player_name", "archetype_primary", "archetype_confidence"]].copy()
+    archetypes["player_key"] = archetypes["player_name"].apply(normalize_player_name)
+    archetypes = archetypes.drop(columns=["player_name"]).drop_duplicates("player_key", keep="first")
+
+    out = out.drop(columns=["archetype_primary", "archetype_confidence"])
+    return out.merge(archetypes, on="player_key", how="left")
+
+
 def merge_player_sources(sleeper_df=None, fantasypros_df=None, underdog_df=None):
     """
     Merge Sleeper, FantasyPros, and Underdog data into one canonical dataframe.
@@ -368,6 +409,7 @@ def merge_player_sources(sleeper_df=None, fantasypros_df=None, underdog_df=None)
         out["projection_source"] = out["projection_points"].notna().map(
             {True: "real", False: None}
         )
+        out = _attach_current_archetypes(out)
 
         if out["projection_rank"].isna().all() and out["projection_points"].notna().any():
             out["projection_rank"] = out["projection_points"].rank(

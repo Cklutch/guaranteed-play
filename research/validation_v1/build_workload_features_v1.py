@@ -16,6 +16,7 @@ NEW_WORKLOAD_COLS = [
     "prior_air_yards", "prior_air_yards_share",
     "prior_team_vacated_target_share", "prior_team_vacated_carry_share",
     "prior_wopr",
+    "prior_durability_score",
 ]
 
 
@@ -105,6 +106,80 @@ def _load_vacated_volume() -> pd.DataFrame:
     return pd.read_csv(path)
 
 
+def _load_garbage_time() -> pd.DataFrame:
+    """
+    Garbage-time-adjusted production, keyed on gsis_id.
+
+    pbp's receiver/rusher player_id IS a gsis_id, so this joins on a real
+    stable key rather than the abbreviated names the redzone aggregation is
+    stuck with -- no crosswalk, no collision guard needed.
+    """
+    path = DATA_DIR / "garbage_time_player_seasons.csv"
+    cols = [
+        "prior_non_garbage_targets", "prior_non_garbage_receiving_yards",
+        "prior_non_garbage_receiving_tds", "prior_non_garbage_carries",
+        "prior_non_garbage_rushing_yards", "prior_non_garbage_rushing_tds",
+        "prior_garbage_time_share",
+    ]
+    if not path.exists():
+        return pd.DataFrame(columns=["season", "player_id"] + cols)
+    df = pd.read_csv(path)
+    df["player_id"] = df["player_id"].astype(str)
+    keep = ["season", "player_id"] + [c for c in cols if c in df.columns]
+    # A traded player can appear twice in a season; keep the higher-volume row.
+    df = df.sort_values("prior_non_garbage_targets", na_position="first")
+    return df[keep].drop_duplicates(["season", "player_id"], keep="last")
+
+
+def _load_route_participation() -> pd.DataFrame:
+    """
+    Route participation and targets/yards per route run, keyed on gsis_id.
+
+    `pbp_participation.offense_players` is a list of gsis_ids, so this joins
+    on a real stable key -- no crosswalk and no ambiguity guard, unlike snap
+    share (13.8% name collisions) or the pbp aggregates (abbreviated names).
+
+    Note the source rows include offensive linemen (everyone on the field
+    for a pass play). They simply don't match a QB/RB/WR/TE in the base
+    dataset and drop out of the join, so no explicit filter is needed.
+    """
+    path = DATA_DIR / "route_participation_player_seasons.csv"
+    cols = [
+        "prior_routes_run", "prior_route_participation_rate",
+        "prior_targets_per_route_run", "prior_yards_per_route_run",
+    ]
+    if not path.exists():
+        return pd.DataFrame(columns=["season", "player_id"] + cols)
+    df = pd.read_csv(path)
+    df["player_id"] = df["player_id"].astype(str)
+    keep = ["season", "player_id"] + [c for c in cols if c in df.columns]
+    df = df.sort_values("prior_routes_run", na_position="first")
+    return df[keep].drop_duplicates(["season", "player_id"], keep="last")
+
+
+def _load_offense_environment() -> pd.DataFrame:
+    """
+    Team offensive environment: prior-season LEVELS plus deviation from the
+    team's own trailing 3-year baseline. Joined on (season, team), the same
+    team-level treatment as prior_team_vacated_*.
+    """
+    path = DATA_DIR / "offense_environment_team_seasons.csv"
+    if not path.exists():
+        return pd.DataFrame(columns=["season", "team"])
+    df = pd.read_csv(path)
+    df["team"] = df["team"].astype(str)
+    return df.drop_duplicates(["season", "team"], keep="first")
+
+
+def _load_injury_durability() -> pd.DataFrame:
+    path = DATA_DIR / "injury_durability_player_seasons.csv"
+    if not path.exists():
+        return pd.DataFrame(columns=["season", "player_id", "prior_durability_score"])
+    df = pd.read_csv(path)
+    df["player_id"] = df["player_id"].astype(str)
+    return df[["season", "player_id", "prior_durability_score"]]
+
+
 def build_workload_dataset(base: pd.DataFrame | None = None) -> pd.DataFrame:
     if base is None:
         base, _metadata = build_dataset()
@@ -188,6 +263,31 @@ def build_workload_dataset(base: pd.DataFrame | None = None) -> pd.DataFrame:
     air_yards_share = pd.to_numeric(dataset.get("prior_air_yards_share"), errors="coerce")
     dataset["prior_wopr"] = 1.5 * target_share + 0.7 * air_yards_share
     dataset.loc[target_share.isna() & air_yards_share.isna(), "prior_wopr"] = np.nan
+
+    # --- Injury / missed-games risk (season + player_id join). All-cause
+    # missed-games risk, not narrowly "injury" -- see
+    # build_injury_features_v1.py for why. ---
+    injury = _load_injury_durability()
+    dataset["player_id"] = dataset["player_id"].astype(str)
+    dataset = dataset.merge(injury, on=["season", "player_id"], how="left")
+
+    # --- Garbage-time-adjusted production (season + gsis_id join). See
+    # build_garbage_time_features_v1.py: this is a measurement correction on
+    # prior-season volume, not a prediction that garbage time recurs. ---
+    dataset = dataset.merge(_load_garbage_time(), on=["season", "player_id"], how="left")
+
+    # --- Route participation / TPRR (season + gsis_id join). Cleared its
+    # persistence gate at r=+0.511 before being built; see
+    # build_route_participation_features_v1.py. ---
+    dataset = dataset.merge(_load_route_participation(), on=["season", "player_id"], how="left")
+
+    # --- Team offensive environment (season + team join). Levels are the
+    # control; the *_vs_baseline columns are the mean-reversion hypothesis.
+    # See build_offense_environment_features_v1.py. ---
+    offense = _load_offense_environment()
+    if "team" in dataset.columns and not offense.empty:
+        dataset["team"] = dataset["team"].astype(str)
+        dataset = dataset.merge(offense, on=["season", "team"], how="left")
 
     return dataset
 

@@ -1,3 +1,7 @@
+from functools import lru_cache
+from pathlib import Path
+
+import numpy as np
 import pandas as pd
 import streamlit as st
 
@@ -24,20 +28,48 @@ INJURY_RISK_COLS = ["injury_risk", "Injury Risk", "injury_score", "risk_score"]
 DURABILITY_COLS = ["durability_grade", "Durability", "durability", "durability_score"]
 SCORABLE_POSITIONS = ["QB", "RB", "WR", "TE"]
 SUPPORTED_ARCHETYPES = ["BOOM", "STEADY", "RISKY", "UPSIDE", "SAFE"]
+# Positional multipliers are all 1.00 deliberately: position_value_score
+# is already value-over-replacement (projection minus the position's
+# replacement baseline), which IS the positional-scarcity adjustment.
+# Multiplying it again double-counts scarcity.
+#
+# These carried TE penalties (value 0.68, urgency 0.70, need cap 1.18)
+# until they were backtested against 16 seasons of realized outcomes in
+# research/validation_v1/backtest_positional_multipliers_v1.py. The data
+# says the opposite of what they assumed -- early-round TEs returned the
+# HIGHEST value over replacement of any position, not the lowest:
+#
+#   ADP 1-48, mean realized VOR:  TE +75.3 | QB +54.9 | RB +46.7 | WR +20.4
+#   TE - RB difference: +28.6 pts, bootstrap CI [+4.7, +52.2] (excludes 0)
+#   2018+ only:         +40.7 pts, bootstrap CI [+9.8, +71.9] (excludes 0)
+#   TE was the top position in EVERY ADP bucket tested.
+#
+# The penalties were measurably harmful: they removed every tight end from
+# the board's top 50 (ADP's top 50 has three), pushing Brock Bowers from
+# ADP 19.7 to board rank 147 and Sam LaPorta from 91.7 to 388.
+#
+# Do not reintroduce a positional multiplier without backtesting it the
+# same way. If TE scarcity needs expressing, it belongs in the replacement
+# baseline, not as a second multiplier on top of it.
 POSITION_VALUE_MULTIPLIERS = {
     "QB": 1.00,
     "RB": 1.00,
     "WR": 1.00,
-    "TE": 0.68,
+    "TE": 1.00,
 }
-POSITION_NEED_WEIGHT_CAPS = {
-    "TE": 1.18,
-}
+# Empty by design. This existed to stop the unfilled-TE need bonus running
+# away, but it was treating the symptom: the real defect was that strategy
+# components could lift a replacement-level player regardless of position.
+# That is now fixed at the source in calculate_final_recommendation_score(),
+# which damps strategy terms toward neutral for players with no value over
+# replacement. Capping the need weight on top of that would just re-apply a
+# TE penalty the VOR backtest already contradicted.
+POSITION_NEED_WEIGHT_CAPS = {}
 POSITION_URGENCY_MULTIPLIERS = {
     "QB": 1.00,
     "RB": 1.00,
     "WR": 1.00,
-    "TE": 0.70,
+    "TE": 1.00,
 }
 RB_WR_BALANCE_MANDATE_THRESHOLD = 3
 CONSTRUCTION_MANDATE_BOOST = 15.0
@@ -956,6 +988,127 @@ def build_position_replacement_baselines(df, pos_col, proj_col):
     return baselines
 
 
+_TIER_CURVE_PATH = Path("research/validation_v1/data/positional_tier_curve.csv")
+_TIER_EDGES = [("1-3", 1, 3), ("4-6", 4, 6), ("7-9", 7, 9),
+               ("10-12", 10, 12), ("13-18", 13, 18), ("19-30", 19, 30)]
+# Beyond the fitted range every position is already at the floor.
+_TIER_BEYOND_FACTOR = 0.05
+
+
+_TIER_FACTOR_MIN = 0.05
+_TIER_FACTOR_MAX = 1.50
+# Below this projected VOR the ratio is numerically unstable (dividing by
+# ~0), and the player scores near nothing anyway, so leave him alone.
+_MIN_PROJECTED_VOR = 5.0
+
+
+@lru_cache(maxsize=1)
+def load_realized_tier_vor():
+    """
+    Realized value-over-replacement by (position, positional-ADP tier),
+    measured 2015-2025 by build_positional_tier_curve_v1.py.
+
+    Player-weighted median, not a season mean: a single career could
+    otherwise carry a cell (Travis Kelce was 24% of the TE1-3 sample at
+    +128 VOR, inflating premium TE well past what it is worth -- and he is
+    not in the 2026 premium pool at all).
+
+    Returns {} if missing, which leaves scoring unchanged.
+    """
+    if not _TIER_CURVE_PATH.exists():
+        return {}
+    try:
+        curve = pd.read_csv(_TIER_CURVE_PATH)
+    except Exception:
+        return {}
+    if "tier_vor" not in curve.columns:
+        return {}
+    return {
+        (str(r["position"]).upper(), str(r["tier"])): float(r["tier_vor"])
+        for _, r in curve.iterrows()
+    }
+
+
+def tier_label_for_rank(positional_adp_rank):
+    rank = _safe_float(positional_adp_rank, None)
+    if rank is None or rank <= 0:
+        return None
+    for label, lo, hi in _TIER_EDGES:
+        if lo <= rank <= hi:
+            return label
+    return None
+
+
+def build_tier_calibration(df, pos_col, replacement_baselines, proj_col):
+    """
+    Calibrate projected value-over-replacement against what each
+    (position, draft-tier) actually returned historically.
+
+        factor = realized_VOR(pos, tier) / projected_VOR(pos, tier)
+
+    This corrects a real, measured bias: projections are miscalibrated
+    ACROSS positions, not just smoothed within them. On the current pool
+    against 2015-2025 outcomes, tier 1-3 calibration comes out at
+    QB 0.36, RB 0.48, WR 0.61, TE 1.10 -- i.e. projections overrate the
+    premium QB tier by roughly 3x while pricing premium TE about right.
+    Left uncorrected, that is why the board floated six QBs into a top 50
+    that ADP gives one.
+
+    This is NOT the double-count the old TE 0.68 multiplier was.
+    Replacement baselines correct scarcity in *projection* space; this
+    corrects the projections themselves against outcomes. Different error,
+    measured separately.
+
+    Tiers whose realized value is at or below replacement are floored
+    rather than allowed to go negative -- a negative factor would invert a
+    player's value and rank bad players above good ones.
+    """
+    realized = load_realized_tier_vor()
+    if not realized:
+        return {}
+
+    work = df[[pos_col, proj_col, "positional_adp_rank"]].copy()
+    work["position"] = work[pos_col].astype(str).str.upper()
+    work["tier"] = work["positional_adp_rank"].apply(tier_label_for_rank)
+    work = work[work["tier"].notna()]
+    if work.empty:
+        return {}
+
+    work["projected_vor"] = [
+        max(_safe_float(p, 0.0) - _safe_float(replacement_baselines.get(pos), 0.0), 0.0)
+        for p, pos in zip(work[proj_col], work["position"])
+    ]
+    projected = work.groupby(["position", "tier"])["projected_vor"].mean()
+
+    calibration = {}
+    for key, projected_vor in projected.items():
+        realized_vor = realized.get(key)
+        if realized_vor is None:
+            continue
+        if realized_vor <= 0:
+            calibration[key] = _TIER_FACTOR_MIN
+        elif projected_vor < _MIN_PROJECTED_VOR:
+            calibration[key] = 1.0
+        else:
+            calibration[key] = float(
+                min(max(realized_vor / projected_vor, _TIER_FACTOR_MIN), _TIER_FACTOR_MAX)
+            )
+    return calibration
+
+
+def positional_tier_factor(position, positional_adp_rank, calibration):
+    """Calibration factor for one player, given the fitted tier table."""
+    if not calibration:
+        return 1.0
+    tier = tier_label_for_rank(positional_adp_rank)
+    # No ADP means the market never priced him, so he is not a premium
+    # asset -- treat him as beyond the fitted range rather than defaulting
+    # to tier 1-3 and handing him full value.
+    if tier is None:
+        return _TIER_FACTOR_MIN
+    return calibration.get((str(position).upper(), tier), 1.0)
+
+
 def calculate_position_value_score(projection_points, position, replacement_baselines):
     """
     Convert raw projection into position-adjusted value over replacement.
@@ -1003,6 +1156,22 @@ def _build_base_recommendation_rankings_df():
 
     context = _build_scoring_context(df, columns)
     replacement_baselines = build_position_replacement_baselines(df, pos_col, proj_col)
+
+    # Positional ADP rank (TE1, TE2, ...) keys the value-cliff curve. Ranked
+    # over the FULL pool including already-drafted players would be wrong,
+    # but df here is the available pool, which is what we want: as premium
+    # players come off the board the remaining ones move up their tier,
+    # which is the real behaviour -- the best TE left genuinely is TE1 now.
+    if adp_col is not None:
+        df["positional_adp_rank"] = (
+            pd.to_numeric(df[adp_col], errors="coerce")
+            .groupby(df[pos_col].astype(str).str.upper())
+            .rank(method="first")
+        )
+    else:
+        df["positional_adp_rank"] = None
+
+    tier_calibration = build_tier_calibration(df, pos_col, replacement_baselines, proj_col)
     need_weights = get_position_need_weights()
     team_profile = get_team_profile()
     tiers_df = build_position_tiers_df()
@@ -1018,6 +1187,13 @@ def _build_base_recommendation_rankings_df():
             position,
             replacement_baselines,
         )
+        # Calibrate against what this position/tier actually returned.
+        # Projections rate TE5 nearly as highly as TE2, and rate QBs far
+        # above what they deliver; outcomes disagree with both.
+        tier_factor = positional_tier_factor(
+            position, row.get("positional_adp_rank"), tier_calibration
+        )
+        position_value_score = round(max(position_value_score * tier_factor, 0.01), 2)
         adp = row[adp_col] if adp_col is not None else None
         need_bonus = float(need_weights.get(position, 1.0))
         adp_bonus = calculate_adp_bonus(row["projection_rank"], adp)
@@ -1135,19 +1311,55 @@ def normalize_component_scores(rankings_df):
     return normalized_df
 
 
+# Components that answer "who should I draft given my roster?" rather than
+# "who is the better player." They are legitimate -- needing a TE really
+# should move a TE up your board -- but they must MODULATE player value,
+# never manufacture it.
+STRATEGY_COMPONENTS = ("position_need", "tier_urgency", "team_fit")
+
+# A player at or below his position's replacement baseline scores exactly
+# 1.0 from calculate_position_value_score (the `max(vor, 0) + 1.0` floor).
+REPLACEMENT_LEVEL_VALUE = 1.0
+
+
 def calculate_final_recommendation_score(row, component_weights=None):
     """
     Combine normalized component scores into one transparent recommendation score.
+
+    Strategy components are damped for players with no value over
+    replacement. Without this, the position-constant strategy terms (40% of
+    the weight between position_need and tier_urgency) can lift a
+    zero-value player into the top of the board purely because his position
+    is unfilled -- measured directly: Evan Engram (ADP 212, projected 90.0
+    against a TE replacement baseline of 131.2, i.e. value at the floor)
+    landed at board rank 46, and Mike Gesicki (ADP 207, projected 91.2) at
+    47. Needing a tight end is a real reason to move a startable tight end
+    up; it is not a reason to draft a replacement-level one in the fourth
+    round.
     """
     weights = _resolve_component_weights(component_weights)
     total_weight = sum(weights.values())
     if total_weight <= 0:
         return 0.0
 
+    # At/below replacement -> strategy terms fall away entirely. Just above
+    # it they scale back in, so there is no cliff at the boundary.
+    raw_value = _safe_float(row.get("position_value_score"), None)
+    if raw_value is None:
+        strategy_scale = 1.0
+    else:
+        surplus = raw_value - REPLACEMENT_LEVEL_VALUE
+        strategy_scale = min(max(surplus / 10.0, 0.0), 1.0)
+
     weighted_score = 0.0
     for component, weight in weights.items():
         _, normalized_col = MASTER_COMPONENT_COLUMNS[component]
-        weighted_score += _safe_float(row.get(normalized_col), 50.0) * weight
+        value = _safe_float(row.get(normalized_col), 50.0)
+        if component in STRATEGY_COMPONENTS:
+            # Damp toward the neutral 50 rather than toward 0, so damping
+            # removes the strategy *tilt* without also imposing a penalty.
+            value = 50.0 + (value - 50.0) * strategy_scale
+        weighted_score += value * weight
 
     return round(weighted_score / total_weight, 2)
 
@@ -1400,6 +1612,76 @@ def generate_recommendation_reasons(row, max_reasons=4):
     return reasons[:max_reasons]
 
 
+# How far the board is allowed to drift from consensus. Step 5c swept this
+# directly (research/validation_v1/optimize_blend_weights_v1.py): mean AUC
+# gain peaks at lambda ~0.10-0.25 and degrades monotonically after, hitting
+# -0.075 at QB / -0.072 at RB by lambda=1.0. 0.20 sits inside that band and
+# is the midpoint of the per-position optima (QB 0.10, RB 0.20, WR 0.25).
+#
+# The board was previously running at effectively lambda=1.0 -- deep in the
+# region measured as harmful -- which is what pushed Trey McBride to #4
+# against an ADP of 29 and stripped WRs out of the top 50.
+#
+# Honest framing: Step 5c also found the optimum is NOT statistically
+# distinguishable from pure ADP (bootstrap CIs include zero) and that
+# walk-forward lambda selection was negative. 0.20 is the least-bad
+# deviation, not an edge. The claim is "tracks consensus with small
+# evidence-backed tilts," never "beats consensus."
+ADP_ANCHOR_LAMBDA = 0.20
+
+
+def apply_adp_anchor(recommendations_df, lam=ADP_ANCHOR_LAMBDA):
+    """
+    Blend the model score toward ADP in percentile space.
+
+        anchored = (1 - lam) * adp_percentile + lam * model_percentile
+
+    Percentiles rather than raw values so the two scales are comparable and
+    a handful of extreme scores can't dominate the blend.
+
+    Players with no ADP were never priced by the market, so there is no
+    consensus to anchor to -- they keep their model percentile scaled into
+    the range below the last ADP-having player rather than being dropped or
+    treated as ADP-worst.
+    """
+    if recommendations_df.empty or "final_score" not in recommendations_df.columns:
+        return recommendations_df
+    if "adp" not in recommendations_df.columns:
+        return recommendations_df
+
+    out = recommendations_df.copy()
+    adp = pd.to_numeric(out["adp"], errors="coerce")
+    model = pd.to_numeric(out["final_score"], errors="coerce")
+    has_adp = adp.notna() & model.notna()
+    if has_adp.sum() < 10:
+        return recommendations_df
+
+    out["pre_anchor_score"] = out["final_score"]
+
+    # Lower ADP is better, so negate before ranking to percentile.
+    adp_pct = (-adp[has_adp]).rank(pct=True)
+    model_pct = model[has_adp].rank(pct=True)
+    blended = (1.0 - lam) * adp_pct + lam * model_pct
+
+    anchored = pd.Series(np.nan, index=out.index, dtype=float)
+    # Rescale to the original score range so downstream display/thresholds
+    # keep working on a familiar 0-100-ish scale.
+    lo, hi = float(model[has_adp].min()), float(model[has_adp].max())
+    span = hi - lo
+    if span <= 0:
+        return recommendations_df
+    anchored.loc[has_adp] = lo + blended.rank(pct=True) * span
+
+    # Unpriced players sit below every priced one, ordered among themselves
+    # by model score -- they are speculative depth, not consensus values.
+    no_adp = ~has_adp & model.notna()
+    if no_adp.any():
+        anchored.loc[no_adp] = lo - 1.0 + model[no_adp].rank(pct=True)
+
+    out["final_score"] = anchored.round(2).fillna(out["final_score"])
+    return out
+
+
 def build_master_recommendations_df(component_weights=None, drop_threshold=12.0):
     """
     Build transparent master recommendations from all existing scoring systems.
@@ -1524,6 +1806,7 @@ def build_master_recommendations_df(component_weights=None, drop_threshold=12.0)
     master_df = apply_construction_pressure_adjustments(master_df)
     master_df = apply_signal_trust_adjustments(master_df)
     master_df = apply_single_qb_value_adjustments(master_df)
+    master_df = apply_adp_anchor(master_df)
     master_df["recommendation_reasons"] = master_df.apply(
         lambda row: generate_recommendation_reasons(row),
         axis=1,

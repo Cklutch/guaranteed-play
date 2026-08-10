@@ -3,6 +3,12 @@ import pandas as pd
 import streamlit as st
 from datetime import datetime
 
+from draftkit.archetypes import (
+    archetype_label,
+    archetype_note,
+    build_roster_risk_report,
+    risk_profile,
+)
 from draftkit.data_access import get_available_players_df, load_players_df, safe_col
 from draftkit.conviction import build_conviction_report
 from draftkit.championship_equity_v2 import build_championship_equity_v2_df
@@ -1028,6 +1034,43 @@ with top_cols[0]:
     else:
         st.caption("No players drafted yet.")
 
+    # Roster composition risk. Points from touchdowns and explosive plays are
+    # far less repeatable week to week than points from targets and carries,
+    # so a roster can project well while having a fragile floor. Nothing else
+    # on this page surfaces that.
+    if my_team:
+        # raw_df, not avail_df -- drafted players are removed from the
+        # available pool, so the roster would never match against it.
+        risk = build_roster_risk_report(my_team, raw_df, player_col=player_col)
+        if risk["classified_count"]:
+            st.markdown("**Roster Risk Mix**")
+            renderer = {
+                "warn": st.warning,
+                "caution": st.info,
+                "ok": st.success,
+            }.get(risk["status"], st.caption)
+            renderer(risk["message"])
+
+            by_risk = risk["counts_by_risk"]
+            st.caption(
+                f"Volume-based: {by_risk['volume']} | TD/big-play: {by_risk['event']} | "
+                f"Mixed: {by_risk['mixed']} | Unclassified: {risk['unclassified_count']}"
+            )
+
+            with st.expander("Archetype breakdown", expanded=False):
+                for entry in risk["players"]:
+                    if entry["label"]:
+                        st.write(f"**{entry['player_name']}** — {entry['label']}")
+                        st.caption(entry["note"])
+                    else:
+                        st.write(f"**{entry['player_name']}** — unclassified")
+                        st.caption(entry["note"])
+                st.caption(
+                    "Thresholds are a rule of thumb (caution at 35% event-dependent, "
+                    "warning at 50%), not a fitted model. Archetypes are descriptive "
+                    "only and are deliberately not part of the ranking score."
+                )
+
 with top_cols[1]:
     st.subheader("Draft Status")
 
@@ -1144,9 +1187,19 @@ with st.container():
     if "position_value_score" in top_df.columns:
         display_cols.append("position_value_score")
         rename_map["position_value_score"] = "Pos Value"
-    if "archetype" in top_df.columns:
-        display_cols.append("archetype")
-        rename_map["archetype"] = "Archetype"
+    # Real usage-derived archetype (bellcow RB, deep threat WR, ...). Shown
+    # instead of the legacy STEADY/RISKY bucket, which is empty for 87% of
+    # players and derived from scores that are no longer populated.
+    if "archetype_primary" in top_df.columns:
+        top_df["archetype_display"] = top_df["archetype_primary"].apply(archetype_label)
+        top_df["risk_display"] = top_df["archetype_primary"].apply(
+            lambda a: {"event": "TD / big-play", "volume": "Volume", "mixed": "Mixed"}.get(
+                risk_profile(a), ""
+            )
+        )
+        display_cols += ["archetype_display", "risk_display"]
+        rename_map["archetype_display"] = "Archetype"
+        rename_map["risk_display"] = "Scoring Type"
 
     if top_df.empty:
         st.info("No players match the current filters.")
@@ -1212,6 +1265,20 @@ with st.container():
             f"({selected_position}{', ' + selected_team if selected_team else ''})"
         )
         st.caption(f"Projection: {selected_projection}")
+
+        # What kind of player this is, and what kind of risk comes with him.
+        selected_archetype = selected_draft_row.get("archetype_primary")
+        if archetype_label(selected_archetype):
+            profile = risk_profile(selected_archetype)
+            profile_text = {
+                "event": "TD / big-play dependent",
+                "volume": "volume-based",
+                "mixed": "mixed",
+            }.get(profile, profile)
+            st.caption(
+                f"Archetype: **{archetype_label(selected_archetype)}** ({profile_text}) — "
+                f"{archetype_note(selected_archetype)}"
+            )
 
         with st.popover("Draft to My Team", use_container_width=True):
             st.write(f"Are you sure you want to draft **{selected_draft_player}**?")

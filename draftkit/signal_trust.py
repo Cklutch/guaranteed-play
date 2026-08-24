@@ -94,6 +94,16 @@ def _projection_context(players_df, columns):
 
 
 def calculate_adp_trust(player_row, columns=None):
+    """Real, disclosed split (plan_deanchor_scoring_from_adp.pdf): only
+    genuine ADP-DATA-QUALITY issues (missing, internally inconsistent, out
+    of range) deduct from trust_score. Model-vs-ADP RANK-GAP flags
+    (extreme_adp_projection_gap, large_adp_projection_gap,
+    elite_projection_late_adp_conflict) are real, disclosed divergence
+    signals, not evidence the data is untrustworthy -- returned separately
+    as `divergence_flags`, never scored. Confirmed circular before this
+    fix: a real model-vs-ADP disagreement directly lowered this score,
+    which then fed apply_signal_trust_adjustments()'s dampening -- pulling
+    the very disagreement the model exists to surface back toward ADP."""
     columns = columns or {}
     adp = _safe_float(_get(player_row, columns, "adp"))
     adp_rank = _safe_float(_get(player_row, columns, "adp_rank"))
@@ -101,6 +111,7 @@ def calculate_adp_trust(player_row, columns=None):
 
     score = 100.0
     flags = []
+    divergence_flags = []
 
     if adp is None and adp_rank is None:
         score -= 60.0
@@ -117,19 +128,17 @@ def calculate_adp_trust(player_row, columns=None):
     if projection_rank is not None and adp_rank is not None:
         gap = adp_rank - projection_rank
         if abs(gap) >= EXTREME_RANK_GAP:
-            score -= 55.0
-            flags.append("extreme_adp_projection_gap")
+            divergence_flags.append("extreme_adp_projection_gap")
         elif abs(gap) >= LARGE_RANK_GAP:
-            score -= 25.0
-            flags.append("large_adp_projection_gap")
+            divergence_flags.append("large_adp_projection_gap")
 
     if adp_rank is not None and adp_rank >= 180 and projection_rank is not None and projection_rank <= 24:
-        score -= 35.0
-        flags.append("elite_projection_late_adp_conflict")
+        divergence_flags.append("elite_projection_late_adp_conflict")
 
     return {
         "trust_score": _clip_score(score),
         "flags": flags,
+        "divergence_flags": divergence_flags,
     }
 
 
@@ -236,12 +245,19 @@ def calculate_sportsbook_trust(provider_debug=None):
 
 
 def calculate_market_disagreement_trust(player_row, columns=None, market_row=None, adp_trust=None, sportsbook_trust=None):
+    """Same real/divergence split as calculate_adp_trust() -- see that
+    function's docstring. `low_adp_trust` now checks the GENUINE (post-
+    split) adp_trust score, so it only fires for real ADP data gaps, not
+    for a real model-vs-ADP disagreement. `extreme_market_disagreement`
+    (a direct model-vs-market rank-gap check, same shape as
+    extreme_adp_projection_gap) moves to divergence_flags, never scored."""
     columns = columns or {}
     adp_trust = adp_trust or calculate_adp_trust(player_row, columns)
     sportsbook_trust = sportsbook_trust or calculate_sportsbook_trust()
 
     score = 100.0
     flags = []
+    divergence_flags = []
 
     if sportsbook_trust.get("trust_score", 0.0) < 45:
         score -= 35.0
@@ -262,8 +278,7 @@ def calculate_market_disagreement_trust(player_row, columns=None, market_row=Non
         flags.append("low_market_confidence")
 
     if market_disagreement is not None and abs(market_disagreement) >= EXTREME_RANK_GAP:
-        score -= 25.0
-        flags.append("extreme_market_disagreement")
+        divergence_flags.append("extreme_market_disagreement")
 
     if _safe_float(_get(player_row, columns, "sportsbook_projection")) is None:
         score -= 25.0
@@ -272,6 +287,7 @@ def calculate_market_disagreement_trust(player_row, columns=None, market_row=Non
     return {
         "trust_score": _clip_score(score),
         "flags": flags,
+        "divergence_flags": divergence_flags,
     }
 
 
@@ -288,12 +304,21 @@ def calculate_signal_trust(adp_trust, projection_trust, market_trust, sportsbook
 
 
 def detect_data_anomalies(player_row, columns=None, market_row=None, duplicate_names=None, projection_context=None, sportsbook_trust=None):
+    """Returns (genuine_flags, divergence_flags) -- see calculate_adp_trust()'s
+    docstring for the real/divergence split this mirrors.
+    projection_rank_conflict/adp_rank_conflict are the SAME rank_gap>=75
+    check as adp_trust's extreme_adp_projection_gap (a real model-vs-ADP
+    disagreement, not a data anomaly) -- moved to divergence_flags. This
+    was the entire real contents of apply_signal_trust_adjustments()'s old
+    `severe_flags` set (all 4 members were divergence-only), which is why
+    that dampening tier is removed rather than fixed in place."""
     columns = columns or {}
     duplicate_names = duplicate_names or set()
     projection_context = projection_context or {}
     sportsbook_trust = sportsbook_trust or calculate_sportsbook_trust()
 
     flags = []
+    divergence_flags = []
     player_name = str(_get(player_row, columns, "player", "")).strip()
     age = _safe_float(_get(player_row, columns, "age"))
     rank_gap = _rank_gap(player_row, columns)
@@ -311,6 +336,8 @@ def detect_data_anomalies(player_row, columns=None, market_row=None, duplicate_n
     flags.extend(adp_trust["flags"])
     flags.extend(projection_trust["flags"])
     flags.extend(market_trust["flags"])
+    divergence_flags.extend(adp_trust["divergence_flags"])
+    divergence_flags.extend(market_trust["divergence_flags"])
 
     if player_name.lower() in duplicate_names:
         flags.append("duplicate_player_name")
@@ -319,13 +346,13 @@ def detect_data_anomalies(player_row, columns=None, market_row=None, duplicate_n
         flags.append("invalid_age")
 
     if rank_gap is not None and abs(rank_gap) >= EXTREME_RANK_GAP:
-        flags.append("projection_rank_conflict")
-        flags.append("adp_rank_conflict")
+        divergence_flags.append("projection_rank_conflict")
+        divergence_flags.append("adp_rank_conflict")
 
     if sportsbook_trust.get("trust_score", 0.0) < 45:
         flags.append("missing_or_low_trust_sportsbook_inputs")
 
-    return sorted(set(flags))
+    return sorted(set(flags)), sorted(set(divergence_flags))
 
 
 def _market_lookup(players_df):
@@ -379,7 +406,7 @@ def build_signal_trust_report(players_df=None):
             adp_trust=adp_trust,
             sportsbook_trust=sportsbook_trust,
         )
-        anomalies = detect_data_anomalies(
+        anomalies, divergence = detect_data_anomalies(
             row,
             columns,
             market_row=market_row,
@@ -387,6 +414,10 @@ def build_signal_trust_report(players_df=None):
             projection_context=projection_context,
             sportsbook_trust=sportsbook_trust,
         )
+        # Real, disclosed model-vs-ADP/market divergence -- surfaced for
+        # transparency, deliberately excluded from anomaly_flags/
+        # signal_trust_score (see calculate_adp_trust()'s docstring).
+        divergence = sorted(set(divergence) | set(adp_trust["divergence_flags"]) | set(market_trust["divergence_flags"]))
 
         rows.append({
             "player_name": player_name,
@@ -410,6 +441,7 @@ def build_signal_trust_report(players_df=None):
             else None,
             "anomaly_flags": anomalies,
             "anomaly_count": len(anomalies),
+            "market_divergence_flags": divergence,
         })
 
     return pd.DataFrame(rows).sort_values(

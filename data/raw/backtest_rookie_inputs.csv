@@ -1,0 +1,117 @@
+player_name,position,draft_season,draft_pick,landing_team,age_at_draft,college,height_inches,weight,forty_time,college_dominator_final_year,college_dominator_career,historical_offense_environment_score,roster_competition_tier,breakout_age
+Bijan Robinson,RB,2023,8,ATL,21.0,Texas,71.0,215.0,4.46,,,2.3,3,
+Jahmyr Gibbs,RB,2023,12,DET,21.0,Alabama,69.0,199.0,4.36,,,1.1,3,
+Jaxon Smith-Njigba,WR,2023,20,SEA,21.0,Ohio St.,73.0,196.0,,,,2.5,3,
+Quentin Johnston,WR,2023,21,LAC,22.0,TCU,75.0,208.0,,,,1.6,4,
+Zay Flowers,WR,2023,22,BAL,22.0,Boston Col.,69.0,182.0,4.42,,,2.5,3,
+Jordan Addison,WR,2023,23,MIN,21.0,USC,71.0,173.0,4.49,,,2.2,3,
+Jonathan Mingo,WR,2023,39,CAR,22.0,Mississippi,74.0,220.0,4.46,,,3.7,5,
+Jayden Reed,WR,2023,50,GNB,23.0,Michigan St.,71.0,187.0,4.45,,,2.7,3,
+Zach Charbonnet,RB,2023,52,SEA,22.0,UCLA,72.0,214.0,4.53,,,2.5,3,
+Rashee Rice,WR,2023,55,KAN,23.0,SMU,73.0,204.0,4.51,,,1.0,2,
+Marvin Mims,WR,2023,63,DEN,21.0,Oklahoma,71.0,183.0,4.38,,,4.3,3,
+Josh Downs,WR,2023,79,IND,22.0,North Carolina,69.0,171.0,4.48,,,4.4,4,
+Tyjae Spears,RB,2023,81,TEN,22.0,Tulane,70.0,201.0,,,,4.0,2,
+De'Von Achane,RB,2023,84,MIA,21.0,Texas A&M,69.0,188.0,4.32,,,1.9,3,
+Michael Wilson,WR,2023,94,ARI,23.0,Stanford,74.0,213.0,4.58,,,3.5,4,
+Chase Brown,RB,2023,163,CIN,23.0,Illinois,70.0,209.0,4.43,,,1.0,2,
+Puka Nacua,WR,2023,177,LAR,22.0,BYU,74.0,201.0,,,,4.2,2,
+Parker Washington,WR,2023,185,JAX,21.0,Penn St.,70.0,204.0,,,,1.4,3,
+Chris Rodriguez,RB,2023,193,WAS,22.0,Kentucky,72.0,217.0,,,,3.4,3,
+Marvin Harrison,WR,2024,4,ARI,22.0,Ohio St.,75.0,209.0,,,,3.3,5,
+Malik Nabers,WR,2024,6,NYG,21.0,LSU,72.0,200.0,,35.6,,4.6,3,20.0
+Rome Odunze,WR,2024,9,CHI,22.0,Washington,75.0,212.0,4.45,31.8,,2.8,2,21.0
+Brian Thomas,WR,2024,23,JAX,21.0,LSU,75.0,209.0,4.33,26.7,,2.6,4,20.0
+Xavier Worthy,WR,2024,28,KAN,21.0,Texas,71.0,165.0,4.21,,,1.8,2,
+Ricky Pearsall,WR,2024,31,SFO,23.0,Florida,73.0,189.0,4.41,,,1.0,4,
+Xavier Legette,WR,2024,32,CAR,23.0,South Carolina,73.0,221.0,4.39,,,4.4,3,
+Keon Coleman,WR,2024,33,BUF,21.0,Florida St.,75.0,213.0,4.61,18.7,,1.0,2,
+Ladd McConkey,WR,2024,34,LAC,22.0,Georgia,72.0,186.0,4.39,,,3.0,5,
+Ja'Lynn Polk,WR,2024,37,NWE,22.0,Washington,73.0,203.0,4.52,22.5,,4.5,3,21.0
+Jonathon Brooks,RB,2024,46,CAR,21.0,Texas,72.0,216.0,,,,4.4,3,
+Adonai Mitchell,WR,2024,52,IND,21.0,Texas,74.0,205.0,4.34,20.9,,2.4,3,20.0
+Malachi Corley,WR,2024,65,NYJ,22.0,Western Kentucky,,,,,,4.8,2,
+Trey Benson,RB,2024,66,ARI,22.0,Florida St.,72.0,216.0,4.39,,,3.3,3,
+Jermaine Burton,WR,2024,80,CIN,23.0,Alabama,,,,,,2.2,4,
+Blake Corum,RB,2024,83,LAR,23.0,Michigan,68.0,205.0,4.53,,,1.4,3,
+Roman Wilson,WR,2024,84,PIT,23.0,Michigan,71.0,185.0,4.39,,,3.9,3,
+MarShawn Lloyd,RB,2024,88,GNB,23.0,USC,69.0,220.0,4.46,,,1.6,3,
+Jalen McMillan,WR,2024,92,TAM,22.0,Washington,73.0,197.0,4.47,10.8,,2.7,3,
+Luke McCaffrey,WR,2024,100,WAS,23.0,Rice,,,,,,3.5,3,
+Javon Baker,WR,2024,110,NWE,22.0,Central Florida,,,,,,4.5,3,
+Devontez Walker,WR,2024,113,BAL,23.0,North Carolina,,,,,,1.2,3,
+Bucky Irving,RB,2024,125,TAM,22.0,Oregon,69.0,192.0,4.55,,,2.7,2,
+Will Shipley,RB,2024,127,PHI,22.0,Clemson,,,,,,1.0,2,
+Ray Davis,RB,2024,128,BUF,24.0,Kentucky,,,,,,1.0,2,
+Isaac Guerendo,RB,2024,129,SFO,24.0,Louisville,72.0,221.0,4.33,,,1.0,2,
+Braelon Allen,RB,2024,134,NYJ,20.0,Wisconsin,73.0,235.0,,,,4.8,2,
+Jacob Cowing,WR,2024,135,SFO,23.0,Arizona,,,,,,1.0,4,
+Anthony Gould,WR,2024,142,IND,23.0,Oregon St.,,,,,,2.4,3,
+Audric Estime,RB,2024,147,DEN,21.0,Notre Dame,,,,,,3.3,2,
+Ainias Smith,WR,2024,152,PHI,23.0,Texas A&M,,,,,,1.0,3,
+Jamari Thrash,WR,2024,156,CLE,23.0,Louisville,,,,,,3.0,3,
+Rasheen Ali,RB,2024,165,BAL,23.0,Marshall,,,,,,1.2,3,
+Tyrone Tracy,RB,2024,166,NYG,24.0,Purdue,71.0,209.0,4.48,,,4.6,3,
+Keilan Robinson,RB,2024,167,JAX,24.0,Texas,,,,,,2.6,2,
+Bub Means,WR,2024,170,NOR,23.0,Pittsburgh,,,,,,1.9,3,
+Jha'Quan Jackson,WR,2024,182,TEN,24.0,Tulane,,,,,,3.7,2,
+Johnny Wilson,WR,2024,185,PHI,23.0,Florida St.,,,,,,1.0,3,
+Jase McClellan,RB,2024,186,ATL,22.0,Alabama,,,,,,3.7,3,
+Casey Washington,WR,2024,187,ATL,23.0,Illinois,,,,,,3.7,2,
+Tejhaun Palmer,WR,2024,191,ARI,24.0,Ala-Birmingham,,,,,,3.3,5,
+Jawhar Jordan,RB,2024,205,HOU,25.0,Louisville,,,,,,2.1,3,
+Dylan Laube,RB,2024,208,LVR,24.0,New Hampshire,,,,,,4.2,3,
+Jordan Whittington,WR,2024,213,LAR,23.0,Texas,,,,,,1.4,3,
+Brenden Rice,WR,2024,225,LAC,22.0,USC,,,,,,3.0,5,
+Tahj Washington,WR,2024,241,MIA,23.0,USC,,,,,,1.1,3,
+Cornelius Johnson,WR,2024,253,LAC,23.0,Michigan,,,,,,3.0,5,
+Travis Hunter,WR,2025,2,JAX,22.0,Colorado,,,,30.4,,3.5,3,21.0
+Ashton Jeanty,RB,2025,6,LVR,21.0,Boise St.,69.0,211.0,,,77.3,4.2,4,20.0
+Tetairoa McMillan,WR,2025,8,CAR,22.0,Arizona,76.0,219.0,,44.3,,3.5,3,21.0
+Emeka Egbuka,WR,2025,19,TAM,22.0,Ohio St.,73.0,202.0,,24.0,,1.0,3,21.0
+Omarion Hampton,RB,2025,22,LAC,22.0,North Carolina,72.0,221.0,4.46,,70.0,2.5,3,21.0
+Matthew Golden,WR,2025,23,GNB,22.0,Texas,71.0,191.0,4.29,22.1,,1.7,4,21.0
+Jayden Higgins,WR,2025,34,HOU,22.0,Iowa St.,76.0,214.0,4.47,33.0,,3.6,5,21.0
+Quinshon Judkins,RB,2025,36,CLE,21.0,Ohio St.,72.0,221.0,4.48,,39.8,4.2,3,20.0
+TreVeyon Henderson,RB,2025,38,NWE,22.0,Ohio St.,70.0,202.0,4.43,,38.2,4.3,3,21.0
+Luther Burden,WR,2025,39,CHI,21.0,Missouri,72.0,206.0,4.41,23.1,,3.9,4,20.0
+Tre' Harris,WR,2025,55,LAC,23.0,Mississippi,74.0,205.0,4.54,22.6,,2.5,3,22.0
+Jack Bech,WR,2025,58,LVR,22.0,TCU,73.0,214.0,,25.4,,4.2,2,21.0
+RJ Harvey,RB,2025,60,DEN,24.0,Central Florida,68.0,205.0,4.4,,53.0,2.0,2,23.0
+Kyle Williams,WR,2025,69,NWE,22.0,Washington St.,71.0,190.0,4.4,33.4,,4.3,2,21.0
+Isaac TeSlaa,WR,2025,70,DET,23.0,Arkansas,76.0,214.0,4.43,15.3,,1.0,3,
+Jaylin Noel,WR,2025,79,HOU,23.0,Iowa St.,70.0,194.0,4.39,33.4,,3.6,5,22.0
+Kaleb Johnson,RB,2025,83,PIT,22.0,Iowa,73.0,224.0,4.57,,59.9,3.0,3,21.0
+Savion Williams,WR,2025,87,GNB,23.0,TCU,76.0,222.0,4.48,15.0,,1.7,4,
+Tai Felton,WR,2025,102,MIN,22.0,Maryland,,,,,,2.3,3,
+Bhayshul Tuten,RB,2025,104,JAX,22.0,Virginia Tech,69.0,206.0,4.32,,50.0,3.5,3,21.0
+Cam Skattebo,RB,2025,105,NYG,23.0,Arizona St.,70.0,219.0,,,61.1,4.2,2,22.0
+Arian Smith,WR,2025,110,NYJ,23.0,Georgia,,,,,,3.1,3,
+Trevor Etienne,RB,2025,114,CAR,21.0,Georgia,,,,,,3.5,2,
+Woody Marks,RB,2025,116,HOU,24.0,USC,70.0,207.0,4.54,,60.0,3.6,2,23.0
+Jarquez Hunter,RB,2025,117,LAR,22.0,Auburn,,,,,,2.7,2,
+Dylan Sampson,RB,2025,126,CLE,20.0,Tennessee,,,,,,4.2,3,
+Jaylin Lane,WR,2025,128,WAS,23.0,Virginia Tech,,,,,,1.0,3,
+Jalen Royals,WR,2025,133,KAN,22.0,Utah St.,,,,,,1.6,4,
+Jordan Watkins,WR,2025,138,SFO,23.0,Mississippi,,,,,,2.2,4,
+Jordan James,RB,2025,147,SFO,21.0,Oregon,,,,,,2.2,3,
+Jaydon Blue,RB,2025,149,DAL,21.0,Texas,,,,,,3.6,2,
+KeAndre Lambert-Smith,WR,2025,158,LAC,23.0,Auburn,,,,,,2.5,3,
+Tory Horton,WR,2025,166,SEA,22.0,Colorado St.,,,,,,3.2,3,
+Ollie Gordon,RB,2025,179,MIA,21.0,Oklahoma St.,,,,,,2.9,2,
+Devin Neal,RB,2025,184,NOR,22.0,Kansas,71.0,213.0,4.58,,49.9,3.5,3,21.0
+Kalel Mullings,RB,2025,188,TEN,22.0,Michigan,,,,,,4.3,3,
+Tahj Brooks,RB,2025,193,CIN,23.0,Texas Tech,,,,,,1.1,3,
+LaJohntay Wester,WR,2025,203,BAL,23.0,Colorado,,,,,,1.0,3,
+Jimmy Horn,WR,2025,208,CAR,22.0,Colorado,,,,,,3.5,3,
+Damien Martinez,RB,2025,223,SEA,21.0,Miami (FL),,,,,,3.2,3,
+Brashard Smith,RB,2025,228,KAN,22.0,SMU,,,,,,1.6,3,
+Kyle Monangai,RB,2025,233,CHI,23.0,Rutgers,68.0,211.0,4.6,,56.1,3.9,2,22.0
+LeQuint Allen,RB,2025,236,JAX,21.0,Syracuse,,,,,,3.5,3,
+Ricky White,WR,2025,238,SEA,23.0,UNLV,,,,,,3.2,3,
+Phil Mafah,RB,2025,239,DAL,22.0,Clemson,,,,,,3.6,2,
+Kaden Prather,WR,2025,240,BUF,23.0,Maryland,,,,,,1.0,3,
+Konata Mumpfield,WR,2025,242,LAR,22.0,Pittsburgh,,,,,,2.7,3,
+Dominic Lovett,WR,2025,244,DET,22.0,Georgia,,,,,,1.0,3,
+Jacory Croskey-Merritt,RB,2025,245,WAS,24.0,Arizona,,,,,,1.0,3,
+Junior Bergen,WR,2025,252,SFO,,Montana,,,,,,2.2,4,

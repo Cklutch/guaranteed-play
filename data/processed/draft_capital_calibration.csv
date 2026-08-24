@@ -1,0 +1,5 @@
+position,n_picks,n_classes,fitted_k,r_squared_fitted,r_squared_original_shared_k
+RB,215,10,116.08,0.7192,-0.9528
+WR,322,10,98.86,0.834,-0.7543
+QB,120,10,74.32,0.8379,-0.1302
+TE,141,10,101.84,0.7551,-0.7718

@@ -14,6 +14,7 @@ OUTCOME_SOURCE_CANDIDATES = [
     PROJECT_ROOT / "case_studies" / "case_studies" / "data" / "qb_rb_te_wr_elite_age_player_seasons_half_ppr.csv",
 ]
 WR_OPPORTUNITY_SOURCE = PROJECT_ROOT / "case_studies" / "data" / "opportunity_wr_target_share_player_seasons_half_ppr.csv"
+STATS_DIR = VALIDATION_DIR / "data" / "stats_player_reg_by_season"
 MARKET_SOURCE_CANDIDATES = [
     VALIDATION_DIR / "historical_adp.csv",
     VALIDATION_DIR / "historical_market.csv",
@@ -22,9 +23,16 @@ MARKET_SOURCE_CANDIDATES = [
 
 IDENTITY_COLS = ["season", "player_name", "player_id", "position", "team", "age"]
 MARKET_COLS = [
-    "preseason_adp", "positional_adp", "overall_adp", "estimated_draft_round", "preseason_projection",
+    "preseason_adp", "positional_adp", "overall_adp", "estimated_draft_round",
     "adp_source", "projection_source", "half_ppr_adp", "ppr_adp", "standard_adp",
 ]
+# preseason_projection was dropped (Iteration 2, projection_model_iteration_plan.pdf):
+# historical_adp.csv defines the column but it was 0/2,667 populated -- no
+# projection data was ever loaded into the market source, for any position or
+# season. Not a merge bug; the field was genuinely always empty. Downstream
+# consumers (evaluate_wr_models.py / evaluate_rb_models.py) already filter
+# FEATURE_GROUPS to `f in df.columns`, so dropping it is a no-op for them --
+# it was contributing nothing as an always-null column either.
 PRIOR_COLS = [
     "prior_targets", "prior_receptions", "prior_receiving_yards", "prior_receiving_tds", "prior_carries",
     "prior_rushing_yards", "prior_rushing_tds", "prior_passing_yards", "prior_passing_tds", "prior_total_tds",
@@ -73,6 +81,90 @@ def _safe_string(df: pd.DataFrame, col: str) -> pd.Series:
     return df[col].astype(str).replace({"nan": np.nan, "None": np.nan})
 
 
+def _load_receptions_by_season_player() -> pd.DataFrame:
+    """Real receptions by (season, player_id), read directly from
+    stats_player_reg_by_season/*.csv -- used to derive genuine half-PPR
+    fantasy_points (Iteration 2, projection_model_iteration_plan.pdf).
+
+    The outcome source's own "half_ppr" candidate
+    (case_studies/case_studies/data/qb_rb_te_wr_elite_age_player_seasons_half_ppr.csv)
+    was checked directly and found byte-identical to the full-PPR file for
+    every real player-season sampled (Jefferson, Kelce, Gibbs, McCaffrey) --
+    its own generation script (rb_elite_age_analysis.py's
+    SCORING_COLUMN_CANDIDATES) looks for a fantasy_points_half_ppr column
+    that does not exist anywhere in stats_player_reg_by_season, and silently
+    falls back to fantasy_points_ppr. Deriving directly from real receptions
+    counts here sidesteps that broken intermediate file entirely.
+    """
+    rows = []
+    for path in sorted(STATS_DIR.glob("*.csv")):
+        cols = pd.read_csv(path, nrows=0).columns
+        if "receptions" not in cols or "player_id" not in cols:
+            continue
+        df = pd.read_csv(path, usecols=["season", "player_id", "receptions"])
+        rows.append(df)
+    if not rows:
+        return pd.DataFrame(columns=["season", "player_id", "receptions"])
+    out = pd.concat(rows, ignore_index=True)
+    out["season"] = pd.to_numeric(out["season"], errors="coerce").astype("Int64")
+    out["receptions"] = pd.to_numeric(out["receptions"], errors="coerce")
+    # A handful of (season, player_id) pairs repeat across multi-team/multi-stint
+    # rows in the raw source; sum real receptions across stints for a true
+    # season total rather than picking one arbitrarily.
+    return out.groupby(["season", "player_id"], as_index=False)["receptions"].sum()
+
+
+def _load_games_by_season_player() -> pd.DataFrame:
+    """Real games-played by (season, player_id) from stats_player_reg_by_season.
+
+    Found while building Iteration 3 (baseline projection model): the
+    outcome source's own "games" column was requested via _safe_numeric()
+    but never existed in any OUTCOME_SOURCE_CANDIDATES file (confirmed --
+    those files carry season/player_id/name/position/age/fantasy_points/
+    positional_finish/passing/rushing/receiving stat totals, no games
+    column), so games_played and everything derived from it
+    (final_fantasy_ppg) were silently 100% null the whole time. Same fix
+    pattern as _load_receptions_by_season_player() above.
+    """
+    rows = []
+    for path in sorted(STATS_DIR.glob("*.csv")):
+        cols = pd.read_csv(path, nrows=0).columns
+        if "games" not in cols or "player_id" not in cols:
+            continue
+        df = pd.read_csv(path, usecols=["season", "player_id", "games"])
+        rows.append(df)
+    if not rows:
+        return pd.DataFrame(columns=["season", "player_id", "games"])
+    out = pd.concat(rows, ignore_index=True)
+    out["season"] = pd.to_numeric(out["season"], errors="coerce").astype("Int64")
+    out["games"] = pd.to_numeric(out["games"], errors="coerce")
+    # Sum across multi-team/multi-stint rows for a true season total, same
+    # reasoning as the receptions loader above.
+    return out.groupby(["season", "player_id"], as_index=False)["games"].sum()
+
+
+def _load_team_by_season_player() -> pd.DataFrame:
+    """Real team by (season, player_id), from stats_player_reg_by_season's
+    recent_team column. Found alongside the games_played gap while building
+    Iteration 3: the outcome source never carried a team column either
+    (out["team"] silently defaulted to all-NaN via the same "column not in
+    df.columns" branch), so any team-context feature join was a guaranteed
+    100% miss. One row per (season, player_id) in the raw source (no
+    mid-season multi-team stint rows), so no aggregation ambiguity here."""
+    rows = []
+    for path in sorted(STATS_DIR.glob("*.csv")):
+        cols = pd.read_csv(path, nrows=0).columns
+        if "recent_team" not in cols or "player_id" not in cols:
+            continue
+        df = pd.read_csv(path, usecols=["season", "player_id", "recent_team"])
+        rows.append(df)
+    if not rows:
+        return pd.DataFrame(columns=["season", "player_id", "recent_team"])
+    out = pd.concat(rows, ignore_index=True)
+    out["season"] = pd.to_numeric(out["season"], errors="coerce").astype("Int64")
+    return out.rename(columns={"recent_team": "real_team"})
+
+
 def _load_outcomes() -> pd.DataFrame:
     path = _first_existing(OUTCOME_SOURCE_CANDIDATES)
     if path is None:
@@ -89,14 +181,53 @@ def _load_outcomes() -> pd.DataFrame:
     out["player_key"] = out["player_name"].apply(clean_name)
     out["player_id"] = out["player_id"] if "player_id" in out.columns else np.nan
     out["position"] = out["position"].astype(str).str.upper()
-    out["team"] = out["team"] if "team" in out.columns else np.nan
     out["age"] = _safe_numeric(out, "age")
     out["final_fantasy_points"] = _safe_numeric(out, "fantasy_points")
     out["final_positional_finish"] = _safe_numeric(out, "positional_finish")
-    out["games_played"] = _safe_numeric(out, "games")
-    if out["games_played"].isna().all():
-        out["games_played"] = np.nan
+
+    games = _load_games_by_season_player()
+    out = out.merge(games, on=["season", "player_id"], how="left")
+    out["games_played"] = out["games"]
+    out = out.drop(columns=["games"])
+
+    real_team = _load_team_by_season_player()
+    out = out.merge(real_team, on=["season", "player_id"], how="left")
+    out["team"] = out["real_team"]
+    out = out.drop(columns=["real_team"])
+
+    # Half-PPR correction (Iteration 2): out["final_fantasy_points"] above is
+    # sourced from the outcome file's full-PPR "fantasy_points" column. Real
+    # league is half-PPR (confirmed this session) -- subtract 0.5/reception
+    # using real receptions counts from stats_player_reg_by_season. Rows with
+    # no matching (season, player_id) in that source (pre-1999 gaps, ID
+    # mismatches) keep the uncorrected full-PPR value rather than being
+    # silently dropped or NaN'd -- flagged via half_ppr_corrected for
+    # transparency, not hidden.
+    receptions = _load_receptions_by_season_player()
+    out = out.merge(receptions, on=["season", "player_id"], how="left")
+    out["half_ppr_corrected"] = out["receptions"].notna()
+    out.loc[out["half_ppr_corrected"], "final_fantasy_points"] = (
+        out.loc[out["half_ppr_corrected"], "final_fantasy_points"]
+        - 0.5 * out.loc[out["half_ppr_corrected"], "receptions"]
+    )
+    out = out.drop(columns=["receptions"])
+
     out["final_fantasy_ppg"] = out["final_fantasy_points"] / out["games_played"].replace(0, np.nan)
+
+    # Duplicate-row fix (Iteration 2): 297 rows share a real (season,
+    # player_id, position) key with a different fantasy_points value --
+    # the same upstream ID-assignment bug _build_prior_features() below
+    # already documents and fixes for the `prior` join frame, but that fix
+    # was never applied to `outcomes`/`current` itself, so it leaked
+    # straight into final_fantasy_points. NOT the same as the 243 groups
+    # that only collide on abbreviated player_name with a genuinely
+    # different real player_id -- those are real distinct players and must
+    # not be touched here (this key includes player_id, so it never matches
+    # them). Keep the highest-production row per key, matching the existing
+    # precedent exactly.
+    out = out.sort_values("final_fantasy_points", ascending=False, na_position="last")
+    out = out.drop_duplicates(["season", "player_id", "position"], keep="first")
+    out = out.sort_index()
     return out
 
 
@@ -135,7 +266,6 @@ def _normalize_market_columns(df: pd.DataFrame) -> pd.DataFrame:
         "preseason_adp": ["preseason_adp", "adp", "average_draft_position", "average draft position"],
         "overall_adp": ["overall_adp", "adp", "adp_rank", "overall_rank", "rank"],
         "positional_adp": ["positional_adp", "pos_adp", "position_adp", "position_rank", "pos_rank"],
-        "preseason_projection": ["preseason_projection", "projection", "projection_points", "projected_points", "fpts"],
         "projection_source": ["projection_source", "proj_source"],
         "adp_source": ["adp_source", "source"],
         "half_ppr_adp": ["half_ppr_adp", "half_ppr", "half ppr adp"],
@@ -171,7 +301,7 @@ def _load_market() -> pd.DataFrame:
     df["position"] = df["position"].astype(str).str.upper() if "position" in df.columns else np.nan
     keep = ["season", "player_key", "initial_last_key", "position"] + MARKET_COLS
     df = ensure_columns(df, keep)[keep]
-    for col in ["preseason_adp", "positional_adp", "overall_adp", "preseason_projection", "half_ppr_adp", "ppr_adp", "standard_adp"]:
+    for col in ["preseason_adp", "positional_adp", "overall_adp", "half_ppr_adp", "ppr_adp", "standard_adp"]:
         df[col] = pd.to_numeric(df[col], errors="coerce")
     if df["overall_adp"].isna().all() and df["preseason_adp"].notna().any():
         df["overall_adp"] = df["preseason_adp"]
@@ -299,7 +429,7 @@ def build_dataset() -> tuple[pd.DataFrame, dict[str, object]]:
     current = outcomes[outcomes["position"].isin(["WR", "RB", "QB", "TE"])].copy()
     keep_current = [
         "season", "player_name", "player_id", "player_key", "position", "team", "age", "final_fantasy_points",
-        "final_fantasy_ppg", "final_positional_finish", "games_played",
+        "final_fantasy_ppg", "final_positional_finish", "games_played", "half_ppr_corrected",
     ]
     current = ensure_columns(current, keep_current)[keep_current]
     dataset = current.merge(prior, on=["season", "player_key", "position"], how="left")
@@ -324,7 +454,7 @@ def build_dataset() -> tuple[pd.DataFrame, dict[str, object]]:
     else:
         dataset = ensure_columns(dataset, MARKET_COLS)
 
-    for col in ["overall_adp", "preseason_adp", "positional_adp", "preseason_projection", "half_ppr_adp", "ppr_adp", "standard_adp"]:
+    for col in ["overall_adp", "preseason_adp", "positional_adp", "half_ppr_adp", "ppr_adp", "standard_adp"]:
         dataset[col] = pd.to_numeric(dataset[col], errors="coerce")
     dataset["estimated_draft_round"] = np.ceil(dataset["overall_adp"] / 12.0)
     dataset.loc[dataset["estimated_draft_round"].isna() & dataset["preseason_adp"].notna(), "estimated_draft_round"] = np.ceil(dataset["preseason_adp"] / 12.0)
@@ -412,7 +542,6 @@ def write_feature_inventory(path: Path) -> None:
         ("preseason_adp", "WR/RB", "Market draft cost before season", "historical_adp.csv or historical_market.csv", "objective", "yes", "low", "high", "investigate"),
         ("overall_adp", "WR/RB", "Overall market draft rank", "historical_adp.csv or historical_market.csv", "objective", "yes", "low", "high", "investigate"),
         ("positional_adp", "WR/RB", "Market rank within position", "historical_adp.csv or historical_market.csv", "objective", "yes", "low", "high", "investigate"),
-        ("preseason_projection", "WR/RB", "Projected fantasy points before season", "historical_market.csv optional column", "objective/mixed", "yes", "low", "high", "investigate"),
         ("prior_targets", "WR", "Previous-season WR targets", "prior season WR opportunity cache", "objective", "yes", "low", "medium", "trusted"),
         ("prior_target_share", "WR", "Previous-season share of team targets", "prior season WR opportunity cache", "objective", "yes", "low", "medium", "trusted"),
         ("prior_receiving_yards", "WR/RB", "Previous-season receiving yards", "prior season outcome cache", "objective", "yes", "low", "medium", "trusted"),
@@ -436,7 +565,7 @@ def write_import_template(path: Path) -> None:
     if path.exists():
         return
     cols = [
-        "season", "player_name", "position", "overall_adp", "positional_adp", "preseason_projection",
+        "season", "player_name", "position", "overall_adp", "positional_adp",
         "projection_source", "adp_source", "half_ppr_adp", "ppr_adp", "standard_adp",
     ]
     pd.DataFrame(columns=cols).to_csv(path, index=False)

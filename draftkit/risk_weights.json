@@ -1,0 +1,6 @@
+{
+  "QB": {"injury": 0.207, "role_usage_td": 0.258, "offense_environment": 0.465, "schedule_weather_venue": 0.07},
+  "RB": {"injury": 0.406, "role_usage_td": 0.341, "offense_environment": 0.213, "schedule_weather_venue": 0.04},
+  "WR": {"injury": 0.235, "role_usage_td": 0.352, "offense_environment": 0.373, "schedule_weather_venue": 0.04},
+  "TE": {"injury": 0.299, "role_usage_td": 0.341, "offense_environment": 0.32, "schedule_weather_venue": 0.04}
+}

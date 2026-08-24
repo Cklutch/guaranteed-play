@@ -12,3 +12,6 @@ research/validation_v1/data/raw_*.csv
 research/validation_v1/data/redzone_airyards_by_season/
 research/validation_v1/data/stats_player_reg_by_season/
 research/validation_v1/data/roster_*.csv
+
+# Regenerable raw API response cache from draftkit/scripts/pull_sportsbook_props.py.
+draftkit/scripts/source_sportsbook_raw/

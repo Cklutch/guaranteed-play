@@ -15,9 +15,9 @@ DEFAULT_CURRENT_PICK = 1
 DEFAULT_ROSTER_SETTINGS = {
     "QB": 1,
     "RB": 2,
-    "WR": 2,
+    "WR": 3,
     "TE": 1,
-    "FLEX": 1,
+    "FLEX": 2,
     "DST": 1,
     "K": 1,
     "BENCH": 6,

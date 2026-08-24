@@ -1,0 +1,198 @@
+player_name,position,draft_season,draft_pick,landing_team,college,height_inches,weight,forty_time,college_dominator_final_year,college_dominator_career,breakout_age,projected_tier,composite,sample_weight,status,tag,display_weight,display_status,display_tag,component_draft_capital,component_dominator,component_athletic,component_roster_competition,component_offense_environment,component_schedule,component_breakout_age,games,attempts,rushing_data_status,component_ncaa_passer_rating,generated_at
+Jeremiyah Love,RB,2026,3,ARI,Notre Dame,72.0,212.0,4.36,,44.1,,bellcow,72.1,0.0,projected,bellcow,0.0,projected,bellcow,97.5,97.0,97.8,20.0,40.0,72.5,,,,,,2026-08-17T02:16:54+00:00
+Carnell Tate,WR,2026,4,TEN,Ohio St.,74.25,192.0,4.53,23.3,,,complementary,63.1,0.0,projected,complementary,0.0,projected,complementary,96.1,51.3,,60.0,7.5,97.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Jordyn Tyson,WR,2026,8,NO,Arizona St.,74.12,203.0,,24.4,,,complementary,67.8,0.0,projected,complementary,0.0,projected,complementary,92.5,53.7,,80.0,30.0,100.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Makai Lemon,WR,2026,20,PHI,USC,71.12,192.0,,30.0,,,complementary,63.9,0.0,projected,complementary,0.0,projected,complementary,83.2,66.0,,60.0,55.0,35.0,20.0,,,,,2026-08-17T02:16:54+00:00
+KC Concepcion,WR,2026,24,CLE,Texas A&M,71.62,196.0,,27.2,,,complementary,61.8,0.0,projected,complementary,0.0,projected,complementary,80.5,59.8,,80.0,12.5,67.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Jadarian Price,RB,2026,32,SEA,Notre Dame,70.62,203.0,4.49,,25.1,,committee,68.3,0.0,projected,committee,0.0,projected,committee,78.4,55.2,83.2,60.0,65.0,45.0,,,,,,2026-08-17T02:16:54+00:00
+De'Zhaun Stribling,WR,2026,33,SF,Mississippi,74.12,207.0,4.36,17.3,,,complementary,59.4,0.0,projected,complementary,0.0,projected,complementary,75.0,38.1,,60.0,100.0,52.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Denzel Boston,WR,2026,39,CLE,Washington,75.62,212.0,,27.7,,,complementary,58.9,0.0,projected,complementary,0.0,projected,complementary,71.7,60.9,,80.0,12.5,67.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Germie Bernard,WR,2026,47,PIT,Alabama,73.25,206.0,4.48,21.8,,,complementary,58.7,0.0,projected,complementary,0.0,projected,complementary,67.8,48.0,,80.0,60.0,60.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Antonio Williams,WR,2026,71,WAS,Clemson,71.5,187.0,4.41,,,,complementary,51.1,0.0,projected,complementary,0.0,projected,complementary,58.2,50.0,,60.0,45.0,55.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Malachi Fields,WR,2026,74,NYG,Notre Dame,76.5,218.0,4.61,,,,complementary,53.4,0.0,projected,complementary,0.0,projected,complementary,57.2,50.0,,60.0,70.0,57.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Caleb Douglas,WR,2026,75,MIA,Texas Tech,75.5,206.0,4.39,,,,complementary,48.2,0.0,projected,complementary,0.0,projected,complementary,56.9,50.0,,60.0,37.5,20.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Zachariah Branch,WR,2026,79,ATL,Georgia,68.62,177.0,4.35,26.3,,,complementary,55.9,0.0,projected,complementary,0.0,projected,complementary,55.6,57.9,,80.0,42.5,75.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Ja'Kobi Lane,WR,2026,80,BAL,USC,,,,19.4,,,complementary,53.9,0.0,projected,complementary,0.0,projected,complementary,55.3,42.7,,80.0,67.5,62.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Ted Hurst,WR,2026,84,TB,Georgia St.,76.0,206.0,4.42,,,,complementary,48.2,0.0,projected,complementary,0.0,projected,complementary,54.1,50.0,,40.0,52.5,70.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Zavion Thomas,WR,2026,89,CHI,LSU,70.0,190.0,4.28,,,,complementary,57.7,0.0,projected,complementary,0.0,projected,complementary,52.6,50.0,,80.0,97.5,60.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Kaelon Black,RB,2026,90,SF,Indiana,,,,,,,committee,65.5,0.0,projected,committee,0.0,projected,committee,56.3,50.0,50.0,80.0,100.0,52.5,,,,,,2026-08-17T02:16:54+00:00
+Chris Bell,WR,2026,94,MIA,Louisville,73.88,222.0,,32.0,,,complementary,51.3,0.0,projected,complementary,0.0,projected,complementary,51.3,70.4,,60.0,37.5,20.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Brenen Thompson,WR,2026,105,LAC,Mississippi St.,69.0,164.0,4.26,,,,complementary,45.0,0.0,projected,complementary,0.0,projected,complementary,48.5,50.0,,40.0,40.0,70.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Jonah Coleman,RB,2026,108,DEN,Washington,68.12,220.0,,,35.2,,committee,62.3,0.0,projected,committee,0.0,projected,committee,51.8,77.4,50.0,60.0,87.5,50.0,,,,,,2026-08-17T02:16:54+00:00
+Elijah Sarratt,WR,2026,115,BAL,Indiana,74.5,210.0,,,,,complementary,52.5,0.0,projected,complementary,0.0,projected,complementary,46.2,50.0,,80.0,67.5,62.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Kaden Wetjen,WR,2026,121,PIT,Iowa,69.0,193.0,4.47,,,,complementary,51.2,0.0,projected,complementary,0.0,projected,complementary,45.0,50.0,,80.0,60.0,60.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Skyler Bell,WR,2026,125,BUF,Connecticut,71.62,192.0,4.4,34.6,,,complementary,56.7,0.0,projected,complementary,0.0,projected,complementary,44.2,76.1,,60.0,100.0,25.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Bryce Lance,WR,2026,136,NO,North Dakota St.,75.0,204.0,4.34,,,,complementary,49.2,0.0,projected,complementary,0.0,projected,complementary,42.1,50.0,,80.0,30.0,100.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Colbie Young,WR,2026,140,CIN,Georgia,76.75,218.0,4.49,,,,complementary,50.9,0.0,projected,complementary,0.0,projected,complementary,41.4,50.0,,80.0,62.5,72.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Reggie Virgil,WR,2026,143,ARI,Texas Tech,75.0,187.0,4.57,18.1,,,complementary,42.9,0.0,projected,complementary,0.0,projected,complementary,40.9,39.8,,60.0,40.0,72.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Emmett Johnson,RB,2026,161,KC,Nebraska,70.25,202.0,4.56,,76.5,,committee,63.0,0.0,projected,committee,0.0,projected,committee,41.9,100.0,77.9,60.0,67.5,32.5,,,,,,2026-08-17T02:16:54+00:00
+Nicholas Singleton,RB,2026,165,TEN,Penn St.,72.25,219.0,,,,,committee,45.4,0.0,projected,committee,0.0,projected,committee,41.3,50.0,50.0,60.0,7.5,97.5,,,,,,2026-08-17T02:16:54+00:00
+Kendrick Law,WR,2026,168,DET,Kentucky,71.0,203.0,4.45,22.3,,,complementary,48.7,0.0,projected,complementary,0.0,projected,complementary,37.0,49.1,,60.0,92.5,65.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Adam Randall,RB,2026,174,BAL,Clemson,75.38,232.0,4.5,,,,committee,62.9,0.0,projected,committee,0.0,projected,committee,40.0,50.0,94.3,80.0,67.5,62.5,,,,,,2026-08-17T02:16:54+00:00
+Cyrus Allen,WR,2026,176,KC,Cincinnati,,,,,,,complementary,44.5,0.0,projected,complementary,0.0,projected,complementary,36.0,50.0,,60.0,67.5,32.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Kaytron Allen,RB,2026,187,WAS,Penn St.,71.38,216.0,,,57.5,,committee,51.5,0.0,projected,committee,0.0,projected,committee,38.3,100.0,50.0,40.0,45.0,55.0,,,,,,2026-08-17T02:16:54+00:00
+Barion Brown,WR,2026,190,NO,LSU,71.0,177.0,4.4,,,,complementary,46.5,0.0,projected,complementary,0.0,projected,complementary,34.2,50.0,,80.0,30.0,100.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Josh Cameron,WR,2026,191,JAX,Baylor,73.5,220.0,,,,,complementary,43.4,0.0,projected,complementary,0.0,projected,complementary,34.1,50.0,,40.0,85.0,50.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Malik Benson,WR,2026,195,LV,Oregon,72.0,189.0,4.37,18.9,,,complementary,40.0,0.0,projected,complementary,0.0,projected,complementary,33.6,41.6,,80.0,0.0,77.5,20.0,,,,,2026-08-17T02:16:54+00:00
+CJ Daniels,WR,2026,197,LAR,Miami (FL),74.0,202.0,,13.7,,,complementary,43.0,0.0,projected,complementary,0.0,projected,complementary,33.4,30.1,,60.0,100.0,55.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Demond Claiborne,RB,2026,198,MIN,Wake Forest,69.75,188.0,4.37,,,,committee,46.9,0.0,projected,committee,0.0,projected,committee,37.0,50.0,85.9,60.0,15.0,22.5,,,,,,2026-08-17T02:16:54+00:00
+CJ Williams,WR,2026,203,JAX,Stanford,,,,,,,complementary,43.0,0.0,projected,complementary,0.0,projected,complementary,32.8,50.0,,40.0,85.0,50.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Lewis Bond,WR,2026,204,HOU,Boston Col.,,,,29.5,,,complementary,47.4,0.0,projected,complementary,0.0,projected,complementary,32.6,64.9,,80.0,50.0,15.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Anthony Smith,WR,2026,218,DAL,East Carolina,,,,,,,complementary,47.0,0.0,projected,complementary,0.0,projected,complementary,31.2,50.0,,60.0,100.0,52.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Seth McGowan,RB,2026,237,IND,Kentucky,72.25,223.0,4.49,,43.4,,bellcow,71.8,0.0,projected,bellcow,0.0,projected,bellcow,32.9,95.5,91.4,80.0,90.0,87.5,,,,,,2026-08-17T02:16:54+00:00
+Jam Miller,RB,2026,245,NE,Alabama,70.25,209.0,4.42,,,,committee,60.8,0.0,projected,committee,0.0,projected,committee,32.1,50.0,91.3,60.0,100.0,60.0,,,,,,2026-08-17T02:16:54+00:00
+Deion Burks,WR,2026,254,IND,Oklahoma,69.75,180.0,4.3,,,,complementary,43.7,0.0,projected,complementary,0.0,projected,complementary,28.0,50.0,,40.0,90.0,87.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Bijan Robinson,RB,2023,8,ATL,Texas,71.0,215.0,4.46,,,,bellcow,75.0,1.0,confirmed,bellcow,1.0,confirmed,bellcow,93.6,50.0,90.6,60.0,67.5,75.0,,,,,,2026-08-17T02:16:54+00:00
+Jahmyr Gibbs,RB,2023,12,DET,Alabama,69.0,199.0,4.36,,,,bellcow,78.3,1.0,confirmed,bellcow,1.0,confirmed,bellcow,90.6,50.0,91.8,60.0,97.5,65.0,,,,,,2026-08-17T02:16:54+00:00
+Jaxon Smith-Njigba,WR,2023,20,SEA,Ohio St.,73.0,196.0,,,,,complementary,61.1,1.0,confirmed,alpha,1.0,confirmed,alpha,83.2,50.0,,60.0,62.5,45.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Quentin Johnston,WR,2023,21,LAC,TCU,75.0,208.0,,,,,complementary,61.4,1.0,confirmed,boom_bust,1.0,confirmed,boom_bust,82.5,50.0,,40.0,85.0,70.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Zay Flowers,WR,2023,22,BAL,Boston Col.,69.0,182.0,4.42,,,,complementary,61.5,1.0,confirmed,alpha,1.0,confirmed,alpha,81.8,50.0,,60.0,62.5,62.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Jordan Addison,WR,2023,23,MIN,USC,71.0,173.0,4.49,,,,complementary,60.0,1.0,confirmed,boom_bust,1.0,confirmed,boom_bust,81.1,50.0,,60.0,70.0,22.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Jonathan Mingo,WR,2023,39,CAR,Mississippi,74.0,220.0,4.46,,,,complementary,49.6,1.0,confirmed,boom_bust,1.0,confirmed,boom_bust,71.7,50.0,,20.0,32.5,75.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Jayden Reed,WR,2023,50,GB,Michigan St.,71.0,187.0,4.45,,,,complementary,54.7,1.0,confirmed,boom_bust,1.0,confirmed,boom_bust,66.4,50.0,,60.0,57.5,45.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Zach Charbonnet,RB,2023,52,SEA,UCLA,72.0,214.0,4.53,,,,committee,64.6,1.0,confirmed,committee_back,1.0,confirmed,committee_back,69.1,50.0,84.7,60.0,62.5,45.0,,,,,,2026-08-17T02:16:54+00:00
+Rashee Rice,WR,2023,55,KC,SMU,73.0,204.0,4.51,,,,complementary,60.6,1.0,confirmed,alpha,1.0,confirmed,alpha,64.3,50.0,,80.0,100.0,32.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Marvin Mims,WR,2023,63,DEN,Oklahoma,71.0,183.0,4.38,,,,complementary,49.1,1.0,confirmed,complementary,1.0,confirmed,complementary,61.1,50.0,,60.0,17.5,50.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Josh Downs,WR,2023,79,IND,North Carolina,69.0,171.0,4.48,,,,complementary,45.8,1.0,confirmed,high_floor,1.0,confirmed,high_floor,55.6,50.0,,40.0,15.0,87.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Tyjae Spears,RB,2023,81,TEN,Tulane,70.0,201.0,,,,,committee,57.3,1.0,confirmed,handcuff,1.0,confirmed,handcuff,58.9,50.0,50.0,80.0,25.0,97.5,,,,,,2026-08-17T02:16:54+00:00
+De'Von Achane,RB,2023,84,MIA,Texas A&M,69.0,188.0,4.32,,,,committee,63.0,1.0,confirmed,bellcow,1.0,confirmed,bellcow,58.0,50.0,90.0,60.0,77.5,20.0,,,,,,2026-08-17T02:16:54+00:00
+Michael Wilson,WR,2023,94,ARI,Stanford,74.0,213.0,4.58,,,,complementary,45.8,1.0,confirmed,boom_bust,1.0,confirmed,boom_bust,51.3,50.0,,40.0,37.5,72.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Chase Brown,RB,2023,163,CIN,Illinois,70.0,209.0,4.43,,,,committee,68.2,1.0,confirmed,bellcow,1.0,confirmed,bellcow,41.6,50.0,90.4,80.0,100.0,72.5,,,,,,2026-08-17T02:16:54+00:00
+Puka Nacua,WR,2023,177,LAR,BYU,74.0,201.0,,,,,complementary,43.8,1.0,confirmed,alpha,1.0,confirmed,alpha,35.8,50.0,,80.0,20.0,55.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Parker Washington,WR,2023,185,JAX,Penn St.,70.0,204.0,,,,,complementary,47.2,1.0,confirmed,boom_bust,1.0,confirmed,boom_bust,34.8,50.0,,60.0,90.0,50.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Chris Rodriguez,RB,2023,193,WAS,Kentucky,72.0,217.0,,,,,committee,47.0,1.0,confirmed,committee_back,1.0,confirmed,committee_back,37.6,50.0,50.0,60.0,40.0,55.0,,,,,,2026-08-17T02:16:54+00:00
+Marvin Harrison,WR,2024,4,ARI,Ohio St.,75.0,209.0,,,,,complementary,59.0,1.0,confirmed,boom_bust,1.0,confirmed,boom_bust,96.1,50.0,,20.0,42.5,72.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Malik Nabers,WR,2024,6,NYG,LSU,72.0,200.0,,35.6,,20.0,complementary,72.5,1.0,confirmed,alpha,1.0,confirmed,alpha,94.3,78.3,,60.0,10.0,57.5,70.0,,,,,2026-08-17T02:16:54+00:00
+Rome Odunze,WR,2024,9,CHI,Washington,75.0,212.0,4.45,31.8,,21.0,alpha,75.6,1.0,confirmed,boom_bust,1.0,confirmed,boom_bust,91.7,70.0,,80.0,55.0,60.0,55.0,,,,,2026-08-17T02:16:54+00:00
+Brian Thomas,WR,2024,23,JAX,LSU,75.0,209.0,4.33,26.7,,20.0,complementary,64.6,1.0,confirmed,boom_bust,1.0,confirmed,boom_bust,81.1,58.7,,40.0,60.0,50.0,70.0,,,,,2026-08-17T02:16:54+00:00
+Xavier Worthy,WR,2024,28,KC,Texas,71.0,165.0,4.21,,,,complementary,63.4,1.0,confirmed,complementary,1.0,confirmed,complementary,77.9,50.0,,80.0,80.0,32.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Ricky Pearsall,WR,2024,31,SF,Florida,73.0,189.0,4.41,,,,complementary,59.8,1.0,confirmed,boom_bust,1.0,confirmed,boom_bust,76.1,50.0,,40.0,100.0,52.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Xavier Legette,WR,2024,32,CAR,South Carolina,73.0,221.0,4.39,,,,complementary,55.2,1.0,confirmed,complementary,1.0,confirmed,complementary,75.5,50.0,,60.0,15.0,75.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Keon Coleman,WR,2024,33,BUF,Florida St.,75.0,213.0,4.61,18.7,,,complementary,61.8,1.0,confirmed,boom_bust,1.0,confirmed,boom_bust,75.0,41.1,,80.0,100.0,25.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Ladd McConkey,WR,2024,34,LAC,Georgia,72.0,186.0,4.39,,,,complementary,52.0,1.0,confirmed,high_floor,1.0,confirmed,high_floor,74.4,50.0,,20.0,50.0,70.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Ja'Lynn Polk,WR,2024,37,NE,Washington,73.0,203.0,4.52,22.5,,21.0,complementary,56.6,1.0,confirmed,boom_bust,1.0,confirmed,boom_bust,72.8,49.5,,60.0,12.5,60.0,55.0,,,,,2026-08-17T02:16:54+00:00
+Jonathon Brooks,RB,2024,46,CAR,Texas,72.0,216.0,,,,,committee,54.5,0.48,blended,committee,0.0,projected,committee,71.6,50.0,50.0,60.0,15.0,75.0,,,,,,2026-08-17T02:16:54+00:00
+Adonai Mitchell,WR,2024,52,IND,Texas,74.0,205.0,4.34,20.9,,20.0,complementary,61.3,1.0,confirmed,complementary,1.0,confirmed,complementary,65.5,46.0,,60.0,65.0,87.5,70.0,,,,,2026-08-17T02:16:54+00:00
+Malachi Corley,WR,2024,65,NYJ,Western Kentucky,,,,,,,complementary,51.6,0.467,blended,complementary,0.0,projected,complementary,60.3,50.0,,80.0,5.0,70.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Trey Benson,RB,2024,66,ARI,Florida St.,72.0,216.0,4.39,,,,committee,63.2,1.0,confirmed,handcuff,1.0,confirmed,handcuff,63.8,50.0,96.9,60.0,42.5,72.5,,,,,,2026-08-17T02:16:54+00:00
+Jermaine Burton,WR,2024,80,CIN,Alabama,,,,,,,complementary,50.5,0.467,blended,complementary,0.0,projected,complementary,55.3,50.0,,40.0,70.0,72.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Blake Corum,RB,2024,83,LAR,Michigan,68.0,205.0,4.53,,,,committee,65.4,1.0,confirmed,committee_back,1.0,confirmed,committee_back,58.3,50.0,81.1,60.0,90.0,55.0,,,,,,2026-08-17T02:16:54+00:00
+Roman Wilson,WR,2024,84,PIT,Michigan,71.0,185.0,4.39,,,,complementary,48.2,0.7,blended,unconfirmed,0.0,projected,complementary,54.1,50.0,,60.0,27.5,60.0,20.0,,,,,2026-08-17T02:16:54+00:00
+MarShawn Lloyd,RB,2024,88,GB,USC,69.0,220.0,4.46,,,,committee,65.5,0.25,blended,committee,0.0,projected,committee,56.9,50.0,92.7,60.0,85.0,45.0,,,,,,2026-08-17T02:16:54+00:00
+Jalen McMillan,WR,2024,92,TB,Washington,73.0,197.0,4.47,10.8,,,complementary,44.3,1.0,confirmed,complementary,1.0,confirmed,complementary,51.8,23.8,,60.0,57.5,70.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Luke McCaffrey,WR,2024,100,WAS,Rice,,,,,,,complementary,47.4,0.5,blended,unconfirmed,0.0,projected,complementary,49.7,50.0,,60.0,37.5,55.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Javon Baker,WR,2024,110,NE,Central Florida,,,,,,,complementary,44.3,0.0,projected,complementary,0.0,projected,complementary,47.3,50.0,,60.0,12.5,60.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Devontez Walker,WR,2024,113,BAL,North Carolina,,,,,,,complementary,52.5,0.267,blended,complementary,0.0,projected,complementary,46.7,50.0,,60.0,95.0,62.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Bucky Irving,RB,2024,125,TB,Oregon,69.0,192.0,4.55,,,,committee,61.3,1.0,confirmed,committee_back,1.0,confirmed,committee_back,48.1,50.0,74.7,80.0,57.5,70.0,,,,,,2026-08-17T02:16:54+00:00
+Will Shipley,RB,2024,127,PHI,Clemson,,,,,,,committee,62.1,1.0,confirmed,handcuff,1.0,confirmed,handcuff,47.8,50.0,50.0,80.0,100.0,35.0,,,,,,2026-08-17T02:16:54+00:00
+Ray Davis,RB,2024,128,BUF,Kentucky,,,,,,,committee,61.5,1.0,confirmed,handcuff,1.0,confirmed,handcuff,47.6,50.0,50.0,80.0,100.0,25.0,,,,,,2026-08-17T02:16:54+00:00
+Isaac Guerendo,RB,2024,129,SF,Louisville,72.0,221.0,4.33,,,,bellcow,70.3,0.0,projected,bellcow,1.0,confirmed,handcuff,47.4,50.0,100.0,80.0,100.0,52.5,,,,,,2026-08-17T02:16:54+00:00
+Braelon Allen,RB,2024,134,NYJ,Wisconsin,73.0,235.0,,,,,committee,49.2,0.84,blended,handcuff,1.0,confirmed,handcuff,46.4,50.0,50.0,80.0,5.0,70.0,,,,,,2026-08-17T02:16:54+00:00
+Jacob Cowing,WR,2024,135,SF,Arizona,,,,,,,complementary,47.9,0.2,blended,complementary,0.0,projected,complementary,42.3,50.0,,40.0,100.0,52.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Anthony Gould,WR,2024,142,IND,Oregon St.,,,,,,,complementary,48.7,0.067,blended,complementary,0.0,projected,complementary,41.0,50.0,,60.0,65.0,87.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Audric Estime,RB,2024,147,DEN,Notre Dame,,,,,,,committee,53.1,1.0,confirmed,handcuff,1.0,confirmed,handcuff,44.1,50.0,50.0,80.0,42.5,50.0,,,,,,2026-08-17T02:16:54+00:00
+Ainias Smith,WR,2024,152,PHI,Texas A&M,,,,,,,complementary,49.0,0.0,projected,complementary,0.0,projected,complementary,39.4,50.0,,60.0,100.0,35.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Jamari Thrash,WR,2024,156,CLE,Louisville,,,,,,,complementary,45.5,0.0,projected,complementary,0.0,projected,complementary,38.8,50.0,,60.0,50.0,67.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Rasheen Ali,RB,2024,165,BAL,Marshall,,,,,,,committee,56.8,0.72,blended,handcuff,1.0,confirmed,handcuff,41.3,50.0,50.0,60.0,95.0,62.5,,,,,,2026-08-17T02:16:54+00:00
+Tyrone Tracy,RB,2024,166,NYG,Purdue,71.0,209.0,4.48,,,,committee,49.2,1.0,confirmed,committee_back,1.0,confirmed,committee_back,41.2,50.0,86.5,60.0,10.0,57.5,,,,,,2026-08-17T02:16:54+00:00
+Keilan Robinson,RB,2024,167,JAX,Texas,,,,,,,committee,54.8,0.0,projected,committee,0.0,projected,committee,41.0,50.0,50.0,80.0,60.0,50.0,,,,,,2026-08-17T02:16:54+00:00
+Bub Means,WR,2024,170,NO,Pittsburgh,,,,,,,complementary,49.1,0.5,blended,unconfirmed,0.0,projected,complementary,36.8,50.0,,60.0,77.5,100.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Jha'Quan Jackson,WR,2024,182,TEN,Tulane,,,,,,,complementary,46.9,0.0,projected,complementary,0.0,projected,complementary,35.2,50.0,,80.0,32.5,97.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Johnny Wilson,WR,2024,185,PHI,Florida St.,,,,,,,complementary,47.4,0.5,blended,unconfirmed,0.0,projected,complementary,34.8,50.0,,60.0,100.0,35.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Jase McClellan,RB,2024,186,ATL,Alabama,,,,,,,committee,47.1,0.0,projected,committee,0.0,projected,committee,38.4,50.0,50.0,60.0,32.5,75.0,,,,,,2026-08-17T02:16:54+00:00
+Casey Washington,WR,2024,187,ATL,Illinois,,,,,,,complementary,45.6,0.533,blended,unconfirmed,0.0,projected,complementary,34.6,50.0,,80.0,32.5,75.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Tejhaun Palmer,WR,2024,191,ARI,Ala-Birmingham,,,,,,,complementary,37.3,0.0,projected,complementary,0.0,projected,complementary,34.1,50.0,,20.0,42.5,72.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Jawhar Jordan,RB,2024,205,HOU,Louisville,,,,,,,committee,49.5,1.0,confirmed,handcuff,1.0,confirmed,handcuff,36.2,50.0,50.0,60.0,72.5,15.0,,,,,,2026-08-17T02:16:54+00:00
+Dylan Laube,RB,2024,208,LV,New Hampshire,,,,,,,committee,44.6,0.44,blended,committee,1.0,confirmed,handcuff,35.8,50.0,50.0,60.0,20.0,77.5,,,,,,2026-08-17T02:16:54+00:00
+Jordan Whittington,WR,2024,213,LAR,Texas,,,,,,,complementary,46.3,0.833,blended,unconfirmed,0.0,projected,complementary,31.7,50.0,,60.0,90.0,55.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Brenden Rice,WR,2024,225,LAC,USC,,,,,,,complementary,36.7,0.0,projected,complementary,0.0,projected,complementary,30.5,50.0,,20.0,50.0,70.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Tahj Washington,WR,2024,241,MIA,USC,,,,,,,complementary,44.4,0.0,projected,complementary,0.0,projected,complementary,29.1,50.0,,60.0,97.5,20.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Cornelius Johnson,WR,2024,253,LAC,Michigan,,,,,,,complementary,35.8,0.0,projected,complementary,0.0,projected,complementary,28.1,50.0,,20.0,50.0,70.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Travis Hunter,WR,2025,2,JAX,Colorado,,,,30.4,,21.0,complementary,71.8,0.0,projected,complementary,0.0,projected,complementary,98.0,66.9,,60.0,37.5,50.0,55.0,,,,,2026-08-17T02:16:54+00:00
+Ashton Jeanty,RB,2025,6,LV,Boise St.,69.0,211.0,,,77.3,20.0,committee,65.9,1.0,confirmed,bellcow,1.0,confirmed,bellcow,95.1,100.0,50.0,40.0,20.0,77.5,,,,,,2026-08-17T02:16:54+00:00
+Tetairoa McMillan,WR,2025,8,CAR,Arizona,76.0,219.0,,44.3,,21.0,alpha,78.8,1.0,confirmed,high_floor,1.0,confirmed,high_floor,92.5,97.5,,60.0,37.5,75.0,55.0,,,,,2026-08-17T02:16:54+00:00
+Emeka Egbuka,WR,2025,19,TB,Ohio St.,73.0,202.0,,24.0,,21.0,complementary,70.6,1.0,confirmed,high_floor,1.0,confirmed,high_floor,83.9,52.8,,60.0,100.0,70.0,55.0,,,,,2026-08-17T02:16:54+00:00
+Omarion Hampton,RB,2025,22,LAC,North Carolina,72.0,221.0,4.46,,70.0,21.0,bellcow,79.1,1.0,confirmed,committee_back,1.0,confirmed,committee_back,84.1,100.0,93.1,60.0,62.5,70.0,,,,,,2026-08-17T02:16:54+00:00
+Matthew Golden,WR,2025,23,GB,Texas,71.0,191.0,4.29,22.1,,21.0,complementary,62.5,1.0,confirmed,complementary,1.0,confirmed,complementary,81.1,48.6,,40.0,82.5,45.0,55.0,,,,,2026-08-17T02:16:54+00:00
+Jayden Higgins,WR,2025,34,HOU,Iowa St.,76.0,214.0,4.47,33.0,,21.0,complementary,56.9,1.0,confirmed,complementary,1.0,confirmed,complementary,74.4,72.6,,20.0,35.0,15.0,55.0,,,,,2026-08-17T02:16:54+00:00
+Quinshon Judkins,RB,2025,36,CLE,Ohio St.,72.0,221.0,4.48,,39.8,20.0,committee,68.1,1.0,confirmed,bellcow,1.0,confirmed,bellcow,76.3,87.6,91.4,60.0,20.0,67.5,,,,,,2026-08-17T02:16:54+00:00
+TreVeyon Henderson,RB,2025,38,NE,Ohio St.,70.0,202.0,4.43,,38.2,21.0,committee,65.9,1.0,confirmed,committee_back,1.0,confirmed,committee_back,75.3,84.0,87.4,60.0,17.5,60.0,,,,,,2026-08-17T02:16:54+00:00
+Luther Burden,WR,2025,39,CHI,Missouri,72.0,206.0,4.41,23.1,,20.0,complementary,56.5,1.0,confirmed,complementary,1.0,confirmed,complementary,71.7,50.8,,40.0,27.5,60.0,70.0,,,,,2026-08-17T02:16:54+00:00
+Tre' Harris,WR,2025,55,LAC,Mississippi,74.0,205.0,4.54,22.6,,22.0,complementary,57.7,1.0,confirmed,complementary,1.0,confirmed,complementary,64.3,49.7,,60.0,62.5,70.0,40.0,,,,,2026-08-17T02:16:54+00:00
+Jack Bech,WR,2025,58,LV,TCU,73.0,214.0,,25.4,,21.0,complementary,59.4,0.967,blended,unconfirmed,0.0,projected,complementary,63.0,55.9,,80.0,20.0,77.5,55.0,,,,,2026-08-17T02:16:54+00:00
+RJ Harvey,RB,2025,60,DEN,Central Florida,68.0,205.0,4.4,,53.0,23.0,bellcow,78.2,1.0,confirmed,committee_back,1.0,confirmed,committee_back,65.9,100.0,91.2,80.0,75.0,50.0,,,,,,2026-08-17T02:16:54+00:00
+Kyle Williams,WR,2025,69,NE,Washington St.,71.0,190.0,4.4,33.4,,21.0,complementary,61.2,0.0,projected,complementary,0.0,projected,complementary,58.9,73.5,,80.0,17.5,60.0,55.0,,,,,2026-08-17T02:16:54+00:00
+Isaac TeSlaa,WR,2025,70,DET,Arkansas,76.0,214.0,4.43,15.3,,,complementary,53.1,0.9,blended,unconfirmed,0.0,projected,complementary,58.5,33.7,,60.0,100.0,65.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Jaylin Noel,WR,2025,79,HOU,Iowa St.,70.0,194.0,4.39,33.4,,22.0,complementary,49.1,1.0,confirmed,boom_bust,1.0,confirmed,boom_bust,55.6,73.5,,20.0,35.0,15.0,40.0,,,,,2026-08-17T02:16:54+00:00
+Kaleb Johnson,RB,2025,83,PIT,Iowa,73.0,224.0,4.57,,59.9,21.0,committee,67.8,1.0,confirmed,handcuff,1.0,confirmed,handcuff,58.3,100.0,85.6,60.0,50.0,60.0,,,,,,2026-08-17T02:16:54+00:00
+Savion Williams,WR,2025,87,GB,TCU,76.0,222.0,4.48,15.0,,,complementary,45.4,0.333,blended,complementary,0.0,projected,complementary,53.2,33.0,,40.0,82.5,45.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Tai Felton,WR,2025,102,MIN,Maryland,,,,,,,complementary,48.6,0.1,blended,complementary,0.0,projected,complementary,49.2,50.0,,60.0,67.5,22.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Bhayshul Tuten,RB,2025,104,JAX,Virginia Tech,69.0,206.0,4.32,,50.0,21.0,committee,65.7,1.0,confirmed,committee_back,1.0,confirmed,committee_back,52.7,100.0,98.6,60.0,37.5,50.0,,,,,,2026-08-17T02:16:54+00:00
+Cam Skattebo,RB,2025,105,NYG,Arizona St.,70.0,219.0,,,61.1,22.0,committee,60.1,1.0,confirmed,committee_back,1.0,confirmed,committee_back,52.5,100.0,50.0,80.0,20.0,57.5,,,,,,2026-08-17T02:16:54+00:00
+Arian Smith,WR,2025,110,NYJ,Georgia,,,,,,,complementary,48.3,0.533,blended,unconfirmed,0.0,projected,complementary,47.3,50.0,,60.0,47.5,70.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Trevor Etienne,RB,2025,114,CAR,Georgia,,,,,,,committee,55.5,0.92,blended,handcuff,1.0,confirmed,handcuff,50.5,50.0,50.0,80.0,37.5,75.0,,,,,,2026-08-17T02:16:54+00:00
+Woody Marks,RB,2025,116,HOU,USC,70.0,207.0,4.54,,60.0,23.0,committee,64.2,1.0,confirmed,committee_back,1.0,confirmed,committee_back,50.0,100.0,81.2,80.0,35.0,15.0,,,,,,2026-08-17T02:16:54+00:00
+Jarquez Hunter,RB,2025,117,LAR,Auburn,,,,,,,committee,57.3,0.0,projected,committee,0.0,projected,committee,49.8,50.0,50.0,80.0,57.5,55.0,,,,,,2026-08-17T02:16:54+00:00
+Dylan Sampson,RB,2025,126,CLE,Tennessee,,,,,,,committee,47.8,1.0,confirmed,handcuff,1.0,confirmed,handcuff,48.0,50.0,50.0,60.0,20.0,67.5,,,,,,2026-08-17T02:16:54+00:00
+Jaylin Lane,WR,2025,128,WAS,Virginia Tech,,,,,,,complementary,51.5,1.0,confirmed,boom_bust,1.0,confirmed,boom_bust,43.6,50.0,,60.0,100.0,55.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Jalen Royals,WR,2025,133,KC,Utah St.,,,,,,,complementary,45.5,0.1,blended,complementary,0.0,projected,complementary,42.6,50.0,,40.0,85.0,32.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Jordan Watkins,WR,2025,138,SF,Mississippi,,,,,,,complementary,44.7,0.1,blended,complementary,0.0,projected,complementary,41.7,50.0,,40.0,70.0,52.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Jordan James,RB,2025,147,SF,Oregon,,,,,,,committee,53.4,0.0,projected,committee,0.0,projected,committee,44.1,50.0,50.0,60.0,70.0,52.5,,,,,,2026-08-17T02:16:54+00:00
+Jaydon Blue,RB,2025,149,DAL,Texas,,,,,,,committee,52.0,1.0,confirmed,handcuff,1.0,confirmed,handcuff,43.8,50.0,50.0,80.0,35.0,52.5,,,,,,2026-08-17T02:16:54+00:00
+KeAndre Lambert-Smith,WR,2025,158,LAC,Auburn,,,,,,,complementary,46.7,0.4,blended,complementary,0.0,projected,complementary,38.5,50.0,,60.0,62.5,70.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Tory Horton,WR,2025,166,SEA,Colorado St.,,,,,,,complementary,43.3,0.733,blended,unconfirmed,0.0,projected,complementary,37.3,50.0,,60.0,45.0,45.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Ollie Gordon,RB,2025,179,MIA,Oklahoma St.,,,,,,,committee,51.7,1.0,confirmed,handcuff,1.0,confirmed,handcuff,39.3,50.0,50.0,80.0,52.5,20.0,,,,,,2026-08-17T02:16:54+00:00
+Devin Neal,RB,2025,184,NO,Kansas,71.0,213.0,4.58,,49.9,21.0,committee,61.3,1.0,confirmed,handcuff,1.0,confirmed,handcuff,38.7,100.0,80.7,60.0,37.5,100.0,,,,,,2026-08-17T02:16:54+00:00
+Kalel Mullings,RB,2025,188,TEN,Michigan,,,,,,,committee,46.0,0.12,blended,committee,1.0,confirmed,handcuff,38.2,50.0,50.0,60.0,17.5,97.5,,,,,,2026-08-17T02:16:54+00:00
+Tahj Brooks,RB,2025,193,CIN,Texas Tech,,,,,,,committee,56.5,0.72,blended,handcuff,1.0,confirmed,handcuff,37.6,50.0,50.0,60.0,97.5,72.5,,,,,,2026-08-17T02:16:54+00:00
+LaJohntay Wester,WR,2025,203,BAL,Colorado,,,,,,,complementary,48.1,0.0,projected,complementary,0.0,projected,complementary,32.8,50.0,,60.0,100.0,62.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Jimmy Horn,WR,2025,208,CAR,Colorado,,,,,,,complementary,42.3,0.5,blended,unconfirmed,0.0,projected,complementary,32.2,50.0,,60.0,37.5,75.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Damien Martinez,RB,2025,223,SEA,Miami (FL),,,,,,,committee,46.3,0.0,projected,committee,0.0,projected,committee,34.2,50.0,50.0,60.0,45.0,45.0,,,,,,2026-08-17T02:16:54+00:00
+Brashard Smith,RB,2025,228,KC,SMU,,,,,,,committee,51.5,1.0,confirmed,handcuff,1.0,confirmed,handcuff,33.7,50.0,50.0,60.0,85.0,32.5,,,,,,2026-08-17T02:16:54+00:00
+Kyle Monangai,RB,2025,233,CHI,Rutgers,68.0,211.0,4.6,,56.1,22.0,committee,59.9,1.0,confirmed,committee_back,1.0,confirmed,committee_back,33.3,100.0,78.5,80.0,27.5,60.0,,,,,,2026-08-17T02:16:54+00:00
+LeQuint Allen,RB,2025,236,JAX,Syracuse,,,,,,,committee,45.0,1.0,confirmed,committee_back,1.0,confirmed,committee_back,33.0,50.0,50.0,60.0,37.5,50.0,,,,,,2026-08-17T02:16:54+00:00
+Ricky White,WR,2025,238,SEA,UNLV,,,,,,,complementary,40.5,0.0,projected,complementary,0.0,projected,complementary,29.3,50.0,,60.0,45.0,45.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Phil Mafah,RB,2025,239,DAL,Clemson,,,,,,,committee,48.7,0.25,blended,committee,0.0,projected,committee,32.7,50.0,50.0,80.0,35.0,52.5,,,,,,2026-08-17T02:16:54+00:00
+Kaden Prather,WR,2025,240,BUF,Maryland,,,,,,,complementary,45.0,0.0,projected,complementary,0.0,projected,complementary,29.2,50.0,,60.0,100.0,25.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Konata Mumpfield,WR,2025,242,LAR,Pittsburgh,,,,,,,complementary,42.1,0.767,blended,unconfirmed,0.0,projected,complementary,29.0,50.0,,60.0,57.5,55.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Dominic Lovett,WR,2025,244,DET,Georgia,,,,,,,complementary,46.8,0.0,projected,complementary,0.0,projected,complementary,28.8,50.0,,60.0,100.0,65.0,20.0,,,,,2026-08-17T02:16:54+00:00
+Jacory Croskey-Merritt,RB,2025,245,WAS,Arizona,,,,,,,committee,54.4,1.0,confirmed,committee_back,1.0,confirmed,committee_back,32.1,50.0,50.0,60.0,100.0,55.0,,,,,,2026-08-17T02:16:54+00:00
+Junior Bergen,WR,2025,252,SF,Montana,,,,,,,complementary,40.0,0.0,projected,complementary,0.0,projected,complementary,28.2,50.0,,40.0,70.0,52.5,20.0,,,,,2026-08-17T02:16:54+00:00
+Trevor Lawrence,QB,2021,1,JAX,Clemson,,,,,,,balanced,82.5,1.0,confirmed,balanced,1.0,confirmed,balanced,98.7,,,,85.0,50.0,,10.0,334.0,measured,67.7,2026-08-17T02:16:54+00:00
+Justin Fields,QB,2021,11,CHI,Ohio State,,,,,,,balanced,80.0,1.0,confirmed,dual_threat,1.0,confirmed,dual_threat,87.1,,,,97.5,60.0,,8.0,225.0,measured,70.2,2026-08-17T02:16:54+00:00
+Mac Jones,QB,2021,15,NE,Alabama,,,,,,,pocket_passer,82.9,1.0,confirmed,pocket_passer,1.0,confirmed,pocket_passer,83.2,,,,100.0,60.0,,13.0,402.0,assumed_non_rusher,81.2,2026-08-17T02:16:54+00:00
+Zach Wilson,QB,2021,2,NYJ,BYU,,,,,,,pocket_passer,80.0,1.0,confirmed,balanced,1.0,confirmed,balanced,97.4,,,,12.5,70.0,,12.0,336.0,assumed_non_rusher,78.6,2026-08-17T02:16:54+00:00
+Trey Lance,QB,2021,3,SF,North Dakota St.,,,,,,,dual_threat,84.8,0.98,blended,unconfirmed,0.0,projected,dual_threat,96.1,,,,100.0,52.5,,16.0,287.0,measured,72.3,2026-08-17T02:16:54+00:00
+Kyle Trask,QB,2021,64,TB,Florida,,,,,,,pocket_passer,61.7,0.0,projected,pocket_passer,0.0,projected,pocket_passer,53.7,,,,52.5,70.0,,12.0,437.0,assumed_non_rusher,72.0,2026-08-17T02:16:54+00:00
+Davis Mills,QB,2021,67,HOU,Stanford,,,,,,,pocket_passer,51.8,1.0,confirmed,balanced,1.0,confirmed,balanced,52.6,,,,50.0,15.0,,5.0,195.0,assumed_non_rusher,56.0,2026-08-17T02:16:54+00:00
+Sam Ehlinger,QB,2021,218,IND,Texas,,,,,,,balanced,48.9,0.0,projected,balanced,0.0,projected,balanced,25.4,,,,90.0,87.5,,10.0,322.0,measured_override,60.3,2026-08-17T02:16:54+00:00
+Kenny Pickett,QB,2022,20,PIT,Pittsburgh,,,,,,,pocket_passer,70.9,0.87,blended,unconfirmed,0.0,projected,pocket_passer,78.8,,,,60.0,60.0,,13.0,497.0,assumed_non_rusher,66.1,2026-08-17T02:16:54+00:00
+Desmond Ridder,QB,2022,74,ATL,Cincinnati,,,,,,,pocket_passer,55.9,0.0,projected,pocket_passer,0.0,projected,pocket_passer,50.1,,,,42.5,75.0,,14.0,387.0,assumed_non_rusher,63.5,2026-08-17T02:16:54+00:00
+Malik Willis,QB,2022,86,TEN,Liberty,,,,,,,dual_threat,50.7,0.89,blended,unconfirmed,0.0,projected,dual_threat,46.4,,,,7.5,97.5,,13.0,339.0,measured,60.5,2026-08-17T02:16:54+00:00
+Bailey Zappe,QB,2022,137,NE,Western Kentucky,,,,,,,pocket_passer,55.8,0.0,projected,pocket_passer,0.0,projected,pocket_passer,35.2,,,,100.0,60.0,,14.0,687.0,assumed_non_rusher,67.5,2026-08-17T02:16:54+00:00
+Sam Howell,QB,2022,144,WAS,North Carolina,,,,,,,pocket_passer,47.2,1.0,confirmed,balanced,1.0,confirmed,balanced,34.0,,,,45.0,55.0,,12.0,347.0,assumed_non_rusher,61.7,2026-08-17T02:16:54+00:00
+Brock Purdy,QB,2022,262,SF,Iowa State,,,,,,,balanced,46.4,1.0,confirmed,balanced,1.0,confirmed,balanced,22.1,,,,100.0,52.5,,13.0,407.0,measured,59.6,2026-08-17T02:16:54+00:00
+Bryce Young,QB,2023,1,CAR,Alabama,,,,,,,balanced,77.0,1.0,confirmed,balanced,1.0,confirmed,balanced,98.7,,,,27.5,75.0,,12.0,380.0,measured_override,65.3,2026-08-17T02:16:54+00:00
+C.J. Stroud,QB,2023,2,HOU,Ohio State,,,,,,,pocket_passer,78.0,1.0,confirmed,balanced,1.0,confirmed,balanced,97.4,,,,50.0,15.0,,13.0,389.0,measured_override,71.1,2026-08-17T02:16:54+00:00
+Anthony Richardson,QB,2023,4,IND,Florida,,,,,,,dual_threat,77.0,1.0,confirmed,dual_threat,1.0,confirmed,dual_threat,94.9,,,,90.0,87.5,,12.0,327.0,measured,52.4,2026-08-17T02:16:54+00:00
+Will Levis,QB,2023,33,TEN,Kentucky,,,,,,,pocket_passer,61.1,1.0,confirmed,balanced,1.0,confirmed,balanced,69.3,,,,7.5,97.5,,11.0,283.0,assumed_non_rusher,60.7,2026-08-17T02:16:54+00:00
+Hendon Hooker,QB,2023,68,DET,Tennessee,,,,,,,pocket_passer,64.1,0.09,blended,pocket_passer,0.0,projected,pocket_passer,52.2,,,,92.5,65.0,,11.0,329.0,assumed_non_rusher,70.2,2026-08-17T02:16:54+00:00
+Caleb Williams,QB,2024,1,CHI,USC,,,,,,,balanced,84.4,1.0,confirmed,balanced,1.0,confirmed,balanced,98.7,,,,97.5,60.0,,12.0,388.0,measured,68.1,2026-08-17T02:16:54+00:00
+J.J. McCarthy,QB,2024,10,MIN,Michigan,,,,,,,pocket_passer,69.1,1.0,confirmed,balanced,1.0,confirmed,balanced,88.1,,,,15.0,22.5,,15.0,332.0,assumed_non_rusher,67.0,2026-08-17T02:16:54+00:00
+Bo Nix,QB,2024,12,DEN,Oregon,,,,,,,balanced,80.1,1.0,confirmed,balanced,1.0,confirmed,balanced,86.1,,,,87.5,50.0,,14.0,470.0,measured,75.3,2026-08-17T02:16:54+00:00
+Jayden Daniels,QB,2024,2,WAS,LSU,,,,,,,dual_threat,84.4,1.0,confirmed,dual_threat,1.0,confirmed,dual_threat,97.4,,,,45.0,55.0,,12.0,327.0,measured,83.2,2026-08-17T02:16:54+00:00
+Drake Maye,QB,2024,3,NE,North Carolina,,,,,,,balanced,80.1,1.0,confirmed,balanced,1.0,confirmed,balanced,96.1,,,,100.0,60.0,,12.0,425.0,measured,59.6,2026-08-17T02:16:54+00:00
+Michael Penix Jr.,QB,2024,8,ATL,Washington,,,,,,,pocket_passer,73.8,0.0,projected,pocket_passer,0.0,projected,pocket_passer,90.3,,,,42.5,75.0,,15.0,555.0,measured_override,62.8,2026-08-17T02:16:54+00:00
+Cam Ward,QB,2025,1,TEN,Miami (FL),,,,,,,balanced,77.6,1.0,confirmed,balanced,1.0,confirmed,balanced,98.7,,,,7.5,97.5,,13.0,454.0,measured,68.9,2026-08-17T02:16:54+00:00
+Jaxson Dart,QB,2025,25,NYG,Ole Miss,,,,,,,balanced,72.5,1.0,confirmed,dual_threat,1.0,confirmed,dual_threat,74.8,,,,70.0,57.5,,13.0,398.0,measured,72.3,2026-08-17T02:16:54+00:00
+Tyler Shough,QB,2025,40,NO,Louisville,,,,,,,pocket_passer,61.0,1.0,confirmed,balanced,1.0,confirmed,balanced,65.0,,,,30.0,100.0,,12.0,389.0,measured,59.3,2026-08-17T02:16:54+00:00
+Jalen Milroe,QB,2025,92,SEA,Alabama,,,,,,,dual_threat,52.7,0.0,projected,dual_threat,0.0,projected,dual_threat,44.7,,,,65.0,45.0,,13.0,319.0,measured,59.5,2026-08-17T02:16:54+00:00
+Dillon Gabriel,QB,2025,94,CLE,Oregon,,,,,,,balanced,50.9,1.0,confirmed,balanced,1.0,confirmed,balanced,44.2,,,,12.5,67.5,,14.0,447.0,measured,65.9,2026-08-17T02:16:54+00:00
+Shedeur Sanders,QB,2025,144,CLE,Colorado,,,,,,,pocket_passer,46.8,1.0,confirmed,balanced,1.0,confirmed,balanced,34.0,,,,12.5,67.5,,13.0,477.0,assumed_non_rusher,67.3,2026-08-17T02:16:54+00:00
+Quinn Ewers,QB,2025,231,MIA,Texas,,,,,,,pocket_passer,39.5,0.83,blended,unconfirmed,0.0,projected,pocket_passer,24.3,,,,37.5,20.0,,14.0,445.0,assumed_non_rusher,59.6,2026-08-17T02:16:54+00:00
+Cade Klubnik,QB,2026,110,NYJ,Clemson,74.25,207.0,,,,,balanced,44.8,0.0,projected,balanced,0.0,projected,balanced,40.3,,,,12.5,70.0,,49.0,1432.0,measured,54.7,2026-08-17T02:16:54+00:00
+Carson Beck,QB,2026,65,ARI,Miami (FL),76.75,233.0,,,,,pocket_passer,56.7,0.0,projected,pocket_passer,0.0,projected,pocket_passer,53.3,,,,40.0,72.5,,55.0,1390.0,measured,62.7,2026-08-17T02:16:54+00:00
+Drew Allar,QB,2026,76,PIT,Penn St.,77.25,228.0,,,,,balanced,54.1,0.0,projected,balanced,0.0,projected,balanced,49.4,,,,60.0,60.0,,45.0,1002.0,measured,57.1,2026-08-17T02:16:54+00:00
+Fernando Mendoza,QB,2026,1,LV,Indiana,76.75,236.0,,,,,balanced,73.3,0.0,projected,balanced,0.0,projected,balanced,98.7,,,,0.0,77.5,,36.0,1008.0,measured,62.5,2026-08-17T02:16:54+00:00
+Taylen Green,QB,2026,182,CLE,Arkansas,77.88,227.0,4.36,,,,dual_threat,39.9,0.0,projected,dual_threat,0.0,projected,dual_threat,29.0,,,,12.5,67.5,,53.0,1190.0,measured,55.5,2026-08-17T02:16:54+00:00
+Ty Simpson,QB,2026,13,LAR,Alabama,73.12,211.0,,,,,pocket_passer,73.9,0.0,projected,pocket_passer,0.0,projected,pocket_passer,85.1,,,,100.0,55.0,,31.0,523.0,measured,57.2,2026-08-17T02:16:54+00:00

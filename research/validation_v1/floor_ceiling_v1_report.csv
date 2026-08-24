@@ -1,0 +1,5 @@
+position,n_scored,coverage_pct,avg_range_width_ppg,verdict
+QB,340,50.0,7.09,well-calibrated
+RB,604,49.0,3.69,well-calibrated
+WR,938,50.3,3.38,well-calibrated
+TE,522,49.2,2.39,well-calibrated

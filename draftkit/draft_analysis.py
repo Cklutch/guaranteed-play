@@ -820,6 +820,14 @@ def build_adp_value_rankings_df():
     if df.empty:
         return pd.DataFrame()
     df = fill_missing_projection_points(df, pos_col, proj_col)
+    # Same override as _build_base_recommendation_rankings_df() -- without
+    # this, adp_delta/value_score (the "adp_value" component) would score
+    # off the stale, un-researched number while position_value_score (the
+    # "projection" component) used this project's corrected one, silently
+    # disagreeing on the same player. Legacy PROJECTION_MANUAL_ADJUSTMENTS
+    # was never applied on this path either (checked directly) -- a
+    # pre-existing gap, not introduced here.
+    df = apply_model_projection_override(df, player_col, proj_col)
 
     current_pick = get_current_pick_number()
     next_pick_distance = get_next_pick_distance()
@@ -958,14 +966,58 @@ def calculate_tier_bonus(player_name, position, tiers_df=None, tier_summary_df=N
 # every ranking the app displays.
 
 
+# Strategy-scale calibration (2026-08-21). See compute_strategy_scale()
+# and calculate_final_recommendation_score() for the full rationale.
+#
+# STRATEGY_SCALE_MIN is a real floor, not a formality: it is what stops a
+# below-replacement player's strategy terms from being switched off
+# entirely, which is what the previous binary rule did. Bounded strictly
+# above zero so every component keeps differentiating players WITHIN a
+# position no matter how far below replacement the position's calibration
+# curve pushes them.
+STRATEGY_SCALE_MIN = 0.15
+STRATEGY_SCALE_AT_REPLACEMENT = 0.5
+STRATEGY_FULL_CREDIT_POSITION_RANK = 3
+
+
+# Share of each FLEX slot that realistically goes to a given position.
+#
+# Single source of truth, deliberately: this used to be a local literal
+# inside build_position_replacement_baselines(), and a 2026-08-21
+# experiment that set TE to 0.0 (chasing a real "TEs rank too high vs
+# point-matched WRs" finding) moved TE's replacement baseline 119.4 ->
+# 133.4 and halved the VOR of the entire TE4-TE17 band in one step --
+# Travis Kelce's position_value_score went 0.83 -> 0.13 and Tucker Kraft
+# fell to board rank 203. Reverted, and hoisted here so the value can't
+# drift between the baseline calc and the VOR-span calc below, which must
+# agree or strategy_scale is normalized against a different replacement
+# level than the one actually used for scoring.
+POSITION_FLEX_SHARES = {"RB": 0.4, "WR": 0.4, "TE": 0.2}
+
+
+def _position_replacement_rank(position):
+    """
+    Real replacement rank for a position under the CURRENT roster settings.
+    """
+    # get_league_size() seeds session state via init_session_state(). Read it
+    # FIRST: reading roster_settings before that seeding returns {} on the very
+    # first call of a fresh process, which made every starter_slots 0 and every
+    # replacement rank 1. In the app that never bit (Home.py inits at import),
+    # but it silently dropped QB from the tier calibration under a bare
+    # `python -m draftkit.tests....` -- caught by test_tier_calibration test A.
+    league_size = get_league_size()
+    roster = st.session_state.get("roster_settings", {})
+    flex_slots = int(roster.get("FLEX", 0))
+    starter_slots = int(roster.get(str(position).upper(), 0))
+    flex_slot_share = flex_slots * POSITION_FLEX_SHARES.get(str(position).upper(), 0.0)
+
+    return max(int(round(league_size * (starter_slots + flex_slot_share))), 1)
+
+
 def build_position_replacement_baselines(df, pos_col, proj_col):
     """
     Estimate position-specific replacement baselines for cross-position scoring.
     """
-    roster = st.session_state.get("roster_settings", {})
-    league_size = get_league_size()
-    flex_slots = int(roster.get("FLEX", 0))
-    flex_shares = {"RB": 0.4, "WR": 0.4, "TE": 0.2}
     baselines = {}
 
     for position in SCORABLE_POSITIONS:
@@ -978,14 +1030,60 @@ def build_position_replacement_baselines(df, pos_col, proj_col):
             baselines[position] = 0.0
             continue
 
-        starter_slots = int(roster.get(position, 0))
-        flex_slot_share = flex_slots * flex_shares.get(position, 0.0)
-        replacement_rank = max(int(round(league_size * (starter_slots + flex_slot_share))), 1)
-        replacement_idx = min(replacement_rank - 1, len(pos_df) - 1)
+        replacement_idx = min(_position_replacement_rank(position) - 1, len(pos_df) - 1)
 
         baselines[position] = float(pos_df.iloc[replacement_idx][proj_col])
 
     return baselines
+
+
+def build_position_vor_spans(df, pos_col, proj_col, replacement_baselines):
+    """
+    Real per-position VOR spans that normalize strategy_scale.
+
+    Two spans per position, both measured off that position's OWN real
+    projection distribution rather than any shared constant, so a point of
+    VOR means the same thing (proportionally) at every position:
+
+    up_span:
+        replacement -> the position's elite tier. Anchored on position rank
+        STRATEGY_FULL_CREDIT_POSITION_RANK (3), deliberately matching the
+        "1-3" premium tier that positional_tier_curve.csv itself already
+        defines as the reference tier (factor 1.0 by construction). A
+        top-3 player at his position therefore earns full strategy credit,
+        which is what the previous thresholded rule effectively gave every
+        player with position_value_score >= 11.0.
+
+    down_span:
+        replacement -> one full replacement-depth deeper (2x the
+        replacement rank). Uses a real rank rather than the position's
+        minimum projection because the raw pool carries a long tail of
+        camp-body rows (830 TEs, 1746 WRs) whose ~0 projections would make
+        the span meaningless.
+    """
+    spans = {}
+
+    for position in SCORABLE_POSITIONS:
+        pos_df = df[df[pos_col].astype(str).str.upper() == position].sort_values(
+            proj_col,
+            ascending=False,
+        )
+
+        if pos_df.empty:
+            spans[position] = (1.0, 1.0)
+            continue
+
+        baseline = _safe_float(replacement_baselines.get(position), 0.0)
+
+        elite_idx = min(STRATEGY_FULL_CREDIT_POSITION_RANK - 1, len(pos_df) - 1)
+        up_span = max(_safe_float(pos_df.iloc[elite_idx][proj_col], baseline) - baseline, 1.0)
+
+        deep_idx = min(_position_replacement_rank(position) * 2 - 1, len(pos_df) - 1)
+        down_span = max(baseline - _safe_float(pos_df.iloc[deep_idx][proj_col], 0.0), 1.0)
+
+        spans[position] = (up_span, down_span)
+
+    return spans
 
 
 _TIER_CURVE_PATH = Path("research/validation_v1/data/positional_tier_curve.csv")
@@ -997,13 +1095,72 @@ _TIER_BEYOND_FACTOR = 0.05
 
 _TIER_FACTOR_MIN = 0.05
 _TIER_FACTOR_MAX = 1.50
-# Below this projected VOR the ratio is numerically unstable (dividing by
-# ~0), and the player scores near nothing anyway, so leave him alone.
-_MIN_PROJECTED_VOR = 5.0
+
+# Floor for the bounded tier normalization (see build_tier_calibration()).
+# Deliberately NOT _TIER_FACTOR_MIN's 0.05: that value existed to express
+# "this tier returned nothing over replacement", but applied as a
+# MULTIPLIER it instead expressed "this player carries no information",
+# which is a different and much stronger claim. 0.25 chosen by sensitivity
+# test over {0.20, 0.25, 0.30} against real within-position ordering.
+#
+# _TIER_FACTOR_MIN stays 0.05 and still applies to players with NO ADP at
+# all (positional_tier_factor below). That is not the same case: an unpriced
+# player was never drafted by anyone, which is a real signal, where a
+# fitted-but-mediocre tier is a priced player the market simply likes less.
+TIER_FACTOR_FLOOR = 0.25
 
 
 @lru_cache(maxsize=1)
-def load_realized_tier_vor():
+def _load_tier_curve_table():
+    """
+    The full (position, replacement_rank, tier) -> realized VOR grid.
+
+    Returns (table, ranks_by_position) or ({}, {}) if the file is missing
+    or malformed, which leaves scoring unchanged.
+    """
+    if not _TIER_CURVE_PATH.exists():
+        return {}, {}
+    try:
+        curve = pd.read_csv(_TIER_CURVE_PATH)
+    except Exception:
+        return {}, {}
+    if "tier_vor" not in curve.columns or "replacement_rank" not in curve.columns:
+        return {}, {}
+
+    table = {}
+    ranks = {}
+    for _, r in curve.iterrows():
+        position = str(r["position"]).upper()
+        rank = int(r["replacement_rank"])
+        table[(position, rank, str(r["tier"]))] = float(r["tier_vor"])
+        ranks.setdefault(position, set()).add(rank)
+
+    return table, {pos: sorted(rs) for pos, rs in ranks.items()}
+
+
+@lru_cache(maxsize=32)
+def _tier_vor_for_ranks(ranks_key):
+    """Select the fitted rows matching one specific replacement-rank config."""
+    table, available = _load_tier_curve_table()
+    if not table:
+        return {}
+
+    realized = {}
+    for position, rank in ranks_key:
+        options = available.get(position)
+        if not options:
+            continue
+        # Clamp to the fitted grid rather than dropping the position: a
+        # league far outside the grid still deserves the nearest real fit.
+        nearest = min(options, key=lambda r: abs(r - rank))
+        for label, _lo, _hi in _TIER_EDGES:
+            value = table.get((position, nearest, label))
+            if value is not None:
+                realized[(position, label)] = value
+    return realized
+
+
+def load_realized_tier_vor(replacement_ranks=None):
     """
     Realized value-over-replacement by (position, positional-ADP tier),
     measured 2015-2025 by build_positional_tier_curve_v1.py.
@@ -1013,20 +1170,36 @@ def load_realized_tier_vor():
     +128 VOR, inflating premium TE well past what it is worth -- and he is
     not in the 2026 premium pool at all).
 
-    Returns {} if missing, which leaves scoring unchanged.
+    Selected for the ACTIVE league configuration (2026-08-21). The curve is
+    now fit across a grid of replacement ranks rather than at one hardcoded
+    set, because replacement rank determines the baseline VOR is measured
+    against and therefore the SIGN of the result: the old fixed
+    {"QB":12,"RB":29,"WR":29,"TE":14} described a roster format nobody here
+    plays, and its negative TE mid-tiers -- the entire basis for the 0.05
+    floor that collapsed every non-elite TE -- turn roughly flat at this
+    league's real TE replacement rank of 17. WR was mis-specified further
+    still (29 vs 46). Passing None derives the ranks from the live roster
+    settings, so changing the lineup selects a different real fit instead
+    of silently reusing one built for another format.
     """
-    if not _TIER_CURVE_PATH.exists():
-        return {}
-    try:
-        curve = pd.read_csv(_TIER_CURVE_PATH)
-    except Exception:
-        return {}
-    if "tier_vor" not in curve.columns:
-        return {}
-    return {
-        (str(r["position"]).upper(), str(r["tier"])): float(r["tier_vor"])
-        for _, r in curve.iterrows()
-    }
+    if replacement_ranks is None:
+        replacement_ranks = {
+            position: _position_replacement_rank(position)
+            for position in SCORABLE_POSITIONS
+        }
+    return _tier_vor_for_ranks(tuple(sorted(replacement_ranks.items())))
+
+
+def _clear_tier_curve_caches():
+    _load_tier_curve_table.cache_clear()
+    _tier_vor_for_ranks.cache_clear()
+
+
+# load_realized_tier_vor() is a thin selector over two lru_cached layers
+# rather than being cached itself (its argument is a dict). Callers -- the
+# tests especially -- still expect the .cache_clear() handle the old
+# lru_cached version exposed, so keep that contract.
+load_realized_tier_vor.cache_clear = _clear_tier_curve_caches
 
 
 def tier_label_for_rank(positional_adp_rank):
@@ -1039,59 +1212,102 @@ def tier_label_for_rank(positional_adp_rank):
     return None
 
 
-def build_tier_calibration(df, pos_col, replacement_baselines, proj_col):
+def build_tier_calibration():
     """
-    Calibrate projected value-over-replacement against what each
-    (position, draft-tier) actually returned historically.
+    Within-position tier-shape correction, matching
+    build_positional_tier_curve_v1.py's own documented formula exactly:
 
-        factor = realized_VOR(pos, tier) / projected_VOR(pos, tier)
+        tier_factor(pos, tier) = realized_VOR(pos, tier) / realized_VOR(pos, "1-3")
 
-    This corrects a real, measured bias: projections are miscalibrated
-    ACROSS positions, not just smoothed within them. On the current pool
-    against 2015-2025 outcomes, tier 1-3 calibration comes out at
-    QB 0.36, RB 0.48, WR 0.61, TE 1.10 -- i.e. projections overrate the
-    premium QB tier by roughly 3x while pricing premium TE about right.
-    Left uncorrected, that is why the board floated six QBs into a top 50
-    that ADP gives one.
+    Corrected 2026-08-17 (task_4d5e2bb0 follow-up) -- the prior version of
+    this function computed realized_VOR(pos, tier) / projected_VOR(pos,
+    tier) instead, using THIS SEASON's own projections as the denominator.
+    That is a different formula than the one the source script's own
+    docstring specifies and explicitly warns against building: "It is NOT
+    a cross-position multiplier... scaling it by a factor derived from
+    cross-position VOR levels would double-count scarcity, which is
+    exactly the mistake the old TE 0.68 multiplier made." Dividing by each
+    position's own current projected_VOR imports exactly that cross-
+    position scale difference (QB's raw point totals run far higher than
+    RB's, so an equally-real absolute realized-VOR gap reads as a far
+    smaller fraction of a QB's projected_VOR than of an RB's) -- verified
+    directly: it produced QB 0.23 vs RB 0.57 at tier 1-3, a cross-position
+    premium-tier discount the documented formula cannot produce at all
+    (realized_VOR(pos,"1-3") divided by itself is 1.0 for every position,
+    by construction -- there is no data-dependent way for tier 1-3 to come
+    out as anything else once the formula matches the docstring).
 
-    This is NOT the double-count the old TE 0.68 multiplier was.
-    Replacement baselines correct scarcity in *projection* space; this
-    corrects the projections themselves against outcomes. Different error,
-    measured separately.
+    What this DOES still correct for, real and measured: projections are
+    smooth within a position but real outcomes cliff -- TE1-3 real median
+    VOR (35.7) vastly outperforms TE4-6 (-4.3) and TE7-9 (-15.1) even
+    though FantasyPros projects TE4-6 close to TE1-3. That within-position
+    shape is what this function now captures, uncontaminated by any
+    cross-position rescaling. It takes no current-season projection or
+    replacement-baseline input at all -- it is a fixed function of the
+    2015-2025 realized-outcomes table alone, recomputed only when that
+    table changes.
 
-    Tiers whose realized value is at or below replacement are floored
-    rather than allowed to go negative -- a negative factor would invert a
-    player's value and rank bad players above good ones.
+    BOUNDED NORMALIZATION, NOT A RAW RATIO (2026-08-21)
+    ---------------------------------------------------
+    The ratio above is unstable by construction wherever a tier's realized
+    VOR approaches zero, which is exactly where most non-elite tiers sit.
+    A cell moving from +1.1 to -2.6 -- well inside sampling noise at ~25
+    distinct players per cell -- flips the factor from +0.02 to a floored
+    0.05, converting noise into a scoring decision that annihilates the
+    whole TE4-15 range. Measured on the real re-fit table, TE7-9 (-2.6) and
+    TE10-12 (+11.2) differ by 14 VOR points and produced factors of -0.05
+    and +0.22.
+
+    Replaced with a bounded, sign-stable normalization over each position's
+    own fitted tiers:
+
+        factor(tier) = m + (1 - m) * (VOR_tier - VOR_min) / (VOR_1-3 - VOR_min)
+
+    m = TIER_FACTOR_FLOOR. Tier 1-3 still evaluates to exactly 1.0 for
+    every position by construction (numerator equals denominator), so the
+    cross-position anti-leakage invariant this function was corrected to
+    guarantee is preserved unchanged -- there is still no data-dependent
+    way for a position's premium tier to come out as anything else. The
+    difference is only in how the tiers BELOW it are spaced: proportionally
+    within the position's own real range, instead of as a fraction of a
+    premium-tier number they are nowhere near.
+
+    A tier above the premium tier's own VOR clamps to 1.0 rather than
+    exceeding it; the floor keeps the worst tier meaningfully scored rather
+    than switched off.
     """
     realized = load_realized_tier_vor()
     if not realized:
         return {}
 
-    work = df[[pos_col, proj_col, "positional_adp_rank"]].copy()
-    work["position"] = work[pos_col].astype(str).str.upper()
-    work["tier"] = work["positional_adp_rank"].apply(tier_label_for_rank)
-    work = work[work["tier"].notna()]
-    if work.empty:
-        return {}
-
-    work["projected_vor"] = [
-        max(_safe_float(p, 0.0) - _safe_float(replacement_baselines.get(pos), 0.0), 0.0)
-        for p, pos in zip(work[proj_col], work["position"])
-    ]
-    projected = work.groupby(["position", "tier"])["projected_vor"].mean()
-
+    positions = {pos for pos, _tier in realized}
     calibration = {}
-    for key, projected_vor in projected.items():
-        realized_vor = realized.get(key)
-        if realized_vor is None:
+    for position in positions:
+        base = realized.get((position, "1-3"))
+        if base is None or base <= 0:
+            continue  # no stable premium-tier anchor to normalize against
+
+        fitted = [
+            realized[(position, label)]
+            for label, _lo, _hi in _TIER_EDGES
+            if (position, label) in realized
+        ]
+        if not fitted:
             continue
-        if realized_vor <= 0:
-            calibration[key] = _TIER_FACTOR_MIN
-        elif projected_vor < _MIN_PROJECTED_VOR:
-            calibration[key] = 1.0
-        else:
-            calibration[key] = float(
-                min(max(realized_vor / projected_vor, _TIER_FACTOR_MIN), _TIER_FACTOR_MAX)
+
+        floor_vor = min(fitted)
+        span = base - floor_vor
+        if span <= 0:
+            continue  # degenerate: every tier identical, no shape to fit
+
+        for label, _lo, _hi in _TIER_EDGES:
+            realized_vor = realized.get((position, label))
+            if realized_vor is None:
+                continue
+            normalized = (realized_vor - floor_vor) / span
+            factor = TIER_FACTOR_FLOOR + (1.0 - TIER_FACTOR_FLOOR) * normalized
+            calibration[(position, label)] = float(
+                min(max(factor, TIER_FACTOR_FLOOR), 1.0)
             )
     return calibration
 
@@ -1109,18 +1325,524 @@ def positional_tier_factor(position, positional_adp_rank, calibration):
     return calibration.get((str(position).upper(), tier), 1.0)
 
 
+# Manual, dated projection adjustments from real, current information not yet
+# reflected in the sourced projection -- role/opportunity signals (coach
+# comments, beat-reporter depth-chart notes) or injury signals too acute for
+# the historical risk model to see yet. Not derivable from stats, same class
+# of override as TEAM_CHANGED_PLAYERS (build_rb_archetypes.py)/
+# INJURY_MANUAL_OVERRIDES (build_risk_variables.py).
+#
+# Real, load-bearing distinction from risk_index (Home.py's RISK column):
+# risk_index never feeds this scoring pipeline at all (confirmed via a
+# full-file grep of this module -- zero references). Only projection_points
+# does, through calculate_position_value_score() (the "projection" component)
+# and calculate_value_score() (the "adp_value" component) below. So this is
+# the one real integration point where a manual override actually moves
+# OUR SCORE/rank, not just a descriptive badge -- adjusting projection_points
+# here flows into both automatically, the same way a real projection update
+# would, with no new scoring-component wiring needed.
+#
+# Jordyn Tyson is a retrofit: his existing INJURY_MANUAL_OVERRIDES entry only
+# ever set injury_score (RISK column only) -- the exact real, current,
+# decisive hamstring news it was built for never moved his rank at all until
+# this entry. Every percentage below is an editorial magnitude estimate, not
+# a verified fact -- the underlying situations (trades, coach quotes) are
+# independently verified real news; the specific number is a judgment call.
+PROJECTION_MANUAL_ADJUSTMENTS = {
+    "DeVonta Smith": {
+        "pct": 12.0,
+        "note": "AJ Brown traded to NE -- Smith is Philly's clear WR1 now",
+        "source": "ESPN/Yahoo, real 2026 offseason reporting",
+        "date": "2026-08-16",
+        # requires build_risk_variables.py re-run to take effect, unlike pct
+        # (which is live on the next Streamlit rerun) -- see role_usage_td_score
+        # override wiring in build_risk_variables.py.
+        "usage_risk_score": 1.5,
+    },
+    "Jordyn Tyson": {
+        # Updated 2026-08-17: superseded the prior -15.0% "uncertain for
+        # Week 1" entry -- news has firmed up to a real, decisive out-until-
+        # Week-9 timeline (user-reported; my own web check the same day
+        # corroborated the underlying hamstring re-injury and prior Week-1-
+        # uncertain reporting but had not yet indexed a source confirming
+        # the specific Week 9 date -- treated as current per the user's
+        # direct report, not independently re-verified beyond that). Missing
+        # weeks 1-8 is ~8 of 17 games (~47%) -- -50.0% is a rough, disclosed
+        # games-missed-proportional estimate (round number, not a precision
+        # ramp-up/target-redistribution model), same editorial-estimate
+        # standard as every other entry here.
+        "pct": -50.0,
+        "note": "Hamstring re-injury -- real, decisive timeline: out until Week 9",
+        "source": "User-reported 2026-08-17; underlying injury independently corroborated via web search "
+                  "(ESPN/NBC Sports/ProFootballRumors)",
+        "date": "2026-08-17",
+    },
+    "Luther Burden": {  # real player_name in master_players.csv omits the "III" suffix
+        "pct": 10.0,
+        "note": "DJ Moore traded to Buffalo; real 2026 camp buzz (HC Ben Johnson), but no "
+                "established real target share yet reflecting the new opportunity",
+        "source": "Multiple outlets (RotoBaller, CBS Sports, BearsTalk)",
+        "date": "2026-08-16",
+    },
+    "Blake Corum": {
+        "pct": 8.0,
+        "note": "Real McVay 'big factor' comments, but Kyren Williams remains the more-trusted "
+                "back per the same sources -- real but incremental, not a lead-role change",
+        "source": "SI.com/NBC Sports",
+        "date": "2026-08-16",
+    },
+    # Jahmyr Gibbs deliberately excluded from this dict (reverted 2026-08-19,
+    # model_proj_staleness_fix_plan.pdf, Step 1): the underlying issue --
+    # stale team-context/competitor-volume features -- is a diagnosed defect
+    # inside the model's own feature pipeline (build_live_projections_v1.py),
+    # not a subjective situational read layered on an already-good external
+    # number. It belongs in model_projection_points_adjusted (see
+    # research/validation_v1/build_live_projections_v1.py), not here --
+    # PROJECTION_MANUAL_ADJUSTMENTS is reserved for narrative/editorial
+    # overrides on the FantasyPros-sourced projection_points (Smith, Tyson,
+    # Burden, Corum), where the external number itself has no known defect.
+    #
+    # Jaylen Warren deliberately excluded: real, but genuinely conflicting
+    # signal (a defined passing-down role vs. a real report his early-down
+    # work is shrinking toward Rico Dowdle) -- a split-the-difference number
+    # wouldn't accurately reflect either real direction. Add once the
+    # picture clarifies, consistent with "forward, seeded opportunistically."
+}
+
+
+def apply_projection_adjustments(df, player_col, proj_col):
+    """Applies PROJECTION_MANUAL_ADJUSTMENTS to projection_points in place.
+    Stamps projection_adjustment_pct/projection_adjustment_note (NaN/None for
+    everyone else) so the adjustment is never silent -- Home.py surfaces it
+    as a visible marker on PROJECTED PTS, same transparency principle as
+    Home.py's _injury_override_badge()."""
+    df["projection_adjustment_pct"] = np.nan
+    df["projection_adjustment_note"] = None
+    for name, override in PROJECTION_MANUAL_ADJUSTMENTS.items():
+        mask = df[player_col] == name
+        if not mask.any():
+            continue
+        df.loc[mask, proj_col] = df.loc[mask, proj_col] * (1 + override["pct"] / 100)
+        df.loc[mask, "projection_adjustment_pct"] = override["pct"]
+        df.loc[mask, "projection_adjustment_note"] = (
+            f"{override['note']} ({override['source']}, {override['date']})"
+        )
+    return df
+
+
+MODEL_PROJECTIONS_PATH = Path("data/processed/model_projections_v1.csv")
+
+# Real, structural gap found and fixed (2026-08-21, "every player needs to
+# be running on the Our Score model-adjusted number" audit): master_players
+# .csv (FantasyPros-sourced, the real board's own player universe) and
+# model_projections_v1.csv (this model's own crosswalk, built from
+# stats_player_reg_by_season/roster_2026.csv) can carry a REAL, different
+# canonical name for the same real person -- confirmed directly for Marquise
+# "Hollywood" Brown: master_players.csv's live, scored, ranked row uses
+# "Hollywood Brown" (with real ADP/market data), while a SEPARATE,
+# structurally empty "Marquise Brown" row also exists there (no ADP, no
+# projection_points at all -- a real duplicate/phantom entry, not the one
+# anyone actually drafts). This model's own correction was written keyed to
+# "Marquise Brown" (see build_live_projections_v1.py) since that's the name
+# stats_player_reg_by_season/roster_2026.csv use for him -- a real, correctly
+# -verified correction that was silently landing on the WRONG, invisible
+# duplicate row instead of the real, live-scored one. Different failure mode
+# from NAME_KEYED_FALLBACK_OVERRIDES (that one covers a player ABSENT from
+# this model's own crosswalk; this covers a name mismatch AT THE BOUNDARY
+# between this model's crosswalk and master_players.csv's separate one).
+# Keyed on the name model_projections_v1.csv actually uses -> the real name
+# master_players.csv uses for the SAME live, scored player. Add an entry
+# here ONLY when directly confirmed (a phantom master_players.csv row with
+# no real ADP/projection data under the model's own name), not speculatively.
+MODEL_TO_MASTER_NAME_ALIASES = {
+    "Marquise Brown": "Hollywood Brown",
+}
+
+
+def apply_model_projection_override(df, player_col, proj_col):
+    """Replaces proj_col with this project's own researched value, for every
+    player who actually has one -- the "replace where corrected" decision
+    (2026-08-21) for wiring the whole team-by-team WR/TE/RB pass plus the
+    QB Book-anchored pass into OUR SCORE/Rank, which until now only the
+    small, older PROJECTION_MANUAL_ADJUSTMENTS dict above could reach.
+
+    Runs strictly AFTER apply_projection_adjustments (same real integration
+    point that dict uses -- see the comment above PROJECTION_MANUAL_
+    ADJUSTMENTS: proj_col is the one column that actually reaches OUR
+    SCORE/rank). Last-write-wins is deliberate: for any player covered by
+    BOTH mechanisms (DeVonta Smith, Jordyn Tyson, Luther Burden all
+    overlap), this session's researched value -- individually verified,
+    dated, pool-conservation-checked -- supersedes the older, thinner
+    editorial guess rather than stacking on top of it. The legacy
+    projection_adjustment_pct/note badge is cleared for those players too,
+    so Home.py doesn't keep showing a stale rationale for a number that
+    no longer reflects it.
+
+    Only counts as "corrected" if a REAL research signal exists:
+    model_projection_points_adjusted where model_adjustment_pct is notna
+    (a real MODEL_PROJECTION_CORRECTIONS entry, even a disclosed 0% "
+    confirmed, no change") OR model_projection_points_fallback where notna
+    (a rookie/name-keyed placeholder, or a QB Book-anchored value).
+    Deliberately does NOT fall back to the bare, uncorrected
+    model_projection_points -- that's the model output this whole model's
+    own docstring says validated WORSE than ADP for QB and is only a
+    "newer, less-proven" signal even at RB/WR/TE (see build_live_
+    projections_v1.py); an untouched raw number has no human research
+    behind it and shouldn't silently replace projection_points."""
+    if not MODEL_PROJECTIONS_PATH.exists():
+        df["model_override_applied"] = False
+        df["model_override_note"] = None
+        return df
+
+    model_df = pd.read_csv(MODEL_PROJECTIONS_PATH)
+    needed = ["player_name", "model_projection_points_adjusted", "model_adjustment_pct",
+              "model_adjustment_note", "model_projection_points_fallback", "model_projection_fallback_note"]
+    model_df = model_df[[c for c in needed if c in model_df.columns]].drop_duplicates("player_name")
+
+    corrected = model_df["model_adjustment_pct"].notna() if "model_adjustment_pct" in model_df.columns else pd.Series(False, index=model_df.index)
+    override_value = model_df["model_projection_points_adjusted"].where(corrected) if "model_projection_points_adjusted" in model_df.columns else pd.Series(np.nan, index=model_df.index)
+    # Real gap found and fixed (2026-08-21, "what have you done to the
+    # middle rounds" audit): compute_rookie_fallback()'s own generic
+    # percentile-mapped estimate (pre-draft composite percentile -> same
+    # percentile of validated veteran model_projection_points, build_live_
+    # projections_v1.py) was flowing through this override exactly like a
+    # real, dated, human-researched correction -- fully replacing proj_col
+    # AND fully exempted from ADP-anchoring (apply_adp_anchor()'s lam=1.0
+    # for model_override_applied rows). That mechanism's own note discloses
+    # it plainly: "Rookie-score fallback (not a real outcome-trained
+    # prediction)" -- a rough statistical placeholder for an otherwise-
+    # blank cell, never meant to carry the same confidence as this
+    # project's real research (Carnell Tate's independent build, Chris
+    # Bell's, the QB Book-anchored pass, etc. -- all real, dated, sourced,
+    # and rightly still exempted). Confirmed live: Seth McGowan's real
+    # FantasyPros projection is 21.6 (sensible for an unproven rookie);
+    # this fallback replaced it with 182.3 (a 90th-percentile veteran-
+    # mapped number), pushed him above the RB replacement baseline,
+    # undamped his strategy components, and combined with an unrelated
+    # ADP-value bug (see build_adp_value_rankings_df()) to land him at
+    # rank 40 overall. Excluded from proj_col entirely here -- it still
+    # shows in the separate MODEL PROJ comparison column (Home.py's own
+    # direct merge of model_projections_v1.csv), just doesn't drive Our
+    # Score with false confidence. Identified by the literal,
+    # programmatically-generated note text (not a per-player judgment
+    # call) so this is precise, not a broad rookie penalty -- a REAL
+    # rookie correction with actual dated research (placeholders above)
+    # is untouched by this filter.
+    is_composite_fallback = pd.Series(False, index=model_df.index)
+    if "model_projection_fallback_note" in model_df.columns:
+        is_composite_fallback = model_df["model_projection_fallback_note"].fillna("").str.contains(
+            "Rookie-score fallback", regex=False
+        )
+    if "model_projection_points_fallback" in model_df.columns:
+        fallback_value = model_df["model_projection_points_fallback"].where(~is_composite_fallback)
+        override_value = override_value.fillna(fallback_value)
+    override_note = model_df["model_adjustment_note"].where(corrected) if "model_adjustment_note" in model_df.columns else pd.Series(None, index=model_df.index)
+    if "model_projection_fallback_note" in model_df.columns:
+        override_note = override_note.fillna(model_df["model_projection_fallback_note"])
+
+    lookup = model_df[["player_name"]].copy()
+    lookup["_override_value"] = override_value
+    lookup["_override_note"] = override_note
+    lookup = lookup[lookup["_override_value"].notna()]
+    # Remap to master_players.csv's real name BEFORE merging, so a real
+    # correction attaches to the live, scored row rather than a phantom
+    # duplicate under this model's own crosswalk name (see
+    # MODEL_TO_MASTER_NAME_ALIASES above).
+    lookup["player_name"] = lookup["player_name"].replace(MODEL_TO_MASTER_NAME_ALIASES)
+
+    df = df.merge(lookup, left_on=player_col, right_on="player_name", how="left", suffixes=("", "_mdl"))
+    has_override = df["_override_value"].notna()
+    df.loc[has_override, proj_col] = df.loc[has_override, "_override_value"]
+    # Legacy PROJECTION_MANUAL_ADJUSTMENTS badge cleared for overridden
+    # players -- it described a different, now-superseded number.
+    df.loc[has_override, "projection_adjustment_pct"] = np.nan
+    df.loc[has_override, "projection_adjustment_note"] = None
+    df["model_override_applied"] = has_override
+    df["model_override_note"] = df["_override_note"].where(has_override)
+    df = df.drop(columns=[c for c in ("player_name_mdl", "_override_value", "_override_note") if c in df.columns])
+    if "player_name" in df.columns and player_col != "player_name":
+        df = df.drop(columns=["player_name"])
+    return df
+
+
+# Real, position-specific decay scale for calculate_position_value_score()'s
+# below-replacement soft floor (plan_below_replacement_floor_collapse.pdf,
+# 2026-08-17). Each value is the real median |value_over_replacement| among
+# that position's current below-replacement pool, EXCLUDING players with a
+# literal zero projection (24-109 per position -- up to a quarter of the
+# below-replacement pool at some positions -- carry no real point signal to
+# preserve at all, so including them would anchor the scale to noise, not
+# real spread). At value_over_replacement == -scale, the transform below
+# returns exp(-1) ~= 37% of the at-replacement value -- a real,
+# data-anchored "typical below-replacement depth" reference, not a picked
+# number. Recompute if replacement baselines or the projection source
+# change meaningfully enough to shift this real distribution.
+BELOW_REPLACEMENT_DECAY_SCALE = {
+    "QB": 288.7,
+    "RB": 129.6,
+    "WR": 104.2,
+    "TE": 101.1,
+}
+_DEFAULT_DECAY_SCALE = 100.0  # any position missing from the table above
+
+
 def calculate_position_value_score(projection_points, position, replacement_baselines):
     """
     Convert raw projection into position-adjusted value over replacement.
+
+    Above replacement: unchanged, linear VOR (see
+    plan_below_replacement_floor_collapse.pdf's explicit requirement not to
+    touch this side -- confirmed via before/after check that the
+    above-replacement tier is untouched).
+
+    Below replacement (fixed 2026-08-17,
+    plan_below_replacement_floor_collapse.pdf): previously
+    `max(value_over_replacement, 0.0)` -- a literal hard clamp. Confirmed
+    directly on Jordyn Tyson's real case that this was discarding real,
+    correctly-computed information: his projection genuinely updated
+    (119.77 -> 70.45 points on a real, decisive injury-timeline update),
+    but both values sat below the WR replacement baseline (170.2), so both
+    collapsed to the exact same adjusted_value and his rank never moved --
+    not a caching bug, confirmed by decomposing every component. Real,
+    measured scope: 646 of 730 players on the current board (88.5%) sit
+    below their position's replacement baseline right now, so this wasn't
+    a rare edge case.
+
+    Replaced with a smooth exponential decay, continuous with the linear
+    side at value_over_replacement == 0 (exp(0) == 1, matching the "+1.0"
+    boundary exactly), monotonic (real magnitude differences among
+    below-replacement players keep registering -- someone 5 points below
+    replacement now clearly outranks someone 150 points below), and always
+    strictly positive (a far-below-replacement player can never invert
+    rankings with a wild negative score, satisfying the same "replacement
+    is the reference point" intent the old hard clamp was protecting,
+    without discarding real information to do it).
     """
     position = str(position).upper()
     projection = _safe_float(projection_points, 0.0)
     baseline = _safe_float(replacement_baselines.get(position), 0.0)
     value_over_replacement = projection - baseline
     positional_multiplier = _safe_float(POSITION_VALUE_MULTIPLIERS.get(position), 1.0)
-    adjusted_value = (max(value_over_replacement, 0.0) + 1.0) * positional_multiplier
 
-    return round(max(adjusted_value, 0.01), 2)
+    if value_over_replacement >= 0:
+        adjusted_value = (value_over_replacement + 1.0) * positional_multiplier
+    else:
+        scale = BELOW_REPLACEMENT_DECAY_SCALE.get(position, _DEFAULT_DECAY_SCALE)
+        adjusted_value = np.exp(value_over_replacement / scale) * positional_multiplier
+
+    # Precision raised 2 -> 6 decimals (plan_below_replacement_floor_collapse.pdf
+    # follow-up, 2026-08-17): 2 decimals was a legacy display-oriented
+    # convention -- fine for the old hard-clamp output (which only ever took
+    # a handful of distinct values anyway) but not for the soft floor above,
+    # whose whole point is to preserve real, continuous below-replacement
+    # differentiation. Rounding this early to 2 decimals, then multiplying
+    # by a per-player tier_factor as small as 0.05 in the row loop below,
+    # collapsed the entire below-replacement population (646 real players)
+    # into just 5 distinct values -- confirmed directly. No other component
+    # in this pipeline rounds a value this early AND THEN multiplies it by a
+    # per-player factor this small (checked calculate_adp_bonus,
+    # calculate_value_score, calculate_team_fit_score -- none combine
+    # premature rounding with a compressing multiplier the way this did).
+    return round(max(adjusted_value, 0.01), 6)
+
+
+def compute_strategy_scale(projection_points, position, replacement_baselines, vor_spans):
+    """
+    How much of the strategy tilt (position need, tier urgency, team fit) a
+    player earns -- continuous in real VOR points, never zero.
+
+    Replaces (2026-08-21) a binary cutoff in
+    calculate_final_recommendation_score():
+
+        surplus = position_value_score - 1.0
+        strategy_scale = clamp(surplus / 10.0, 0.0, 1.0)
+
+    That rule read position_value_score, which is POST-tier_factor. TE's
+    calibration curve floors tier_factor at 0.05 for every tier outside
+    "1-3" (realized tier_vor is negative or zero for all of them), so every
+    non-elite TE was driven below 1.0, strategy_scale collapsed to exactly
+    0, and 55% of the total weight (position_need 0.25 + tier_urgency 0.15
+    + team_fit 0.15) became the constant 50 for the entire position at
+    once. With projection also compressed by the same 0.05 factor,
+    adp_value's 0.15 was left effectively deciding the order -- measured
+    live: Mike Gesicki (91.2 projected, ADP 207) and Cade Otton (101.7,
+    ADP 189) both outranked Travis Kelce (135.0, ADP 121), a 33-44 point
+    projection gap inverted purely by being cheap.
+
+    The historical finding underneath that curve ("mid-round TEs
+    disappoint") is real and is NOT discarded here -- it belongs in the
+    tier curve, lowering the position's overall appeal. What it must not
+    do is destroy the model's ability to tell TE7 from TE17, which is a
+    separate question from how much that tier is worth in the abstract.
+
+    So: scale on real VOR *points* (pre-tier_factor), normalized by the
+    position's own real spans (build_position_vor_spans), piecewise-linear
+    and continuous at replacement, bounded to
+    [STRATEGY_SCALE_MIN, 1.0]:
+
+        vor >= 0:  0.5 -> 1.0   across replacement -> position rank 3
+        vor <  0:  0.5 -> 0.15  across replacement -> 2x replacement rank
+
+    Continuous at vor == 0 (both branches give
+    STRATEGY_SCALE_AT_REPLACEMENT), monotonic in vor, and identical in
+    form at every position, so a middling TE can legitimately earn less
+    strategy credit than an elite WR while Kelce still earns materially
+    more than a 100-point TE -- and that difference survives into
+    final_score instead of being flattened away before it gets there.
+    """
+    position = str(position).upper()
+    projection = _safe_float(projection_points, 0.0)
+    baseline = _safe_float(replacement_baselines.get(position), 0.0)
+    value_over_replacement = projection - baseline
+
+    up_span, down_span = vor_spans.get(position, (1.0, 1.0))
+
+    if value_over_replacement >= 0:
+        ratio = min(value_over_replacement / up_span, 1.0) if up_span > 0 else 1.0
+        scale = STRATEGY_SCALE_AT_REPLACEMENT + (
+            1.0 - STRATEGY_SCALE_AT_REPLACEMENT
+        ) * ratio
+    else:
+        ratio = min(-value_over_replacement / down_span, 1.0) if down_span > 0 else 1.0
+        scale = STRATEGY_SCALE_MIN + (
+            STRATEGY_SCALE_AT_REPLACEMENT - STRATEGY_SCALE_MIN
+        ) * (1.0 - ratio)
+
+    return round(min(max(scale, STRATEGY_SCALE_MIN), 1.0), 6)
+
+
+# === Base Value (2026-08-21) ==============================================
+#
+# Replaces final_score's dependency on the multi-layer blend below (tier
+# calibration, strategy_scale/position_value_score's exp-decay transform,
+# tier urgency, position need, team fit, signal-trust damping, single-QB
+# multiplier, ADP-anchor blend) for the player-VALUE question. That chain
+# accumulated one fragile layer at a time, each able to move a player's
+# rank independently, and it stopped being auditable: Dalton Kincaid (TE3,
+# overall 26) and Kyle Pitts (TE4, overall 35) outranked Kyren Williams
+# (216.4 projected RB points) despite trailing him by 60-80 points, and no
+# single row explained why -- the answer was scattered across five
+# functions. Measured real-board consequence: 30 TEs in the top 150 against
+# 61 WRs, in a format that starts 36 WR slots (3 WR + 3-WR-share of 2 FLEX)
+# before a single true TE flex exists.
+#
+# Base Value asks a narrower, more stable question -- "how good is this
+# player" -- and answers it from four real, already-computed quantities,
+# combined with fixed documented weights and NO per-position transform:
+#
+#     Base Value = a*VOR + b*projection + market_swing - risk_penalty
+#
+# VOR and projection are collinear within a position (VOR is just
+# projection minus that position's own real replacement baseline, a
+# constant), so within a position this is monotonic in projection by
+# construction -- there is no arithmetic path for a 100-point TE to
+# outscore a 135-point TE unless market_swing/risk_penalty (both capped,
+# both far smaller than a real tier gap) supply a specific, visible reason.
+# VOR alone carries the cross-position scarcity signal (via each position's
+# baseline), so a raw 350-point QB does not automatically outrank a
+# 300-point RB the way pure projection would.
+#
+# Position need, team fit, and tier urgency are deliberately NOT inputs
+# here -- they are roster-construction questions, not player-value
+# questions, and belong in a separate live "Pick Recommendation" layer
+# (Roster Need + VONA/next-pick risk + construction fit) added on top of
+# Base Value only once a draft is actually in progress. That layer is not
+# built yet; Base Value is the entire final_score for now, at every roster
+# state, so their contribution is exactly zero rather than damped toward
+# neutral -- see calculate_final_recommendation_score()'s legacy
+# position_need_component_score / team_fit_component_score, which still
+# compute for display/backward-compatibility but no longer reach
+# final_score at all.
+BASE_VALUE_VOR_WEIGHT = 1.0
+
+# Projection's OWN term is a bounded, WITHIN-POSITION percentile bonus (0 to
+# +20), not raw points added on top of VOR (fixed 2026-08-21, same session:
+# the first version used BASE_VALUE_PROJECTION_WEIGHT=0.5 on raw
+# projection_points directly, and it reintroduced exactly the cross-
+# position scale problem VOR exists to remove -- measured live, it put 10
+# QBs in the top 30 and 28 in the top 150. Real cause: QB's genuine VOR
+# spread (QB1 60.1 points over the replacement baseline) is legitimately
+# the SHALLOWEST of any position -- the top 12 QBs cluster tightly, which
+# is real and correct -- but raw projection_points ignores that entirely
+# and rewards QB1's 355.9 raw points on the same absolute scale as an RB's
+# 306, importing the passing-game scoring-rule advantage QB carries over
+# every other position regardless of real scarcity.
+#
+# VOR is exactly monotonic in projection within a position already (same
+# real points, position-constant baseline subtracted), so this bonus is not
+# load-bearing for the "higher projection can't rank below a position-mate"
+# guarantee -- VOR alone already provides that, exactly, in every case.
+# What it adds is a small extra credit for being the best in your own
+# position group, bounded to the same order of magnitude as the market and
+# risk terms so it stays a reinforcement, never a second cross-position
+# scale.
+BASE_VALUE_PROJECTION_BONUS_MAX = 20.0
+
+# Bounded, zero-centered swing: a player with the best possible market
+# treatment gets +6, the worst gets -6, relative to a neutral 0 for a
+# player with no ADP at all. Deliberately small next to real inter-tier VOR
+# gaps (which run 20-170+ points) so ADP can settle a close call but cannot
+# invert a material one -- the single-QB multiplier, signal-trust damping,
+# and ADP-anchor blend this replaces had no such cap and each could move a
+# score by double digits or more on their own.
+BASE_VALUE_MARKET_MAX_SWING = 12.0
+
+# Discount only -- never a bonus. injury_risk is 0-100 (higher = riskier,
+# 50.0 the neutral default for missing data, see get_player_injury_risk()).
+# Scaled so the worst real risk score costs 15 points, comparable in
+# magnitude to the market swing above and, again, well short of what a real
+# tier-defining projection gap should require to overturn.
+BASE_VALUE_RISK_MAX_PENALTY = 15.0
+
+
+def calculate_base_value_score(df):
+    """
+    Vectorized Base Value for every row in df at once (not a per-row apply,
+    since the market-swing term needs the whole pool's ADP distribution to
+    resolve a percentile).
+
+    Requires df to already carry projection_points, value_over_replacement_points,
+    adp, and injury_risk (all present on the frame _build_base_recommendation_rankings_df()
+    produces). Returns df with four new component columns plus base_value_score,
+    the exact, un-adjusted sum of those four -- every rank difference this
+    function produces is readable off one row with no later step able to
+    change it.
+    """
+    out = df.copy()
+    projection = pd.to_numeric(out["projection_points"], errors="coerce").fillna(0.0)
+    vor = pd.to_numeric(out.get("value_over_replacement_points"), errors="coerce").fillna(
+        -projection  # no baseline resolved for this row -> treat as fully below replacement
+    )
+    adp = pd.to_numeric(out.get("adp"), errors="coerce")
+    risk = pd.to_numeric(out.get("injury_risk"), errors="coerce").fillna(50.0).clip(0.0, 100.0)
+
+    out["base_value_vor_component"] = (BASE_VALUE_VOR_WEIGHT * vor).round(3)
+
+    positions = out["position"].astype(str).str.upper()
+    proj_pct_in_position = projection.groupby(positions).rank(pct=True, method="average")
+    out["base_value_projection_component"] = (
+        proj_pct_in_position.fillna(0.0) * BASE_VALUE_PROJECTION_BONUS_MAX
+    ).round(3)
+
+    has_adp = adp.notna()
+    market = pd.Series(0.0, index=out.index)
+    if has_adp.sum() >= 2:
+        # Lower ADP is better; percentile-rank so one extreme value can't
+        # skew the whole scale, then re-center on 0 and cap the swing.
+        adp_pct = (-adp[has_adp]).rank(pct=True)
+        market.loc[has_adp] = (adp_pct - 0.5) * BASE_VALUE_MARKET_MAX_SWING
+    out["base_value_market_component"] = market.round(3)
+
+    out["base_value_risk_component"] = (-(risk / 100.0) * BASE_VALUE_RISK_MAX_PENALTY).round(3)
+
+    out["base_value_score"] = (
+        out["base_value_vor_component"]
+        + out["base_value_projection_component"]
+        + out["base_value_market_component"]
+        + out["base_value_risk_component"]
+    ).round(3)
+
+    return out
 
 
 def _build_base_recommendation_rankings_df():
@@ -1147,6 +1869,8 @@ def _build_base_recommendation_rankings_df():
         return pd.DataFrame()
 
     df = fill_missing_projection_points(df, pos_col, proj_col)
+    df = apply_projection_adjustments(df, player_col, proj_col)
+    df = apply_model_projection_override(df, player_col, proj_col)
 
     if adp_col is not None:
         df[adp_col] = pd.to_numeric(df[adp_col], errors="coerce")
@@ -1156,6 +1880,7 @@ def _build_base_recommendation_rankings_df():
 
     context = _build_scoring_context(df, columns)
     replacement_baselines = build_position_replacement_baselines(df, pos_col, proj_col)
+    vor_spans = build_position_vor_spans(df, pos_col, proj_col, replacement_baselines)
 
     # Positional ADP rank (TE1, TE2, ...) keys the value-cliff curve. Ranked
     # over the FULL pool including already-drafted players would be wrong,
@@ -1171,7 +1896,7 @@ def _build_base_recommendation_rankings_df():
     else:
         df["positional_adp_rank"] = None
 
-    tier_calibration = build_tier_calibration(df, pos_col, replacement_baselines, proj_col)
+    tier_calibration = build_tier_calibration()
     need_weights = get_position_need_weights()
     team_profile = get_team_profile()
     tiers_df = build_position_tiers_df()
@@ -1193,7 +1918,24 @@ def _build_base_recommendation_rankings_df():
         tier_factor = positional_tier_factor(
             position, row.get("positional_adp_rank"), tier_calibration
         )
-        position_value_score = round(max(position_value_score * tier_factor, 0.01), 2)
+        # Precision raised 2 -> 6 (see calculate_position_value_score()'s
+        # own docstring/comment for why): this is where a small tier_factor
+        # (as low as 0.05) previously compounded with premature 2-decimal
+        # rounding to collapse the below-replacement population's real
+        # differentiation into a handful of shared buckets.
+        position_value_score = round(max(position_value_score * tier_factor, 0.01), 6)
+        # Computed from the PRE-tier_factor projection deliberately (see
+        # compute_strategy_scale): tier_factor answers "how much is this
+        # tier worth", strategy_scale answers "how far above/below
+        # replacement is this specific player". Reading the post-factor
+        # score conflated the two and let a floored tier curve switch the
+        # strategy terms off for an entire position at once.
+        strategy_scale = compute_strategy_scale(
+            projection,
+            position,
+            replacement_baselines,
+            vor_spans,
+        )
         adp = row[adp_col] if adp_col is not None else None
         need_bonus = float(need_weights.get(position, 1.0))
         adp_bonus = calculate_adp_bonus(row["projection_rank"], adp)
@@ -1211,12 +1953,30 @@ def _build_base_recommendation_rankings_df():
         )
         archetype = derive_player_archetype(row, columns, context)
 
+        # This player's OWN real tier within his position (same lookup
+        # calculate_tier_bonus already does above) -- carried through so
+        # build_master_recommendations_df() can look up HIS tier's real
+        # urgency (see build_full_tier_urgency_df()) instead of broadcasting
+        # the position's single current-tier value to every player at that
+        # position regardless of which tier they're actually in. Named
+        # "position_tier", not "tier" -- Home.py separately assigns a
+        # whole-board "tier" display column (automatic score-gap bands,
+        # _assign_automatic_tiers()), an unrelated concept this would be
+        # confusable with under the same name.
+        tier_match = tiers_df[tiers_df["Player"].astype(str).str.lower() == player_name.lower()] if not tiers_df.empty else tiers_df
+        player_position_tier = int(tier_match.iloc[0]["Tier"]) if not tier_match.empty else None
+
         rows.append({
             "player_name": player_name,
             "position": position,
+            "position_tier": player_position_tier,
             "team": str(row[team_col]) if team_col is not None else "",
             "projection_points": projection,
             "position_value_score": position_value_score,
+            "value_over_replacement_points": round(
+                projection - _safe_float(replacement_baselines.get(position), 0.0), 3
+            ),
+            "strategy_scale": strategy_scale,
             "position_value_multiplier": POSITION_VALUE_MULTIPLIERS.get(position, 1.0),
             "adp": adp,
             "archetype": archetype,
@@ -1227,6 +1987,10 @@ def _build_base_recommendation_rankings_df():
             "tier_bonus": tier_bonus,
             "team_fit_bonus": team_fit_bonus,
             "projection_source": row.get("projection_source", "real"),
+            "projection_adjustment_pct": row.get("projection_adjustment_pct"),
+            "projection_adjustment_note": row.get("projection_adjustment_note"),
+            "model_override_applied": bool(row.get("model_override_applied", False)),
+            "model_override_note": row.get("model_override_note"),
         })
 
     rankings_df = pd.DataFrame(rows)
@@ -1243,8 +2007,41 @@ def _build_base_recommendation_rankings_df():
     ).reset_index(drop=True)
 
 
-def _normalize_series_to_100(series, neutral_score=50.0, lower_bound=None, upper_bound=None):
+# log(x + epsilon) before min-max, opt-in per component
+# (plan_below_replacement_floor_collapse.pdf follow-up, 2026-08-17): fixing
+# calculate_position_value_score()'s hard clamp restored real magnitude
+# differentiation among below-replacement players, but linear min-max
+# against position_value_score's real range (0.01 to 166.5, a handful of
+# elite-RB outliers at the top) still compressed that differentiation into
+# a slice of the range smaller than 2-decimal rounding can register --
+# confirmed directly: Jordyn Tyson's real, updated position_value_score
+# (0.03 -> 0.02, genuinely different) both normalized to 0.01. Population
+# check confirmed this isn't Tyson-specific: the 25th/50th/75th percentiles
+# of the FULL pool's position_value_score are all exactly 0.01, i.e. the
+# median sits at the literal floor of the range. Log compresses large
+# values proportionally more than small ones, so real relative
+# differentiation near the floor survives without an equivalent flattening
+# at the top -- checked directly against every other component this
+# function normalizes (adp_value, tier_urgency, position_need, team_fit)
+# before applying: only `projection` (source: position_value_score) shows
+# this median-at-the-floor pattern. adp_value has some skew too (median at
+# 2.9% of its range) but its own median (-26.23) sits clearly apart from
+# its floor (-30), i.e. real differentiation already survives there --
+# applying the same transform to a component that isn't actually broken
+# risks distorting a distribution shape that's fine as-is, so it stays on
+# the existing linear path.
+_LOG_TRANSFORM_EPSILON = 0.001
+
+
+def _normalize_series_to_100(series, neutral_score=50.0, lower_bound=None, upper_bound=None, log_transform=False):
     values = pd.to_numeric(series, errors="coerce")
+
+    if log_transform:
+        values = np.log(values.clip(lower=0.0) + _LOG_TRANSFORM_EPSILON)
+        if lower_bound is not None:
+            lower_bound = np.log(max(lower_bound, 0.0) + _LOG_TRANSFORM_EPSILON)
+        if upper_bound is not None:
+            upper_bound = np.log(max(upper_bound, 0.0) + _LOG_TRANSFORM_EPSILON)
 
     if lower_bound is None:
         lower_bound = values.min(skipna=True)
@@ -1288,7 +2085,7 @@ def normalize_component_scores(rankings_df):
     normalized_df = rankings_df.copy()
 
     component_defaults = {
-        "projection": {"neutral": 50.0, "lower": None, "upper": None},
+        "projection": {"neutral": 50.0, "lower": None, "upper": None, "log_transform": True},
         "position_need": {"neutral": 50.0, "lower": 0.6, "upper": 1.5},
         "adp_value": {"neutral": 50.0, "lower": None, "upper": None},
         "tier_urgency": {"neutral": 0.0, "lower": 0.0, "upper": 100.0},
@@ -1306,6 +2103,7 @@ def normalize_component_scores(rankings_df):
             neutral_score=defaults["neutral"],
             lower_bound=defaults["lower"],
             upper_bound=defaults["upper"],
+            log_transform=defaults.get("log_transform", False),
         )
 
     return normalized_df
@@ -1336,20 +2134,41 @@ def calculate_final_recommendation_score(row, component_weights=None):
     47. Needing a tight end is a real reason to move a startable tight end
     up; it is not a reason to draft a replacement-level one in the fourth
     round.
+
+    Revised 2026-08-21: that damping is still here and still does the above
+    job, but it is no longer a binary switch. It previously keyed on
+    position_value_score (POST-tier_factor) against a hard 1.0 cutoff,
+    which meant a position whose calibration curve floors out -- TE, whose
+    realized tier_vor is negative or zero for every tier outside "1-3" --
+    had 55% of its weight collapse to a flat 50 for every player at once,
+    leaving adp_value to decide the order and inverting real 33-44 point
+    projection gaps. It now keys on strategy_scale, which is continuous in
+    real VOR points and bounded strictly above zero. See
+    compute_strategy_scale().
     """
     weights = _resolve_component_weights(component_weights)
     total_weight = sum(weights.values())
     if total_weight <= 0:
         return 0.0
 
-    # At/below replacement -> strategy terms fall away entirely. Just above
-    # it they scale back in, so there is no cliff at the boundary.
-    raw_value = _safe_float(row.get("position_value_score"), None)
-    if raw_value is None:
-        strategy_scale = 1.0
+    # Continuous in real VOR points and bounded strictly above zero -- see
+    # compute_strategy_scale(), which precomputes this per row where the
+    # replacement baselines and per-position spans are actually available.
+    scale_value = _safe_float(row.get("strategy_scale"), None)
+    if scale_value is not None:
+        strategy_scale = min(max(scale_value, STRATEGY_SCALE_MIN), 1.0)
     else:
-        surplus = raw_value - REPLACEMENT_LEVEL_VALUE
-        strategy_scale = min(max(surplus / 10.0, 0.0), 1.0)
+        # Callers that hand-build a row (tests, ad-hoc scoring) won't carry
+        # strategy_scale. Fall back to the old position_value_score rule,
+        # but floored at STRATEGY_SCALE_MIN rather than 0.0: the binary
+        # switch-off is the exact behaviour this replaced, and it should
+        # not survive in a fallback path either.
+        raw_value = _safe_float(row.get("position_value_score"), None)
+        if raw_value is None:
+            strategy_scale = 1.0
+        else:
+            surplus = raw_value - REPLACEMENT_LEVEL_VALUE
+            strategy_scale = min(max(surplus / 10.0, STRATEGY_SCALE_MIN), 1.0)
 
     weighted_score = 0.0
     for component, weight in weights.items():
@@ -1366,12 +2185,58 @@ def calculate_final_recommendation_score(row, component_weights=None):
 
 def apply_signal_trust_adjustments(recommendations_df):
     """
-    Damp recommendation scores when upstream data quality is low.
+    Damp recommendation scores when upstream data quality is genuinely low.
 
     This is intentionally a post-score guardrail: the core recommendation model
-    can still expose what it would have liked, while low-trust data cannot make a
+    can still expose what it would have liked, while low-trust DATA cannot make a
     player the top recommendation.
+
+    plan_deanchor_scoring_from_adp.pdf, Phase 1: real, confirmed circularity
+    fixed at the source (draftkit/signal_trust.py) -- signal_trust_score and
+    adp_trust_score now measure ONLY genuine data-quality issues (missing/
+    inconsistent/out-of-range ADP, missing/invalid projections, sportsbook
+    provider health). A real model-vs-ADP or model-vs-market disagreement no
+    longer lowers either score -- disagreeing with the market is the whole
+    point of running a proprietary model, not evidence it's broken.
+
+    The old `severe_flags` tier (elite_projection_late_adp_conflict,
+    extreme_adp_projection_gap, projection_rank_conflict, adp_rank_conflict)
+    is REMOVED, not reworked: every one of those four flags was itself a
+    model-vs-ADP rank-gap check, now emitted as `market_divergence_flags`
+    (disclosed, never dampened) instead of `anomaly_flags`. Measured on the
+    real live board before this fix: trust_adjustment_applied fired for 617
+    of 730 players (84.5% of the entire pool), and the severe_flags tier
+    alone accounted for real elite players (e.g. most startable QBs)
+    getting hard-capped at 58.0 purely for the model legitimately valuing
+    them differently than ADP.
+
+    Real, necessary companion fix, caught by re-measuring rather than
+    assumed safe: the dampening THRESHOLDS below (previously 50/70/40) were
+    calibrated against a distribution that included the now-removed
+    circular deductions. Left unchanged, they become mathematically
+    unreachable -- measured directly on the full real 3941-player pool
+    post-fix, signal_trust_score's real floor is 70.0 and adp_trust_score's
+    is 50.0, so `< 50`/`< 70`/`< 40` would NEVER fire for anyone, silently
+    deleting the legitimate-anchoring safeguard Phase 2 explicitly requires
+    (a genuine thin-sample/data-conflict case must still get dampened).
+    Recalibrated against the real, corrected, discretized distribution:
+    signal_trust_score clusters at exactly {70.0, 76.0, 79.0, 80.5, ...},
+    with a clean real gap between 70.0 (198 of 3941 real players, 5.0%) and
+    76.0 (the next tier up, 3228 players) -- SIGNAL_TRUST_DAMPEN_THRESHOLD=76
+    isolates exactly that real floor tier. adp_trust_score has its own real
+    floor plateau at 50.0 (328 of 3941, 8.3%) -- ADP_TRUST_DAMPEN_THRESHOLD=55
+    isolates it. Both single-tier (the old two-severity split had no real
+    population left to distinguish between once the circular deductions
+    were removed -- inventing a second tier would fit noise, not data).
+    Dampening magnitudes (caps/multipliers) softened from the old 60/0.88
+    and 62/0.90, since what remains behind these thresholds is now
+    genuinely mild real data friction (e.g. one inconsistent ADP field), not
+    compounded severe-plus-disagreement cases. Reasoned defaults pending
+    their own Phase 2 validation, not final-calibrated -- same standard as
+    every other composite this session.
     """
+    SIGNAL_TRUST_DAMPEN_THRESHOLD = 76.0
+    ADP_TRUST_DAMPEN_THRESHOLD = 55.0
     if recommendations_df.empty:
         return recommendations_df.copy()
 
@@ -1402,16 +2267,10 @@ def apply_signal_trust_adjustments(recommendations_df):
     signal_trust_scores = []
     adp_trust_scores = []
     anomaly_flags = []
+    divergence_flags_col = []
     adjusted_scores = []
     adjustment_applied = []
     adjustment_reasons = []
-
-    severe_flags = {
-        "elite_projection_late_adp_conflict",
-        "extreme_adp_projection_gap",
-        "projection_rank_conflict",
-        "adp_rank_conflict",
-    }
 
     for _, row in adjusted_df.iterrows():
         player_key = str(row.get("player_name", "")).strip().lower()
@@ -1421,32 +2280,28 @@ def apply_signal_trust_adjustments(recommendations_df):
         flags = trust_row.get("anomaly_flags", [])
         if not isinstance(flags, list):
             flags = []
+        divergence = trust_row.get("market_divergence_flags", [])
+        if not isinstance(divergence, list):
+            divergence = []
 
         original_score = _safe_float(row.get("final_score"), 0.0)
         adjusted_score = original_score
         reasons = []
 
-        if severe_flags.intersection(set(flags)):
-            adjusted_score = min(adjusted_score, 58.0)
-            reasons.append("severe data conflict")
-
-        if signal_trust < 50:
-            adjusted_score = min(adjusted_score, 60.0)
-            adjusted_score *= 0.88
+        if signal_trust < SIGNAL_TRUST_DAMPEN_THRESHOLD:
+            adjusted_score = min(adjusted_score, 65.0)
+            adjusted_score *= 0.92
             reasons.append("low signal trust")
-        elif signal_trust < 70:
-            adjusted_score = min(adjusted_score, 68.0)
-            adjusted_score *= 0.94
-            reasons.append("medium-low signal trust")
 
-        if adp_trust < 40:
-            adjusted_score = min(adjusted_score, 62.0)
-            adjusted_score *= 0.90
+        if adp_trust < ADP_TRUST_DAMPEN_THRESHOLD:
+            adjusted_score = min(adjusted_score, 70.0)
+            adjusted_score *= 0.95
             reasons.append("low ADP trust")
 
         signal_trust_scores.append(round(signal_trust, 2))
         adp_trust_scores.append(round(adp_trust, 2))
         anomaly_flags.append(flags)
+        divergence_flags_col.append(divergence)
         adjusted_scores.append(round(adjusted_score, 2))
         adjustment_applied.append(round(adjusted_score, 2) < round(original_score, 2))
         adjustment_reasons.append(", ".join(reasons))
@@ -1455,6 +2310,7 @@ def apply_signal_trust_adjustments(recommendations_df):
     adjusted_df["signal_trust_score"] = signal_trust_scores
     adjusted_df["adp_trust_score"] = adp_trust_scores
     adjusted_df["signal_trust_anomaly_flags"] = anomaly_flags
+    adjusted_df["market_divergence_flags"] = divergence_flags_col
     adjusted_df["final_score"] = adjusted_scores
     adjusted_df["trust_adjustment_applied"] = adjustment_applied
     adjusted_df["trust_adjustment_reason"] = adjustment_reasons
@@ -1556,43 +2412,44 @@ def apply_construction_pressure_adjustments(recommendations_df):
 
 def generate_recommendation_reasons(row, max_reasons=4):
     """
-    Explain why a player ranks highly in the master recommendation engine.
+    Explain why a player ranks where he does under Base Value.
+
+    Rewritten 2026-08-21 alongside calculate_base_value_score(): the
+    previous version cited trust_adjustment_applied, single_qb_adjustment_
+    applied, position_pressure, position_need_component_score,
+    urgency_label, and team_fit_component_score -- every one of them from
+    the legacy blend chain that final_score no longer reads at all. Left
+    as-is, this function would still tell a user "QB score capped due to
+    single-QB positional value" or "Fills current TE roster need" on a
+    score that structurally cannot reflect either -- the same "unexplained
+    rank movement" problem the scoring rewrite fixed, just relocated into
+    the explanation text instead of removed. Every reason below now traces
+    to one of Base Value's own four components, so the text and the score
+    can never disagree.
     """
     reasons = []
     position = str(row.get("position", "")).upper()
 
-    if row.get("construction_mandate_active") and row.get("construction_mandate"):
-        if position == "RB":
-            reasons.append(str(row.get("construction_mandate")))
+    vor_component = _safe_float(row.get("base_value_vor_component"), 0.0)
+    proj_component = _safe_float(row.get("base_value_projection_component"), 0.0)
+    market_component = _safe_float(row.get("base_value_market_component"), 0.0)
+    risk_component = _safe_float(row.get("base_value_risk_component"), 0.0)
 
-    if row.get("trust_adjustment_applied"):
-        reason = row.get("trust_adjustment_reason") or "low input trust"
-        reasons.append(f"Recommendation dampened due to {reason}")
+    if vor_component >= 40:
+        reasons.append(f"Well above {position} replacement level ({vor_component:+.0f} VOR)")
+    elif vor_component <= -20:
+        reasons.append(f"Below {position} replacement level ({vor_component:+.0f} VOR)")
 
-    if row.get("single_qb_adjustment_applied"):
-        reason = row.get("single_qb_adjustment_reason") or "single-QB positional value"
-        reasons.append(f"QB score capped due to {reason}")
+    if proj_component >= BASE_VALUE_PROJECTION_BONUS_MAX * 0.8:
+        reasons.append(f"Top-tier projection within {position}")
 
-    pressure_level = str(row.get("position_pressure", "NONE"))
-    if pressure_level in ["HIGH", "SEVERE"]:
-        reasons.append(f"{position} construction pressure is {pressure_level.lower()}")
+    if market_component >= BASE_VALUE_MARKET_MAX_SWING * 0.4:
+        reasons.append("Market (ADP) values him higher than the field")
+    elif market_component <= -BASE_VALUE_MARKET_MAX_SWING * 0.4:
+        reasons.append("Market (ADP) values him lower than the field")
 
-    if _safe_float(row.get("projection_component_score"), 0.0) >= 75:
-        reasons.append("Strong position-adjusted projection value")
-    if _safe_float(row.get("position_need_component_score"), 0.0) >= 70:
-        reasons.append(f"Fills current {position} roster need")
-
-    value_tier = str(row.get("value_tier", "")).upper()
-    adp_delta = _safe_float(row.get("adp_delta"), 0.0)
-    if value_tier in ["STEAL", "VALUE"] or adp_delta >= 8:
-        reasons.append(f"{value_tier.title() if value_tier else 'Positive'} ADP value")
-
-    urgency_label = str(row.get("urgency_label", "")).title()
-    if urgency_label in ["Critical", "High"]:
-        reasons.append(f"{position} tier urgency is {urgency_label.lower()}")
-
-    if _safe_float(row.get("team_fit_component_score"), 0.0) >= 65:
-        reasons.append("Fits current team construction")
+    if risk_component <= -BASE_VALUE_RISK_MAX_PENALTY * 0.6:
+        reasons.append("Discounted for real injury/durability risk")
 
     fall_risk = str(row.get("fall_risk", "")).upper()
     if fall_risk == "HIGH":
@@ -1600,14 +2457,8 @@ def generate_recommendation_reasons(row, max_reasons=4):
     elif fall_risk == "MEDIUM":
         reasons.append("May not make it back to your next pick")
 
-    archetype = str(row.get("archetype", "")).upper()
-    if archetype in ["SAFE", "STEADY"]:
-        reasons.append(f"{archetype.title()} profile stabilizes the roster")
-    elif archetype in ["BOOM", "UPSIDE"]:
-        reasons.append(f"{archetype.title()} profile adds ceiling")
-
     if not reasons:
-        reasons.append("Best normalized blend of projection, need, value, urgency, and fit")
+        reasons.append("Base Value: VOR + within-position projection, ADP and risk as small adjustments")
 
     return reasons[:max_reasons]
 
@@ -1629,20 +2480,117 @@ def generate_recommendation_reasons(row, max_reasons=4):
 # evidence-backed tilts," never "beats consensus."
 ADP_ANCHOR_LAMBDA = 0.20
 
+# Phase 1b (plan_deanchor_scoring_from_adp.pdf): confidence-conditional
+# anchor lambda -- a genuinely different experiment from the flat lambda
+# sweep optimize_blend_weights_v1.py already ran and found near-optimal at
+# a UNIFORM 0.20 (see that constant's own docstring). This only flexes lam
+# for players the CORRECTED (post Phase 1 circularity fix) signal_trust_score
+# says are genuinely well-supported or genuinely thin -- everyone else stays
+# at the already-validated 0.20 baseline.
+#
+# Real, reachable thresholds (learned from Phase 1's own near-miss: a first
+# draft of that fix's dampening thresholds turned out unreachable against
+# the corrected score distribution, caught only by re-measuring). Checked
+# directly against the real, post-Phase-1 signal_trust_score distribution
+# (3941 real players): the floor tier (<76) holds 198 players (5.0%,
+# reuses the exact same real cut SIGNAL_TRUST_DAMPEN_THRESHOLD already
+# validates -- these are the SAME genuinely-thin-data players, now also
+# anchored tighter, not just dampened); the real elite/clean tier (>=85)
+# holds 342 players (8.7%), comfortably including the real elite-QB cluster
+# (Burrow/Lawrence/Mahomes/Love, all at the real 89.5 tier) with margin to
+# spare -- not razor-fit to catch them specifically.
+#
+# Reasoned defaults pending Phase 2's own validation, NOT final-calibrated
+# -- explicit exit clause: if Phase 2 doesn't show a real improvement for
+# the players this is meant to help, this phase gets dropped and Phase 1
+# alone ships (see draftkit/tests/test_adp_deanchor.py for the real
+# validation this claim is checked against, not just asserted).
+#
+# EXIT CLAUSE EXERCISED, THEN RE-ENABLED (2026-08-17). Original hold: Phase
+# 2 validation found the near-zero QB `projection_component_score` pushed
+# real, meaningfully-drafted elite QBs (Burrow, Herbert, C.Williams,
+# Prescott) 13-15 rank spots WORSE under a higher lam (0.35), and it was
+# unclear whether that near-zero component was a genuine 1-QB-scarcity
+# signal or a scaling bug -- amplifying an unverified number is worse than
+# leaving it alone, so this was held off.
+#
+# That question is now resolved (task_4d5e2bb0 follow-up investigation):
+# the near-zero QB component was a real, confirmed formula bug in
+# build_tier_calibration(), NOT a genuine scarcity signal and NOT the
+# replacement-baseline math (that part was independently verified sound
+# against a real external QB12/13 benchmark, ~289.7 pts, and the engine's
+# own 300.2 baseline sits above it). build_tier_calibration() divided
+# realized_VOR by each position's own CURRENT projected_VOR, importing a
+# cross-position VOR-scale difference the source backtest script's own
+# docstring explicitly warns against as "exactly the mistake the old TE
+# 0.68 multiplier made." Fixed to the documented formula (realized_VOR(pos,
+# tier) / realized_VOR(pos, "1-3"), a pure within-position shape ratio) --
+# confirmed this collapses every position's premium-tier factor to exactly
+# 1.0 by construction, moving Josh Allen from a QB discounted to 23% of his
+# raw VOR to his correct, undiscounted value (position_value_score
+# 16.70 -> 73.00, live-verified: overall rank moves to #30). With that fixed,
+# the ground Phase 1b's amplification stands on is solid, so
+# use_confidence_conditional now defaults to True.
+#
+# This does NOT mean the 0.35/0.20/0.10 lambda values themselves are
+# proven correct -- they remain a reasoned default carrying their own,
+# still-live exit clause: if a fresh Phase 2 validation pass (now run
+# against real, non-discounted QB scores) doesn't show a real improvement
+# for the players this is meant to help, this phase gets dropped again and
+# Phase 1 alone ships. Resolving "was the ground solid" is a different
+# question from "are these specific numbers right," and only the first one
+# is settled here.
+PHASE_1B_LOW_TRUST_THRESHOLD = 76.0
+PHASE_1B_LOW_TRUST_LAMBDA = 0.10
+PHASE_1B_HIGH_TRUST_THRESHOLD = 85.0
+PHASE_1B_HIGH_TRUST_LAMBDA = 0.35
 
-def apply_adp_anchor(recommendations_df, lam=ADP_ANCHOR_LAMBDA):
+
+def compute_confidence_conditional_lambda(signal_trust_scores, base_lam=ADP_ANCHOR_LAMBDA):
+    """Per-row anchor lambda, real signal_trust_score-conditional (Phase 1b).
+    See PHASE_1B_LOW_TRUST_THRESHOLD's docstring for the real thresholds and
+    why they're calibrated the way they are. Missing signal_trust_score
+    (e.g. a player signal_trust.py couldn't resolve) falls back to base_lam
+    -- absence of a trust read is not evidence of either high or low trust."""
+    scores = pd.to_numeric(signal_trust_scores, errors="coerce")
+    lam = pd.Series(base_lam, index=scores.index, dtype=float)
+    lam.loc[scores < PHASE_1B_LOW_TRUST_THRESHOLD] = PHASE_1B_LOW_TRUST_LAMBDA
+    lam.loc[scores >= PHASE_1B_HIGH_TRUST_THRESHOLD] = PHASE_1B_HIGH_TRUST_LAMBDA
+    return lam
+
+
+def apply_adp_anchor(recommendations_df, lam=ADP_ANCHOR_LAMBDA, use_confidence_conditional=True):
     """
-    Blend the model score toward ADP in percentile space.
+    Blend the model score toward ADP on a common 0-1 scale.
 
-        anchored = (1 - lam) * adp_percentile + lam * model_percentile
+        blended  = (1 - lam) * adp_percentile + lam * model_normalized
+        anchored = lo + minmax(blended) * (hi - lo)
 
-    Percentiles rather than raw values so the two scales are comparable and
-    a handful of extreme scores can't dominate the blend.
+    ADP contributes as a percentile (rank-based, deliberate -- raw ADP is
+    not a meaningful interval scale). The MODEL side contributes as a
+    magnitude-preserving log-min-max normalization of pre_anchor_score, not
+    a percentile -- see the inline notes below for the real measured
+    distributions behind both choices, and for the compression bug this
+    replaced (both the model input and the final output were previously
+    rank-transformed, which forced perfectly uniform score spacing across
+    the entire board and discarded every real quality difference the
+    scoring pipeline had computed).
 
     Players with no ADP were never priced by the market, so there is no
     consensus to anchor to -- they keep their model percentile scaled into
     the range below the last ADP-having player rather than being dropped or
     treated as ADP-worst.
+
+    `lam` becomes PER-ROW when `use_confidence_conditional=True` (the
+    default) and a real `signal_trust_score` column is present -- see
+    compute_confidence_conditional_lambda() / PHASE_1B_LOW_TRUST_THRESHOLD's
+    docstring for the real history: this was held off after Phase 2
+    validation found amplifying a near-zero QB projection component pushed
+    real elite QBs worse, then re-enabled once that near-zero component was
+    traced to a confirmed formula bug in build_tier_calibration() (fixed
+    separately) rather than a genuine signal. Still carries its own,
+    separate exit clause on the 0.35/0.20/0.10 lambda values themselves --
+    see that docstring.
     """
     if recommendations_df.empty or "final_score" not in recommendations_df.columns:
         return recommendations_df
@@ -1658,10 +2606,66 @@ def apply_adp_anchor(recommendations_df, lam=ADP_ANCHOR_LAMBDA):
 
     out["pre_anchor_score"] = out["final_score"]
 
-    # Lower ADP is better, so negate before ranking to percentile.
+    if use_confidence_conditional and "signal_trust_score" in out.columns:
+        lam_series = compute_confidence_conditional_lambda(out.loc[has_adp, "signal_trust_score"], base_lam=lam)
+    else:
+        lam_series = pd.Series(lam, index=out.index[has_adp], dtype=float)
+
+    # Real gap found and fixed (2026-08-21): signal_trust_score is a GENERIC
+    # data-quality read (messy/thin/inconsistent inputs) -- it has no way to
+    # tell that apart from a player who simply has a real, dated, human-
+    # verified correction the market hasn't priced in yet (model_
+    # override_applied, see apply_model_projection_override() above).
+    # First attempt floored these rows' lambda at PHASE_1B_HIGH_TRUST_LAMBDA
+    # (0.35) -- measured directly on Jordyn Tyson and found to be a no-op:
+    # his signal_trust_score (95.5) already sits in the automated top tier,
+    # already giving lam=0.35, and even that "most-trusted" tier still
+    # blends in 65% ADP weight -- enough to take his real, correctly-
+    # damped pre-anchor score (31.21, appropriately reflecting a real
+    # ~2-month injury) most of the way back up to 59.68, nearly doubling
+    # it. A partial discount isn't enough here. These rows are human-
+    # verified, dated, sourced corrections -- a stronger signal than the
+    # automated trust metric that already maxed out, and the entire point
+    # of doing that research is defeated if it gets diluted back toward a
+    # stale market number. Fully exempted from the ADP blend (lam=1.0,
+    # pure model score) rather than partially discounted.
+    if "model_override_applied" in out.columns:
+        overridden = out.loc[has_adp, "model_override_applied"].fillna(False).astype(bool)
+        lam_series = lam_series.where(~overridden, 1.0)
+
+    # Lower ADP is better, so negate before ranking to percentile. ADP stays
+    # RANK-based deliberately: raw ADP values are not a meaningful interval
+    # scale (the real distance between ADP 1.1 and 2.0 is not comparable to
+    # the distance between 150 and 151), so ordinal treatment is correct
+    # for this input specifically.
     adp_pct = (-adp[has_adp]).rank(pct=True)
-    model_pct = model[has_adp].rank(pct=True)
-    blended = (1.0 - lam) * adp_pct + lam * model_pct
+
+    # Magnitude-preserving model normalization (final_score compression fix,
+    # 2026-08-17). This was `model[has_adp].rank(pct=True)` -- which threw
+    # away every real magnitude difference the scoring pipeline had just
+    # computed, BEFORE the blend even happened. Unlike ADP, pre_anchor_score
+    # IS a real interval scale (it is a weighted composite of normalized
+    # 0-100 components), so collapsing it to pure rank discarded genuine
+    # signal: measured on the real board, pre_anchor_score spans 18.71-84.53
+    # with std 11.9 and real, differentiated gaps, while the rank transform
+    # reduced every one of those to an identical 1/N step.
+    #
+    # Log-scale rather than plain min-max, chosen from the real measured
+    # distribution rather than by default: pre_anchor_score's real skew is
+    # +2.37 (p25=25.25, p50=28.89, p75=34.55, p99=77.09) -- a long right
+    # tail with the population bunched near the bottom. Plain min-max
+    # against a range dominated by a handful of elite outliers would
+    # compress that bunched majority into a sliver, which is exactly the
+    # bug already found and fixed in position_value_score's own
+    # normalization earlier today. Same epsilon-guarded treatment reused.
+    log_model = np.log(model[has_adp].clip(lower=0.0) + _LOG_TRANSFORM_EPSILON)
+    log_lo, log_hi = float(log_model.min()), float(log_model.max())
+    if log_hi > log_lo:
+        model_pct = (log_model - log_lo) / (log_hi - log_lo)
+    else:
+        model_pct = pd.Series(0.5, index=log_model.index, dtype=float)
+
+    blended = (1.0 - lam_series) * adp_pct + lam_series * model_pct
 
     anchored = pd.Series(np.nan, index=out.index, dtype=float)
     # Rescale to the original score range so downstream display/thresholds
@@ -1670,7 +2674,29 @@ def apply_adp_anchor(recommendations_df, lam=ADP_ANCHOR_LAMBDA):
     span = hi - lo
     if span <= 0:
         return recommendations_df
-    anchored.loc[has_adp] = lo + blended.rank(pct=True) * span
+
+    # Direct min-max rescale of blended's OWN values (final_score
+    # compression fix, 2026-08-17). This was `blended.rank(pct=True) * span`
+    # -- and rank(pct=True) on N distinct values always returns exactly
+    # {1/N, 2/N, ... 1}, so no matter what blended actually looked like
+    # going in, the output was forced into perfectly uniform steps. That one
+    # line is what produced the measured 0.0975-points-per-rank spacing
+    # across the entire real board: rank 1 (84.53) to rank 250 (60.36) is a
+    # 24.17-point span over 249 steps = 0.0971/rank, matching a pure
+    # rank-linear sequence almost exactly. Every real quality difference
+    # between adjacent players was erased at the final step.
+    #
+    # blended carries real structure worth preserving -- measured on the
+    # real board: std 0.2603, skew 0.464, and consecutive-gap std/mean of
+    # 2.91 (a perfectly uniform sequence would be 0.0). Its mild skew is
+    # why a straight min-max is right HERE, where a log transform was right
+    # for the strongly-skewed model input above -- each transform picked
+    # from that input's own real measured distribution, not applied blanket.
+    blended_lo, blended_hi = float(blended.min()), float(blended.max())
+    if blended_hi > blended_lo:
+        anchored.loc[has_adp] = lo + ((blended - blended_lo) / (blended_hi - blended_lo)) * span
+    else:
+        anchored.loc[has_adp] = lo + 0.5 * span
 
     # Unpriced players sit below every priced one, ordered among themselves
     # by model score -- they are speculative depth, not consensus values.
@@ -1749,20 +2775,46 @@ def build_master_recommendations_df(component_weights=None, drop_threshold=12.0)
     if "fall_risk" not in master_df.columns:
         master_df["fall_risk"] = master_df["adp_rank"].apply(calculate_fall_risk)
 
-    urgency_df = build_position_urgency_df(drop_threshold=drop_threshold)
-    if not urgency_df.empty:
+    # Real gap found and fixed (2026-08-21): the position-only lookup below
+    # used to key on `str(row["Position"]).upper()` alone, but urgency_df
+    # (build_position_urgency_df()) only ever carried each position's
+    # CURRENT tier -- so every player at a position, regardless of his own
+    # real tier, got that single tier's urgency broadcast to him (verified
+    # live: every RB row read raw_urgency_score=70.5, every WR row read
+    # 60.5, uniformly). calculate_position_urgency() itself is a real,
+    # working formula (verified by hand -- it reproduces 70.5/60.5 exactly
+    # from players_left/tier_dropoff/need_weight), so the fix is reach, not
+    # the formula: build_full_tier_urgency_df() computes it for EVERY
+    # tier of every position, and the lookup below is now keyed on
+    # (Position, Tier) using each player's own real position_tier (see
+    # _build_base_recommendation_rankings_df()) rather than position alone.
+    full_urgency_df = build_full_tier_urgency_df(drop_threshold=drop_threshold)
+    if not full_urgency_df.empty:
         urgency_lookup = {
+            (str(row["Position"]).upper(), int(row["Tier"])): row.to_dict()
+            for _, row in full_urgency_df.iterrows()
+        }
+        # Fallback for a player whose own tier didn't resolve (position_tier
+        # is None) or whose specific tier has no urgency row for some other
+        # reason -- his position's OWN lowest/current tier, the same value
+        # every player at that position used to get, rather than a silent
+        # zero.
+        position_fallback = {
             str(row["Position"]).upper(): row.to_dict()
-            for _, row in urgency_df.iterrows()
+            for _, row in full_urgency_df.sort_values("Tier").groupby("Position").first().reset_index().iterrows()
         }
     else:
         urgency_lookup = {}
+        position_fallback = {}
 
-    master_df["raw_urgency_score"] = master_df["position"].map(
-        lambda pos: _safe_float(
-            urgency_lookup.get(str(pos).upper(), {}).get("Urgency Score"),
-            0.0,
-        )
+    def _urgency_row(row):
+        pos = str(row.get("position") or "").upper()
+        tier = row.get("position_tier")
+        key = (pos, int(tier)) if tier is not None and pd.notna(tier) else None
+        return (urgency_lookup.get(key) if key is not None else None) or position_fallback.get(pos, {})
+
+    master_df["raw_urgency_score"] = master_df.apply(
+        lambda row: _safe_float(_urgency_row(row).get("Urgency Score"), 0.0), axis=1
     )
     master_df["position_urgency_multiplier"] = master_df["position"].map(
         lambda pos: _safe_float(
@@ -1773,51 +2825,72 @@ def build_master_recommendations_df(component_weights=None, drop_threshold=12.0)
     master_df["urgency_score"] = (
         master_df["raw_urgency_score"] * master_df["position_urgency_multiplier"]
     ).round(2)
-    master_df["urgency_bonus"] = master_df["position"].map(
-        lambda pos: _safe_float(
-            urgency_lookup.get(str(pos).upper(), {}).get("Urgency Bonus"),
-            1.0,
-        )
+    master_df["urgency_bonus"] = master_df.apply(
+        lambda row: _safe_float(_urgency_row(row).get("Urgency Bonus"), 1.0), axis=1
     )
-    master_df["urgency_label"] = master_df["position"].map(
-        lambda pos: urgency_lookup.get(str(pos).upper(), {}).get("Urgency Label", "Low")
+    master_df["urgency_label"] = master_df.apply(
+        lambda row: _urgency_row(row).get("Urgency Label", "Low"), axis=1
     )
-    master_df["tier_dropoff"] = master_df["position"].map(
-        lambda pos: _safe_float(
-            urgency_lookup.get(str(pos).upper(), {}).get("Tier Dropoff"),
-            0.0,
-        )
+    master_df["tier_dropoff"] = master_df.apply(
+        lambda row: _safe_float(_urgency_row(row).get("Tier Dropoff"), 0.0), axis=1
     )
-    master_df["players_left_in_tier"] = master_df["position"].map(
-        lambda pos: int(
-            _safe_float(
-                urgency_lookup.get(str(pos).upper(), {}).get("Players Left In Tier"),
-                0.0,
-            )
-        )
+    master_df["players_left_in_tier"] = master_df.apply(
+        lambda row: int(_safe_float(_urgency_row(row).get("Players Left In Tier"), 0.0)), axis=1
     )
 
     master_df = normalize_component_scores(master_df)
     weights = _resolve_component_weights(component_weights)
-    master_df["final_score"] = master_df.apply(
+    # Legacy per-row blend -- kept computing so its component-score columns
+    # (projection_component_score, position_need_component_score, etc.)
+    # keep existing behind-the-scenes readers (recommendation_explainer.py,
+    # other pages) working, and so this session's git history stays legible.
+    # No longer what final_score is set to: see the Base Value block above
+    # calculate_base_value_score() for why. Stored under a distinct name so
+    # nothing downstream can mistake it for the real score.
+    master_df["legacy_blend_score"] = master_df.apply(
         lambda row: calculate_final_recommendation_score(row, weights),
         axis=1,
     )
+    # The four calls below each read/write a column literally named
+    # final_score internally (construction pressure logs
+    # pre_construction_score off it, the ADP anchor blends against it,
+    # etc.) -- give them the legacy blend to operate on so they don't
+    # raise, fully aware every one of their writes gets discarded by the
+    # unconditional overwrite a few lines down.
+    master_df["final_score"] = master_df["legacy_blend_score"]
     master_df = apply_construction_pressure_adjustments(master_df)
     master_df = apply_signal_trust_adjustments(master_df)
     master_df = apply_single_qb_value_adjustments(master_df)
     master_df = apply_adp_anchor(master_df)
+
+    # Base Value (2026-08-21) is the entire player-value score now, at every
+    # roster state -- see calculate_base_value_score()'s own docstring.
+    # Applied LAST and unconditionally so nothing above (construction
+    # pressure, signal-trust damping, the single-QB multiplier, the
+    # ADP-anchor blend) can leave a trace in what actually gets sorted:
+    # those calls above still run only to populate their own display/
+    # backward-compat columns (pre_anchor_score, signal_trust_score,
+    # single_qb_adjustment_applied, construction pressure fields), each of
+    # which independently touched final_score before today and is exactly
+    # the "each layer can alter the ranking, layers aren't measuring the
+    # same thing" problem this replaces.
+    master_df = calculate_base_value_score(master_df)
+    master_df["final_score"] = master_df["base_value_score"]
+
     master_df["recommendation_reasons"] = master_df.apply(
         lambda row: generate_recommendation_reasons(row),
         axis=1,
     )
 
+    # Tiebreakers changed to Base Value's own components (2026-08-21): the
+    # legacy component scores below no longer feed final_score at all, so
+    # using them to break ties would let them influence rank through the
+    # back door -- exactly the hidden-layer problem this rewrite removes.
     sort_cols = [
         "final_score",
-        "projection_component_score",
-        "position_need_component_score",
-        "adp_value_component_score",
-        "tier_urgency_component_score",
+        "base_value_vor_component",
+        "base_value_projection_component",
+        "base_value_market_component",
     ]
 
     return master_df.sort_values(sort_cols, ascending=False).reset_index(drop=True)
@@ -2306,6 +3379,72 @@ def build_position_urgency_df(drop_threshold=12.0):
         ["Urgency Score", "Tier Dropoff", "Need Weight"],
         ascending=False,
     ).reset_index(drop=True)
+
+
+def build_full_tier_urgency_df(drop_threshold=12.0):
+    """Real per-(position, tier) urgency, for every tier -- not just the
+    current one build_position_urgency_df()/build_tier_summary_df() are
+    scoped to (2026-08-21 audit finding: real, verified -- calculate_
+    position_urgency() itself is a genuine dynamic formula, reproduced by
+    hand from players_left/tier_dropoff/need_weight, NOT a hardcoded
+    per-position constant. The real gap is narrower: build_tier_summary_df()
+    only ever computes `first_tier = pos_df["Tier"].min()`, so that real
+    formula only ever ran on each position's CURRENT tier, and every player
+    at that position -- tier 1 or tier 8 -- got broadcast the identical
+    result via a position-only lookup in _build_base_recommendation_
+    rankings_df(). Confirmed live: every RB row read raw_urgency_score=70.5,
+    every WR row read 60.5, regardless of the player's own real tier.
+
+    Deliberately a NEW function, not a modification of build_position_
+    urgency_df()/build_tier_summary_df() -- those have real other callers
+    (opponent_model.py, recommendation_explainer.py, pages_archive/
+    8_Tier_Desperation.py) that want "the single current tier cliff right
+    now," a genuinely different, valid question from "what tier is THIS
+    specific player actually in." Consumed by _build_base_recommendation_
+    rankings_df() below, keyed on (Position, Tier) so each player's row can
+    look up its OWN tier's real urgency rather than its position's current
+    one."""
+    tiers_df = build_position_tiers_df(drop_threshold=drop_threshold)
+    if tiers_df.empty:
+        return pd.DataFrame()
+
+    next_pick_distance = get_next_pick_distance()
+    if next_pick_distance is None:
+        next_pick_distance = 3
+
+    need_weights = get_position_need_weights()
+    rows = []
+
+    for position in ["QB", "RB", "WR", "TE"]:
+        pos_df = tiers_df[tiers_df["Position"] == position]
+        if pos_df.empty:
+            continue
+        for tier in sorted(pos_df["Tier"].unique()):
+            players_left = int((pos_df["Tier"] == tier).sum())
+            if players_left <= 2:
+                tier_status = "Thin"
+            elif players_left <= 4:
+                tier_status = "Shrinking"
+            else:
+                tier_status = "Healthy"
+            tier_dropoff = calculate_tier_dropoff(
+                position, tier, tiers_df=tiers_df, drop_threshold=drop_threshold
+            )
+            urgency = calculate_position_urgency(
+                position=position,
+                players_left=players_left,
+                tier_dropoff=tier_dropoff,
+                next_pick_distance=next_pick_distance,
+                need_weight=need_weights.get(position, 1.0),
+            )
+            urgency["Tier"] = int(tier)
+            urgency["Tier Status"] = tier_status
+            rows.append(urgency)
+
+    if not rows:
+        return pd.DataFrame()
+
+    return pd.DataFrame(rows)
 
 
 def get_most_urgent_position(drop_threshold=12.0):

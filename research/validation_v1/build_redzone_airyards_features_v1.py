@@ -9,6 +9,7 @@ from validation_utils import VALIDATION_DIR, clean_name, initial_last_key
 PBP_TAG = "pbp"
 SEASONS = tuple(range(1999, 2026))
 RED_ZONE_YARDLINE_100 = 20  # inside the opponent's 20-yard line
+INSIDE_10_YARDLINE_100 = 10  # inside the opponent's 10-yard line (RB archetype spec)
 
 PBP_USECOLS = [
     "game_id", "season", "season_type", "week", "posteam",
@@ -54,6 +55,7 @@ def _aggregate_one_season(season: int, assets: list) -> pd.DataFrame:
     df = df[df["season_type"].astype(str).eq("REG")].copy()
     df["yardline_100"] = pd.to_numeric(df["yardline_100"], errors="coerce")
     df["is_red_zone"] = df["yardline_100"] <= RED_ZONE_YARDLINE_100
+    df["is_inside_10"] = df["yardline_100"] <= INSIDE_10_YARDLINE_100
 
     # Receiving side: targets, red zone targets, air yards, explosive catches.
     targets = df[df["pass_attempt"].fillna(0).astype(int).eq(1) & df["receiver_player_id"].notna()].copy()
@@ -82,6 +84,7 @@ def _aggregate_one_season(season: int, assets: list) -> pd.DataFrame:
     rusher_agg = carries.groupby(["rusher_player_id", "rusher_player_name", "posteam"]).agg(
         carries=("rusher_player_id", "size"),
         redzone_carries=("is_red_zone", "sum"),
+        inside10_carries=("is_inside_10", "sum"),
         rushing_tds=("rush_touchdown", "sum"),
         explosive_runs=("is_explosive_run", "sum"),
         rush_yards_total=("rush_yards_play", "sum"),
@@ -96,8 +99,11 @@ def _aggregate_one_season(season: int, assets: list) -> pd.DataFrame:
     # Team-season red zone play totals (for share denominators).
     team_redzone_targets = targets[targets["is_red_zone"]].groupby("posteam").size().rename("team_redzone_targets")
     team_redzone_carries = carries[carries["is_red_zone"]].groupby("posteam").size().rename("team_redzone_carries")
+    team_inside10_carries = carries[carries["is_inside_10"]].groupby("posteam").size().rename("team_inside10_carries")
     team_air_yards = targets.groupby("posteam")["air_yards"].sum().rename("team_air_yards_total")
-    team_agg = pd.concat([team_redzone_targets, team_redzone_carries, team_air_yards], axis=1).reset_index().rename(columns={"posteam": "team"})
+    team_agg = pd.concat(
+        [team_redzone_targets, team_redzone_carries, team_inside10_carries, team_air_yards], axis=1
+    ).reset_index().rename(columns={"posteam": "team"})
 
     player_agg = player_agg.merge(team_agg, on="team", how="left")
     player_agg["season"] = season
@@ -135,13 +141,14 @@ def build_redzone_airyards_dataset(force_refresh: bool = False) -> pd.DataFrame:
         return pd.DataFrame(columns=[
             "season", "player_key", "player_name", "team",
             "prior_redzone_target_share", "prior_redzone_carry_share",
+            "prior_redzone_touch_share", "prior_inside10_carry_share",
             "prior_air_yards", "prior_air_yards_share", "prior_targets", "prior_carries_pbp",
         ])
 
     df = raw.copy()
     for col in [
         "targets", "redzone_targets", "air_yards_total", "receiving_tds",
-        "carries", "redzone_carries", "rushing_tds",
+        "carries", "redzone_carries", "inside10_carries", "rushing_tds",
         "explosive_receptions", "explosive_runs", "rush_yards_total",
     ]:
         if col not in df.columns:
@@ -151,6 +158,15 @@ def build_redzone_airyards_dataset(force_refresh: bool = False) -> pd.DataFrame:
     df["redzone_target_share"] = df["redzone_targets"] / df["team_redzone_targets"].replace(0, np.nan)
     df["redzone_carry_share"] = df["redzone_carries"] / df["team_redzone_carries"].replace(0, np.nan)
     df["air_yards_share"] = df["air_yards_total"] / df["team_air_yards_total"].replace(0, np.nan)
+    # RB archetype spec fields (post-v5): redzone_touch_share combines
+    # carries+targets (not receptions), consistent with this whole
+    # pipeline's existing "opportunity = carries+targets" convention
+    # (see draftkit/scripts/build_risk_variables.py's opportunity_share_rate)
+    # rather than only counting completed catches.
+    team_redzone_touches = df["team_redzone_carries"] + df["team_redzone_targets"]
+    df["redzone_touches"] = df["redzone_carries"] + df["redzone_targets"]
+    df["redzone_touch_share"] = df["redzone_touches"] / team_redzone_touches.replace(0, np.nan)
+    df["inside10_carry_share"] = df["inside10_carries"] / df["team_inside10_carries"].replace(0, np.nan)
 
     # aDOT (average depth of target) -- the standard separator between deep
     # threats and possession/slot receivers.
@@ -176,6 +192,10 @@ def build_redzone_airyards_dataset(force_refresh: bool = False) -> pd.DataFrame:
     out = df.rename(columns={
         "redzone_target_share": "prior_redzone_target_share",
         "redzone_carry_share": "prior_redzone_carry_share",
+        "redzone_targets": "prior_redzone_targets",
+        "redzone_touches": "prior_redzone_touches",
+        "redzone_touch_share": "prior_redzone_touch_share",
+        "inside10_carry_share": "prior_inside10_carry_share",
         "air_yards_total": "prior_air_yards",
         "air_yards_share": "prior_air_yards_share",
         "targets": "prior_targets_pbp",
@@ -189,6 +209,8 @@ def build_redzone_airyards_dataset(force_refresh: bool = False) -> pd.DataFrame:
     keep_cols = [
         "season", "player_key", "initial_last_key", "player_name", "team",
         "prior_redzone_target_share", "prior_redzone_carry_share",
+        "prior_redzone_targets",
+        "prior_redzone_touches", "prior_redzone_touch_share", "prior_inside10_carry_share",
         "prior_air_yards", "prior_air_yards_share",
         "prior_targets_pbp", "prior_carries_pbp",
         "prior_adot", "prior_explosive_run_rate", "prior_explosive_rec_rate",
@@ -206,6 +228,8 @@ def main() -> None:
     print(f"Red zone / air yards dataset written: {output_path}")
     print(f"Rows: {len(dataset)}")
     print(f"Non-null prior_redzone_target_share: {int(dataset['prior_redzone_target_share'].notna().sum())}")
+    print(f"Non-null prior_redzone_touch_share: {int(dataset['prior_redzone_touch_share'].notna().sum())}")
+    print(f"Non-null prior_inside10_carry_share: {int(dataset['prior_inside10_carry_share'].notna().sum())}")
     print(f"Non-null prior_air_yards_share: {int(dataset['prior_air_yards_share'].notna().sum())}")
 
 

@@ -3,7 +3,6 @@ age,WR/RB,Player age in target season,nflverse rosters/outcome cache,objective,y
 preseason_adp,WR/RB,Market draft cost before season,historical_adp.csv or historical_market.csv,objective,yes,low,high,investigate
 overall_adp,WR/RB,Overall market draft rank,historical_adp.csv or historical_market.csv,objective,yes,low,high,investigate
 positional_adp,WR/RB,Market rank within position,historical_adp.csv or historical_market.csv,objective,yes,low,high,investigate
-preseason_projection,WR/RB,Projected fantasy points before season,historical_market.csv optional column,objective/mixed,yes,low,high,investigate
 prior_targets,WR,Previous-season WR targets,prior season WR opportunity cache,objective,yes,low,medium,trusted
 prior_target_share,WR,Previous-season share of team targets,prior season WR opportunity cache,objective,yes,low,medium,trusted
 prior_receiving_yards,WR/RB,Previous-season receiving yards,prior season outcome cache,objective,yes,low,medium,trusted

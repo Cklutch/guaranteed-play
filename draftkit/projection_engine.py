@@ -46,7 +46,7 @@ MARKET_TO_OUTPUT_COLUMN = {
     "receptions": "receptions_projection",
 }
 
-FANTASY_SCORING = {
+FULL_PPR_SCORING = {
     "passing_yards": 0.04,
     "passing_tds": 4.0,
     "rushing_yards": 0.10,
@@ -55,6 +55,8 @@ FANTASY_SCORING = {
     "receiving_tds": 6.0,
     "receptions": 1.0,
 }
+
+HALF_PPR_SCORING = {**FULL_PPR_SCORING, "receptions": 0.5}
 
 
 def _empty_projection_df():
@@ -143,7 +145,7 @@ def calculate_market_projection(consensus_market_line):
         return None
 
 
-def calculate_fantasy_points_projection(player_projection_row):
+def calculate_fantasy_points_projection(player_projection_row, scoring=HALF_PPR_SCORING):
     """
     Convert market projections into simple fantasy-point projections.
     """
@@ -154,7 +156,7 @@ def calculate_fantasy_points_projection(player_projection_row):
         try:
             if pd.isna(value):
                 continue
-            total += float(value) * FANTASY_SCORING[market_type]
+            total += float(value) * scoring[market_type]
         except (TypeError, ValueError):
             continue
 
@@ -165,6 +167,7 @@ def build_player_projection_df(
     draftkings_df=None,
     fanduel_df=None,
     pinnacle_df=None,
+    scoring=HALF_PPR_SCORING,
 ):
     projection_inputs_df = build_player_projection_inputs(
         draftkings_df=draftkings_df,
@@ -187,7 +190,7 @@ def build_player_projection_df(
                     match.iloc[0]["consensus_market_line"]
                 )
 
-        row["fantasy_points_projection"] = calculate_fantasy_points_projection(row)
+        row["fantasy_points_projection"] = calculate_fantasy_points_projection(row, scoring=scoring)
         rows.append(row)
 
     return pd.DataFrame(rows, columns=PROJECTION_COLUMNS).sort_values(

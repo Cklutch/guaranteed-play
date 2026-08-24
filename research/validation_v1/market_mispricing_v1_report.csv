@@ -1,0 +1,5 @@
+position,n_undervalued,n_overvalued,undervalued_beat_adp_by_ppg,overvalued_missed_by_ppg,n_seasons_checked,n_seasons_positive_corr,signal_holds_directionally,gated_directions_live
+QB,39,39,0.56,-0.48,5,1,False,NONE (excluded)
+RB,80,80,1.15,0.48,5,5,True,"['overvalued', 'undervalued']"
+WR,99,102,0.04,1.05,5,5,True,['overvalued']
+TE,31,33,0.09,0.91,5,3,True,['overvalued']

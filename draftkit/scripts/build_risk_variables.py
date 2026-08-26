@@ -320,11 +320,56 @@ def _blend_current_injury_status(historical_score: float, injury_status, injury_
 # season-shape impact, which PROJECTION_MANUAL_ADJUSTMENTS in
 # draft_analysis.py now carries separately (a real, distinct games-missed
 # discount, not modeled by this 0-5 injury-risk scale at all).
+# Sizing/mechanism/confidence rules for every entry below: see
+# research/news_override_policy.md (written 2026-08-26 by extracting the
+# rules already applied consistently across these entries -- read it before
+# adding a new one, rather than re-deriving judgment calls from scratch).
 INJURY_MANUAL_OVERRIDES = {
     "Jordyn Tyson": {
         "score": 5.0,
         "reason": "Hamstring re-injury -- real, decisive timeline: out until Week 9",
         "date": "2026-08-17",
+    },
+    # Ashton Jeanty (added 2026-08-26): real, current ankle sprain, helped
+    # off the practice field without weight-bearing (Aug 24, per Rapoport/
+    # Schefter). Reporting explicitly frames it as NOT long-term with a
+    # subsequent "positive update," but the return timeline is still
+    # unconfirmed as of this entry -- unlike Tyson's decisive out-until-
+    # Week-9 case, there is no specific missed-games number to build a
+    # PROJECTION_MANUAL_ADJUSTMENTS discount from yet. Scored 4.0, not the
+    # 5.0 ceiling: real, meaningfully elevated near-term risk, deliberately
+    # short of asserting a confirmed long absence the reporting itself
+    # doesn't support. Revisit (both this score and a possible projection
+    # discount) once a real return timeline firms up.
+    "Ashton Jeanty": {
+        "score": 4.0,
+        "reason": "Sprained ankle at practice (Aug 24) -- not considered long-term per "
+                  "reporting, but return timeline still unconfirmed",
+        "date": "2026-08-26",
+    },
+    # Josh Jacobs (added 2026-08-26): TWO distinct real, current, undisclosed-
+    # to-the-model risks compounding right now, neither visible to the
+    # historical pipeline -- injury_status reads "Questionable" (explicitly
+    # excluded from moving the score, see _blend_current_injury_status), so
+    # his pre-override score (1.7) reflects neither:
+    #   1. An existing groin injury, real and ongoing (reported return "late
+    #      next week" as of Aug 14).
+    #   2. A real, PENDING NFL suspension review (GM Gutekunst confirmed
+    #      Green Bay is preparing a contingency RB plan) stemming from a May
+    #      arrest -- no discipline has been announced and no charges have
+    #      been filed as of this entry, so this is disclosed, elevated
+    #      UNCERTAINTY, not a confirmed absence. No PROJECTION_MANUAL_
+    #      ADJUSTMENTS discount applied for the same reason as Jeanty: no
+    #      real, decisive length to build one from yet -- add one if/when a
+    #      suspension (or its length) is confirmed.
+    # Scored 3.5: real, compounding risk from two independent sources, kept
+    # below Jeanty's 4.0 since neither individual factor here is as acute
+    # as a practice-field injury with a diagnosis in hand.
+    "Josh Jacobs": {
+        "score": 3.5,
+        "reason": "Existing groin injury (return eyed for late Aug) + a real, pending NFL "
+                  "suspension review following a May arrest -- no discipline decided yet",
+        "date": "2026-08-26",
     },
 }
 

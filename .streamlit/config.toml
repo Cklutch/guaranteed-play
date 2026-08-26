@@ -1,0 +1,11 @@
+# Dark theme so Streamlit's own chrome (top toolbar, sidebar, native
+# widgets, menus) matches the custom dark rankings board rendered in
+# Home.py. Colors mirror the board's design tokens (background #0d0f10,
+# surfaces #141718, sage accent #a8c686). Applied at server start --
+# restart Streamlit after changing this file.
+[theme]
+base = "dark"
+backgroundColor = "#0d0f10"
+secondaryBackgroundColor = "#141718"
+textColor = "#eef1ec"
+primaryColor = "#a8c686"

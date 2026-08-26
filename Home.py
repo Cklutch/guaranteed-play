@@ -13,10 +13,20 @@ data/processed/master_players.csv that Draft Mode uses. Because there is no
 live draft state here, the board is evaluated at its draft-start position
 (empty roster, pick 1), which is what a static preseason ranking list
 should show.
+
+Visual design: "Rankings Lab" redesign (2026-08-24), recreated from a
+design-canvas handoff (design_handoff_rankings_board/) in this app's own
+stack rather than shipped as the handoff's raw HTML/JS. Still 100%
+server-rendered HTML via st.markdown(unsafe_allow_html=True) -- no JS. The
+one new interaction primitive is native <details>/<summary> for the
+click-to-expand player card and its sub-collapsibles: zero JS, and expand
+state resetting on every filter change (a full-page rerun) matches the
+handoff's own stated behavior rather than fighting it.
 """
 import html
 import json
-import re
+import math
+from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
@@ -27,110 +37,46 @@ from draftkit.archetypes import archetype_label, risk_profile
 from draftkit.data_access import load_players_df
 from draftkit.draft_analysis import build_recommendation_rankings_df
 from draftkit.draft_state import init_session_state
+from draftkit.ui_helpers import render_tool_nav
 
 TOP_N = 250
 
 POSITION_CHIPS = ["Overall", "QB", "RB", "WR", "TE"]
+VIEW_TABS = [("median", "Median"), ("ceiling", "Ceiling"), ("riskAdj", "Risk-adjusted")]
+RISK_TABS = [("ALL", "Any risk"), ("low", "Low"), ("mid", "Medium"), ("high", "High")]
 
-POSITION_COLORS = {
-    "QB": "#22c55e",
-    "RB": "#ef4444",
-    "WR": "#3b82f6",
-    "TE": "#a855f7",
+# Design tokens -- "Rankings Lab" redesign (design_handoff_rankings_board/
+# README's Design Tokens section). Kept as Python constants (not just CSS)
+# wherever a color needs to be picked dynamically per row/value.
+POSITION_COLORS = {"QB": "#dcc06a", "RB": "#e0947f", "WR": "#7fa8d9", "TE": "#b79ada"}
+RISK_COLORS = {"low": "#7fc98a", "mid": "#e0b45e", "high": "#e08a7f"}
+RISK_LABELS = {"low": "Low", "mid": "Medium", "high": "High"}
+GRADE_COLORS = {
+    "Elite": "#7fc98a", "Great": "#7fa8d9", "Strong": "#dcc06a",
+    "Solid": "#b79ada", "Speculative": "#b79ada",
 }
+# Tier band colors, cycled -- recolored to the new sage-led palette above.
+# Still cycled rather than one-per-tier: TARGET_TIER_COUNT=10 tiers, more
+# than there are genuinely distinct semantic colors to spend on them.
+TIER_BAND_COLORS = ["#a8c686", "#7fa8d9", "#dcc06a", "#b79ada", "#e0947f", "#7fc98a"]
 
-# Tier band colors, cycled. The reference used S/A/B/C letter grades, but this
-# data carries 16 numeric tiers across the top 250 with uneven sizes, so the
-# bands are labeled "Tier N" rather than inventing a grade scale.
-TIER_BAND_COLORS = ["#ec4899", "#a855f7", "#3b82f6", "#22c55e", "#f59e0b", "#14b8a6"]
+# Display-only re-sort penalty for the "Risk-adjusted" view. Uses the richer
+# 4-category risk_index (risk_variables.csv) rather than re-deriving from
+# the single injury_risk aggregate base_value_risk_component already nets
+# out of final_score, so this view is a genuinely different resort, not a
+# restatement of Median. Never touches final_score/tiering.
+RISK_ADJ_VIEW_PENALTY = 15.0
 
-# Table columns: (query-param key, header label, dataframe column, pill style,
-# hover tooltip). Labels are written for someone new to fantasy -- no bare
-# jargon or internal abbreviations. The query-param key is what appears in
-# ?sort=... and is kept short and stable so a bookmarked sort URL survives
-# header-label changes.
-TABLE_COLUMNS = [
-    ("rank", "RANK", "Rank", "rank",
-     "Our overall ranking, 1 = best. This is the order we'd draft in."),
-    ("player", "PLAYER", "player_name", "player", ""),
-    ("posrk", "POSITION RANK", "position_rank", "pos",
-     "Rank within his own position. RB1 = the best running back."),
-    ("team", "TEAM", "team", "muted", "NFL team."),
-    ("age", "AGE", "Age", "blue", "Player age this season."),
-    ("adp", "AVG DRAFT PICK", "adp", "amber",
-     "ADP -- the average pick number where this player actually gets drafted. "
-     "Lower means he goes earlier."),
-    ("fp", "EXPERT RANK", "expert_rank", "muted",
-     "Where fantasy experts (FantasyPros consensus) rank him overall."),
-    ("book", "VEGAS RANK", "sportsbook_position_rank", "purple",
-     "His rank within his position based on sportsbook betting lines -- what "
-     "Vegas expects him to produce."),
-    ("mkt", "VEGAS vs ADP", "position_rank_gap", "signed",
-     "How much Vegas disagrees with where he's being drafted. Green/positive = "
-     "Vegas likes him more than his draft spot suggests (possible bargain). "
-     "Red/negative = Vegas likes him less (possible reach)."),
-    # PROJECTED PTS (key "proj", column projection_points) hidden 2026-08-21
-    # (user: "its the same as the column beside") -- since
-    # apply_model_projection_override() started writing corrections
-    # directly into projection_points itself, this cell shows the exact
-    # same number as MODEL PROJ for every corrected player, which by this
-    # point in the season is most of the relevant board. MODEL PROJ already
-    # carries its own adjustment-percent badge (see the model_projection_points
-    # render branch below), so nothing is lost by dropping this one -- the
-    # underlying column and its render branch are left in place, just no
-    # longer in TABLE_COLUMNS, in case a future page wants the raw value
-    # without MODEL PROJ's framing.
-    ("mdl", "MODEL PROJ", "model_projection_points", "green",
-     "Alternate full-season projection from a separate, backtested model "
-     "(research/validation_v1, projection_model_iteration_plan.pdf) -- RB/WR/TE "
-     "only. QB is deliberately excluded: that position's version of this model "
-     "validated WORSE than a simple ADP-based baseline in real backtesting, so "
-     "it isn't shown rather than displaying a signal known to mislead. Even at "
-     "RB/WR/TE this is a newer, less-proven number than PROJECTED PTS -- shown "
-     "alongside it for comparison, not as a replacement."),
-    ("score", "OUR SCORE", "final_score", "amber",
-     "Our engine's overall 0-100 rating, combining projection, position "
-     "scarcity, value vs ADP, and tier urgency."),
-    ("arch", "ARCHETYPE", "rb_archetype_primary", "archetype",
-     "Role taxonomy, real 2025 usage-based. RBs: a usage tier -- Bellcow, "
-     "Committee, Handcuff, or No Role -- by real backfield touch share; "
-     "'(2-Down)'/'(3-Down)' shows real third-down snap involvement for "
-     "Bellcow/Committee backs. WRs: Alpha, Boom-Bust, High-Floor, or "
-     "Complementary usage tier by real target share/aDOT/catch rate. "
-     "Both positions also carry an independent secondary trait tag "
-     "(RB: Goal-Line, Explosive, Receiving; WR: Deep-Threat, YAC, "
-     "Red-Zone, Rushing) plus, for WR, a real QB-context flag. A small "
-     "tag flags a real secondary trait that doesn't rise to its own "
-     "archetype. Hover for the real numbers behind the call. "
-     "Unconfirmed means real data doesn't yet support a confident read "
-     "(new/limited-usage player), not that he's unimportant. Incoming "
-     "rookies with no NFL snaps yet show a dashed 'Projected: X' badge "
-     "(pre-season model, v1/unvalidated -- see hover) that shifts to a "
-     "'X -- Y% confirmed' hybrid badge as real usage accumulates, then "
-     "becomes a standard badge once confirmed."),
-    ("risk", "RISK", "risk_index", "risk",
-     "Composite risk score, 0-100, HIGHER = riskier. Combines four "
-     "categories -- Injury (recency/severity-weighted), Role/Usage/TD "
-     "(target share, snap share, depth-chart competition, TD-rate "
-     "dependence), Offense Environment (team EPA/play, pace, scoring), and "
-     "Schedule/Weather/Venue (dome/cold games, playoff-week SOS, bye, "
-     "primetime/short-week load) -- weighted differently by position (e.g. "
-     "RBs weight injury/role heaviest, QBs/WRs weight offense environment "
-     "heaviest). Market mispricing and week-to-week volatility are "
-     "reported but deliberately NOT part of this score -- one's a value "
-     "signal, the other a symptom, not independent risk. Hover a value for "
-     "the full breakdown. Live draft-pick risk-stacking warnings are in "
-     "the standalone scorecard: python -m draftkit.risk_cli."),
-]
-
-SORTABLE_COLUMNS = {key: column for key, _, column, _, _ in TABLE_COLUMNS}
-# MODEL PROJ (key "mdl") sorts on the effective displayed value (adjusted /
-# fallback / raw, see model_projection_effective above), not the raw
-# model_projection_points column the cell renderer only falls back to when
-# nothing else is present. Overridden here, after the dict comprehension,
-# so the render dispatch (which switches on column == "model_projection_points")
-# is untouched -- only the sort key changes.
-SORTABLE_COLUMNS["mdl"] = "model_projection_effective"
+# Display-only upside bonus for the "Ceiling" view, symmetric with
+# RISK_ADJ_VIEW_PENALTY above. There is no floor/ceiling *points*
+# projection anywhere in the pipeline (master_players.csv carries the
+# columns but they're 100% null), and sorting the cross-position board by
+# raw ceiling points would just float every QB to the top anyway. So the
+# Ceiling view re-sorts final_score (already VOR/position-fair) plus a
+# variance-driven bonus: TD-dependent, high-volatility players -- the ones
+# whose 90th-percentile outcome most exceeds their median -- rise. Never
+# touches final_score/tiering.
+CEILING_VIEW_BONUS = 15.0
 
 
 def _position_rank_number(series):
@@ -151,202 +97,235 @@ def _position_rank_number(series):
 
 RANKINGS_CSS = """
 <style>
-  .block-container { padding-top: 2.2rem; padding-bottom: 2rem; max-width: 100%; }
-  /* Streamlit's own h1 rule wins on specificity, hence the explicit
-     element+class selector and !important -- without them this renders as
-     44px white instead of the intended amber. */
+  @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+  .stApp, .block-container { background: #0d0f10 !important; }
+  /* Dark-match Streamlit's own chrome so the page reads as one surface.
+     Without a dark theme config these default to the light theme (white
+     top toolbar, light-gray sidebar) and frame the dark board with
+     mismatched edges. Belt-and-suspenders with .streamlit/config.toml,
+     which is the canonical fix but only applies on server restart. */
+  header[data-testid="stHeader"] { background: #0d0f10 !important; }
+  [data-testid="stToolbar"] { background: transparent !important; }
+  /* Rankings has no sidebar content -- navigation is the top-of-page tool
+     dropdown (render_tool_nav) -- so hide Streamlit's sidebar and its
+     collapsed-state expander entirely rather than showing an empty rail. */
+  section[data-testid="stSidebar"], [data-testid="stSidebarCollapsedControl"] { display: none !important; }
+  /* Tighten the dropdown so it reads as a compact tool switcher. */
+  div[data-testid="stSelectbox"] { max-width: 260px; }
+  .block-container { padding-top: 1.2rem; padding-bottom: 2rem; max-width: 100%; }
+  body, .stApp, .stApp p, .stApp span, .stApp div { font-family: 'IBM Plex Sans', system-ui, sans-serif; }
+
+  /* ---- Header bar ---- */
+  .gp-header {
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    flex-wrap: wrap; padding: 4px 4px 14px; border-bottom: 1px solid #23282b; margin-bottom: 18px;
+  }
+  .gp-header-left { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .gp-logo {
+    width: 26px; height: 26px; border-radius: 6px; background: #123d22; border: 1px solid #1f5c33;
+    display: inline-flex; align-items: center; justify-content: center;
+    font: 800 12px Archivo, sans-serif; color: #a8c686;
+  }
+  .gp-wordmark { font: 700 13px Archivo, sans-serif; letter-spacing: -.01em; color: #eef1ec; }
+  .gp-nav { display: flex; gap: 20px; margin-left: 6px; font: 500 12.5px 'IBM Plex Sans', sans-serif; }
+  .gp-nav a, .gp-nav span { color: #8c948f; text-decoration: none; }
+  .gp-nav a:hover { color: #eef1ec; }
+  .gp-nav .active { color: #eef1ec; padding-bottom: 2px; border-bottom: 2px solid #a8c686; }
+  .gp-chips { display: flex; align-items: center; gap: 10px; font: 500 11.5px 'IBM Plex Sans', sans-serif; color: #8c948f; }
+  .gp-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border: 1px solid #23282b; border-radius: 99px; }
+  .gp-chip-dot { width: 5px; height: 5px; border-radius: 99px; background: #a8c686; }
+
+  /* ---- Title block ---- */
+  .gp-eyebrow {
+    font: 600 10px 'IBM Plex Mono', monospace; letter-spacing: .2em; color: #a8c686; text-transform: uppercase;
+  }
   h1.gp-title {
-    color: #f59e0b !important; font-size: 28px !important; font-weight: 800 !important;
-    margin: 0 0 12px !important; padding: 0 !important;
+    color: #f4f6f2 !important; font-family: Archivo, sans-serif !important; font-size: 32px !important;
+    font-weight: 800 !important; letter-spacing: -.03em !important; line-height: 1.05 !important;
+    margin: 8px 0 0 !important; padding: 0 !important;
   }
-  .gp-count { color: #7d8ea3; font-size: 12px; text-align: right; padding-top: 8px; }
+  .gp-subhead { margin: 9px 0 0; font: 400 13px/1.6 'IBM Plex Sans', sans-serif; color: #8c948f; max-width: 600px; }
+  .gp-stamps {
+    display: flex; gap: 18px; flex-wrap: wrap; padding: 14px 0 0;
+    font: 400 11px 'IBM Plex Mono', monospace; color: #6f776f; letter-spacing: .03em;
+  }
+  .gp-stamps b { color: #b9c1ba; font-weight: 500; }
+  .gp-title-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; padding-bottom: 18px; border-bottom: 1px solid #23282b; }
+  .gp-export-caption { font: 400 11px 'IBM Plex Sans', sans-serif; color: #6f776f; text-align: right; margin-top: 6px; }
 
-  /* Position chips -- Streamlit buttons restyled. Active chip uses the native
-     primary type so the state survives without extra CSS plumbing. */
-  div[data-testid="stButton"] button {
-    border-radius: 8px; font-size: 13px; font-weight: 700; padding: 4px 0;
-    border: 1px solid #24303f; background: #131c29; color: #9fb0c3;
+  /* ---- Streamlit widgets restyled as design-token pills/tabs ---- */
+  div[data-testid="stButton"] button, div[data-testid="stDownloadButton"] button {
+    border-radius: 8px; font: 600 12.5px 'IBM Plex Sans', sans-serif;
+    padding: 8px 14px; border: 1px solid #23282b; background: #141718; color: #8c948f;
   }
-  div[data-testid="stButton"] button[kind="primary"] {
-    background: #f59e0b; color: #10151d; border-color: #f59e0b;
+  div[data-testid="stButton"] button:hover, div[data-testid="stDownloadButton"] button:hover {
+    border-color: #3d4549; color: #eef1ec;
   }
+  div[data-testid="stButton"] button[kind="primary"], div[data-testid="stDownloadButton"] button[kind="primary"] {
+    background: #123d22; border-color: #1f5c33; color: #cfe4b4;
+  }
+  div[data-testid="stButton"] button[kind="primary"]:hover { background: #17512d; }
+  div[data-testid="stTextInput"] input {
+    background: #141718; border: 1px solid #23282b; border-radius: 8px; color: #eef1ec;
+    font: 400 12.5px 'IBM Plex Sans', sans-serif;
+  }
+  .gp-view-note { font: 400 11.5px 'IBM Plex Sans', sans-serif; color: #6f776f; padding-top: 8px; }
+  .gp-count { color: #6f776f; font: 500 11.5px 'IBM Plex Mono', monospace; text-align: right; padding-top: 10px; }
 
-  .gp-table-wrap { overflow-x: auto; margin-top: 10px; }
-  table.gp-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
-  table.gp-table th {
-    text-align: center; padding: 9px 8px; color: #7d8ea3;
-    font-size: 11px; font-weight: 700; letter-spacing: .05em;
-    border-bottom: 1px solid #1e2836; white-space: nowrap;
+  /* ---- Table ---- */
+  .gp-table-wrap {
+    background: #101314; border: 1px solid #23282b; border-radius: 12px;
+    overflow-x: auto; margin-top: 16px;
   }
-  table.gp-table th a { color: #7d8ea3; text-decoration: none; }
-  table.gp-table th a:hover { color: #e6edf3; }
-  table.gp-table th.sorted a { color: #f59e0b; }
-  table.gp-table td {
-    text-align: center; padding: 5px 8px; border-bottom: 1px solid #151d29;
+  .gp-table-inner { min-width: 1220px; }
+  .gp-row-grid {
+    display: grid;
+    grid-template-columns: 56px minmax(220px,1.2fr) 74px 84px 92px 128px 108px 104px 104px 44px;
+    align-items: center; gap: 12px;
   }
-  table.gp-table td.col-rank { color: #7d8ea3; font-size: 11px; width: 34px; }
-  table.gp-table td.col-player {
-    text-align: left; font-weight: 600; color: #e6edf3; white-space: nowrap;
-    background: #101825; border-radius: 5px;
+  .gp-thead {
+    height: 38px; padding: 0 20px; background: #131718; border-bottom: 1px solid #23282b;
+    font: 600 9.5px 'IBM Plex Mono', monospace; letter-spacing: .13em; color: #7c847e; text-transform: uppercase;
   }
-  table.gp-table tr:hover td { background: #131c29; }
+  .gp-thead > div:not(:first-child):not(:nth-child(2)):not(:nth-child(3)) { text-align: right; }
 
-  .tier-band td { padding: 0 !important; border: none !important; }
-  .tier-band-inner {
-    display: block; width: 100%; margin: 10px 0 4px;
-    padding: 5px 12px; border-radius: 6px;
-    font-size: 12px; font-weight: 800; color: #0b0f16;
+  .tier-band {
+    display: flex; align-items: baseline; gap: 12px; padding: 10px 20px;
+    background: #121516; border-top: 1px solid #1c2022; border-bottom: 1px solid #1c2022;
   }
+  .tier-band-bar { width: 3px; height: 12px; border-radius: 2px; align-self: center; }
+  .tier-band-label { font: 700 10.5px 'IBM Plex Mono', monospace; letter-spacing: .16em; text-transform: uppercase; }
+  .tier-band-desc { font: 400 11.5px 'IBM Plex Sans', sans-serif; color: #78807a; }
 
-  .pill {
-    position: relative;
-    display: inline-block; min-width: 42px; padding: 2px 8px; border-radius: 5px;
-    font-size: 11.5px; font-weight: 700; line-height: 1.5;
+  details.gp-row { border-bottom: 1px solid #1a1e1f; }
+  details.gp-row > summary {
+    list-style: none; cursor: pointer; padding: 11px 20px;
   }
-  .pill-muted  { background: #1b2534; color: #9fb0c3; }
-  .pill-blue   { background: #16273f; color: #60a5fa; }
-  .pill-amber  { background: #33260f; color: #fbbf24; }
-  .pill-purple { background: #291a3d; color: #c084fc; }
-  .pill-green  { background: #10291c; color: #4ade80; }
-  .pill-red    { background: #331515; color: #f87171; }
-  .pill-empty  { color: #3d4a5c; }
-
-  /* PROJECTED PTS manual-adjustment marker (draft_analysis.py's
-     PROJECTION_MANUAL_ADJUSTMENTS) -- small, visibly distinct from the pill
-     itself, hover reveals the real note/source/date. Reuses the existing
-     pill red/green palette rather than inventing new colors. */
-  .proj-adj {
-    display: inline-block; font-size: 10px; font-weight: 700;
-    padding: 1px 5px; border-radius: 4px; cursor: default; vertical-align: middle;
+  details.gp-row > summary::-webkit-details-marker { display: none; }
+  details.gp-row > summary:hover { background: rgba(168,198,134,.04); }
+  details.gp-row[open] > summary { background: rgba(168,198,134,.035); }
+  .gp-cell-rank { font: 600 15px 'IBM Plex Mono', monospace; color: #8c948f; }
+  .gp-cell-player { display: flex; align-items: center; gap: 11px; min-width: 0; }
+  .gp-avatar {
+    position: relative; overflow: hidden;
+    width: 34px; height: 34px; border-radius: 99px; background: #1d2124; border: 1px solid #2a3033;
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    font: 600 11px 'IBM Plex Mono', monospace; color: #6f776f;
   }
-  .proj-adj-pos { background: #10291c; color: #4ade80; }
-  .proj-adj-neg { background: #331515; color: #f87171; }
-
-  /* MODEL PROJ diagnosed-defect correction marker
-     (model_proj_staleness_fix_plan.pdf, Step 4) -- deliberately a DIFFERENT
-     color from both proj-adj-pos/neg (narrative override, PROJECTED PTS)
-     and continuity-flag's bare "!" (unresolved, verify-before-trusting).
-     This one means "known bug, already fixed for this player" -- reads as
-     resolved/corrected, not uncertain. */
-  .model-corrected { background: #0f2a3d; color: #38bdf8; }
-
-  /* MODEL PROJ rookie-score fallback marker
-     (rb_model_fix_plan.pdf, Phase 1) -- a THIRD distinct color, separate
-     from model-corrected (blue, "known bug already fixed") and
-     continuity-flag (bare "!", "verify this"). This one means "not a real
-     outcome-trained prediction at all -- substituted from the pre-draft
-     rookie composite score." */
-  .rookie-fallback { background: #2a1f3d; color: #c4b5fd; }
-
-  /* Risk scorecard hover popover -- CSS-only, no JS, matching how this
-     table is already 100% server-rendered HTML. Colors reuse the existing
-     dark-theme palette above (pill-red/-amber/-green, table bg/border
-     tones) rather than introducing a second theme. */
-  .pill-risk { cursor: default; }
-  .scorecard {
-    position: absolute; top: 130%; right: -10px; width: 300px;
-    background: #101825; border: 1px solid #1e2836; border-radius: 10px;
-    box-shadow: 0 12px 32px rgba(0,0,0,0.5); padding: 14px;
-    z-index: 50; opacity: 0; transform: translateY(-6px);
-    pointer-events: none; transition: opacity .12s ease, transform .12s ease;
-    text-align: left; font-weight: 400; white-space: normal;
+  /* Initials sit underneath; the headshot overlay paints on top of them
+     only when the Sleeper CDN returns a real image (a 403 leaves the
+     overlay transparent, so the initials show through). */
+  .gp-avatar-ini {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
   }
-  .pill-risk:hover .scorecard { opacity: 1; transform: translateY(0); pointer-events: auto; }
-
-  .sc-header {
-    display: flex; justify-content: space-between; align-items: flex-start;
-    margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #1e2836;
+  .gp-avatar-img {
+    position: absolute; inset: 0; border-radius: 99px;
+    background-size: cover; background-position: center top; background-repeat: no-repeat;
   }
-  .sc-name { font-size: 13px; font-weight: 700; color: #e6edf3; }
-  .sc-meta { font-size: 11px; color: #7d8ea3; margin-top: 2px; }
-  .sc-overall { text-align: right; }
-  .sc-overall .num { font-size: 20px; font-weight: 800; line-height: 1; }
-  .sc-overall .of100 { font-size: 11px; font-weight: 500; color: #7d8ea3; }
-  .sc-overall .lbl { font-size: 10px; color: #7d8ea3; text-transform: uppercase; letter-spacing: .04em; }
+  .gp-avatar-lg { width: 52px; height: 52px; font-size: 15px; }
+  .gp-cell-name { font: 600 14.5px Archivo, sans-serif; letter-spacing: -.01em; color: #f4f6f2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .gp-cell-role { font: 400 11px 'IBM Plex Sans', sans-serif; color: #7c847e; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .gp-cell-pos { display: flex; align-items: center; gap: 6px; }
+  .gp-cell-team { font: 500 10.5px 'IBM Plex Mono', monospace; color: #6f776f; }
+  .gp-cell-num { text-align: right; font: 500 13px 'IBM Plex Mono', monospace; color: #c9d0c9; }
+  .gp-cell-num-strong { color: #eef1ec; }
+  .gp-score-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+  .gp-score-num { font: 700 16px Archivo, sans-serif; letter-spacing: -.02em; color: #f4f6f2; }
+  .gp-score-of100 { font: 500 10px 'IBM Plex Mono', monospace; color: #6f776f; }
+  .gp-score-bar-track { display: block; width: 96px; height: 3px; background: #23282b; border-radius: 2px; }
+  .gp-score-bar-fill { display: block; height: 3px; border-radius: 2px; background: #a8c686; }
+  .gp-risk-cell { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+  .gp-risk-bars { display: flex; align-items: flex-end; gap: 2px; height: 16px; }
+  .gp-risk-bars span { width: 5px; border-radius: 1px; }
+  .gp-risk-num { font: 600 12px 'IBM Plex Mono', monospace; width: 22px; text-align: right; }
+  .gp-cell-delta { text-align: right; font: 400 11px 'IBM Plex Sans', sans-serif; }
+  .gp-caret { display: flex; justify-content: flex-end; color: #7c847e; font: 400 12px 'IBM Plex Mono', monospace; }
+  details.gp-row[open] .gp-caret-closed, details.gp-row:not([open]) .gp-caret-open { display: none; }
 
-  .sc-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-  .sc-row:last-of-type { margin-bottom: 0; }
-  .sc-cat-label { width: 104px; font-size: 11px; color: #7d8ea3; flex-shrink: 0; }
-  .sc-bar-track { flex: 1; height: 6px; background: #1b2534; border-radius: 3px; overflow: hidden; }
-  .sc-bar-fill { height: 100%; border-radius: 3px; }
-  .sc-cat-score { width: 32px; text-align: right; font-size: 11px; font-weight: 700; color: #e6edf3; flex-shrink: 0; }
+  /* ---- Player card ---- */
+  .gp-card { margin: 4px 20px 26px; background: #141718; border: 1px solid #262b2e; border-radius: 16px; overflow: hidden; }
+  .gp-ticker { background: #0b0d0e; border-bottom: 1px solid #23282b; display: flex; flex-wrap: wrap; }
+  .gp-ticker-cell {
+    display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px;
+    font: 600 10.5px 'IBM Plex Mono', monospace; letter-spacing: .06em; color: #6f776f;
+    white-space: nowrap; border-right: 1px solid #171b1c;
+  }
+  .gp-card-head { padding: 16px 20px 14px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+  .gp-card-head-left { display: flex; gap: 13px; align-items: center; }
+  .gp-card-rank { font: 800 24px Archivo, sans-serif; color: #6f776f; line-height: 1; }
+  .gp-card-name { font: 800 19px Archivo, sans-serif; letter-spacing: -.01em; color: #f4f6f2; }
+  .gp-card-postteam { font: 400 12.5px 'IBM Plex Sans', sans-serif; color: #8c948f; margin-top: 2px; }
+  .gp-tier-pill {
+    display: inline-block; font: 700 10px 'IBM Plex Mono', monospace; letter-spacing: .05em;
+    padding: 2px 8px; border-radius: 6px; margin-top: 6px; background: rgba(168,198,134,.12);
+  }
+  .gp-card-score { text-align: right; }
+  .gp-card-score-num { font: 800 32px Archivo, sans-serif; color: #a8c686; line-height: 1; letter-spacing: -.02em; }
+  .gp-card-score-lbl { font: 600 9px 'IBM Plex Mono', monospace; color: #6f776f; text-transform: uppercase; letter-spacing: .1em; margin-top: 3px; }
+  .gp-card-grade { font: 700 11px 'IBM Plex Sans', sans-serif; margin-top: 4px; }
 
-  .sc-divider { margin: 12px 0 10px; border-top: 1px dashed #1e2836; }
-  .sc-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
-  .sc-badge { font-size: 10px; padding: 3px 8px; border-radius: 12px; font-weight: 600; }
-  .sc-badge-avoid   { background: #331515; color: #f87171; }
-  .sc-badge-value   { background: #10291c; color: #4ade80; }
-  .sc-badge-fair    { background: #1b2534; color: #9fb0c3; }
-  .sc-badge-chronic { background: #33260f; color: #fbbf24; }
+  .gp-stat3 { display: grid; grid-template-columns: repeat(3,1fr); border-top: 1px solid #23282b; border-bottom: 1px solid #23282b; }
+  .gp-stat3-cell { padding: 11px 8px; text-align: center; border-right: 1px solid #23282b; }
+  .gp-stat3-cell:last-child { border-right: none; }
+  .gp-stat3-num { font: 700 16px 'IBM Plex Mono', monospace; color: #eef1ec; }
+  .gp-stat3-lbl { font: 600 9px 'IBM Plex Mono', monospace; color: #6f776f; text-transform: uppercase; letter-spacing: .08em; margin-top: 3px; }
 
-  .sc-note { font-size: 10.5px; color: #7d8ea3; line-height: 1.5; }
-  .sc-note b { color: #e6edf3; }
+  .gp-callout { margin: 14px 20px 0; padding: 13px 16px; border-radius: 12px; display: flex; align-items: center; gap: 14px; }
+  .gp-callout-arrow { font: 800 20px Archivo, sans-serif; flex-shrink: 0; }
+  .gp-callout-text { font: 600 13px 'IBM Plex Sans', sans-serif; color: #eef1ec; }
+  .gp-callout-sub { font: 400 10.5px 'IBM Plex Sans', sans-serif; color: #8c948f; margin-top: 2px; }
 
-  /* RB archetype badge + popover -- reuses the .scorecard/.sc-* popover
-     scaffold above (same CSS-only hover mechanism), new badge colors only.
-     Kept close to existing pill tokens where they already overlap
-     (blue/purple/green/red already exist above); orange/gray are new. */
-  .arch-wrap { position: relative; display: inline-block; }
-  .arch-badge {
-    display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px;
-    border-radius: 12px; font-size: 11px; font-weight: 700; cursor: default;
-    white-space: nowrap;
+  .gp-verdict-lbl { font: 600 9px 'IBM Plex Mono', monospace; letter-spacing: .16em; color: #a8c686; text-transform: uppercase; }
+  .gp-verdict { font: 600 16px/1.4 Archivo, sans-serif; color: #f4f6f2; margin-top: 7px; }
+  .gp-why-block { padding: 8px 20px 16px; border-bottom: 1px solid #23282b; }
+  .gp-why { font: 400 12.5px/1.55 'IBM Plex Sans', sans-serif; color: #8c948f; }
+  .gp-chips-row { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 11px; }
+  .gp-chip-tag {
+    font: 400 11px 'IBM Plex Sans', sans-serif; color: #8c948f; background: #1a1e20;
+    border: 1px solid #262b2e; border-radius: 7px; padding: 4px 10px;
   }
-  .arch-Bellcow      { background: #16273f; color: #60a5fa; }
-  .arch-Committee    { background: #291a3d; color: #c084fc; }
-  .arch-Handcuff     { background: #232833; color: #8b95a5; }
-  /* Class name stays "Unconfirmed" (shared with WR's own unconfirmed
-     styling below) even though RB's displayed badge TEXT is "No Role" --
-     see Home.py's _render_cell()/_archetype_scorecard_html() RB-specific
-     label override. Goal-Line/Explosive/Receiving badge colors removed --
-     RB primary is a usage tier only now, those are secondary lean tags
-     (see .arch-lean-tag styling), never a badge background anymore. */
-  .arch-Unconfirmed  { background: #33260f; color: #fbbf24; }
-  /* WR archetype badge colors -- shares the same .arch-wrap/.arch-badge/
-     .scorecard scaffold above; Unconfirmed is shared with RB (same CSS
-     class, different displayed text for RB). New tier names only. */
-  .arch-Alpha         { background: #3a1a2e; color: #f472b6; }
-  .arch-Complementary { background: #232833; color: #8b95a5; }
-  /* Boom-Bust/High-Floor (claude_code_plan_possession_split.pdf) -- replace
-     Possession everywhere, including rookie_projection.py's own pre-draft
-     tier (2026-08-15) -- .arch-Possession removed, nothing emits it. */
-  .arch-Boom-Bust     { background: #331515; color: #f87171; }
-  .arch-High-Floor    { background: #10291c; color: #4ade80; }
-  /* QB rushing-style tiers (claude_code_plan_qb_archetypes.pdf). */
-  .arch-Pocket-Passer { background: #16273f; color: #60a5fa; }
-  .arch-Balanced      { background: #232833; color: #8b95a5; }
-  .arch-Dual-Threat   { background: #331515; color: #f87171; }
-  /* TE receiving/blocking tiers (plan_te_archetypes.pdf). Balanced reuses
-     the class above (same "Balanced" label/color). */
-  .arch-Receiving-TE  { background: #3a1a2e; color: #f472b6; }
-  .arch-Blocking-TE   { background: #232833; color: #8b95a5; }
-  /* TE role_profile (plan_te_role_profile_elite.pdf) -- second-pass split
-     within receiving_te only, replaces the flat Receiving-TE badge for
-     those rows. Display label has a real space ("Elite TE") per the
-     user's confirmed wording, unlike every other hyphenated badge above --
-     badge_class strips the space (see _render_cell()'s te_primary branch)
-     so the CSS class itself stays a single token. */
-  .arch-Elite-TE         { background: #3a1a2e; color: #f472b6; }
-  .arch-Complementary-TE { background: #232833; color: #8b95a5; }
-  /* Rookie projection badge states (draftkit/rookie_projection.py) --
-     layered AFTER the tier-color classes above so they win the cascade
-     (same specificity, later source order) regardless of which tier
-     they're paired with, matching the user-supplied mockup's own
-     .pill-projected/.pill-blended layering over .pill-bellcow/.pill-alpha.
-     Values taken directly from that mockup, already visually approved. */
-  .arch-projected {
-    border: 1px dashed #6b8afd; background: transparent; color: #a9bdff; font-style: italic;
+  .gp-chip-tag b { color: #e6eae4; font-weight: 600; }
+
+  .gp-range-block { padding: 14px 20px; border-bottom: 1px solid #23282b; }
+  .gp-range-track { position: relative; height: 6px; background: #1c2022; border-radius: 3px; margin: 12px 0 6px; }
+  .gp-range-fill { position: absolute; inset: 0; background: rgba(168,198,134,.3); border-radius: 3px; }
+  .gp-range-dot { position: absolute; top: -3px; width: 12px; height: 12px; border-radius: 99px; background: #a8c686; border: 2px solid #141718; }
+  .gp-range-labels { display: flex; justify-content: space-between; font: 500 10.5px 'IBM Plex Mono', monospace; color: #7c847e; }
+
+  details.gp-section { border-bottom: 1px solid #23282b; }
+  details.gp-section:last-child { border-bottom: none; }
+  details.gp-section > summary {
+    list-style: none; cursor: pointer; display: flex; justify-content: space-between;
+    align-items: center; padding: 12px 20px; font: 700 12px 'IBM Plex Sans', sans-serif; color: #b9c1ba;
   }
-  .arch-blended {
-    background: linear-gradient(90deg, rgba(217,164,65,0.28) 0%, rgba(23,50,79,0.9) 60%);
-    color: #f0c878;
+  details.gp-section > summary::-webkit-details-marker { display: none; }
+  details.gp-section > summary:hover { background: rgba(168,198,134,.04); }
+  details.gp-section[open] .sec-caret-closed, details.gp-section:not([open]) .sec-caret-open { display: none; }
+  .sec-caret { font: 400 11px 'IBM Plex Mono', monospace; color: #7c847e; }
+  .gp-section-body { padding: 14px 20px 16px; background: #111516; }
+
+  .bar-row-grid { display: grid; grid-template-columns: 150px 1fr 46px; align-items: center; gap: 9px; }
+  .bar-row-grid.nested { grid-template-columns: 136px 1fr 44px; }
+  .bar-row-lbl { font: 400 11.5px 'IBM Plex Sans', sans-serif; color: #8c948f; }
+  .bar-track { display: block; height: 7px; background: #1c2022; border-radius: 4px; }
+  .bar-track.thin { height: 6px; border-radius: 3px; }
+  .bar-fill { display: block; height: 7px; border-radius: 4px; }
+  .bar-fill.thin { height: 6px; border-radius: 3px; }
+  .bar-val { text-align: right; font: 600 11px 'IBM Plex Mono', monospace; color: #c9d0c9; }
+  .nest-group { border-left: 2px solid rgba(168,198,134,.3); padding-left: 13px; display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+  .gp-risk-note {
+    margin-top: 12px; padding: 10px 13px; border-radius: 9px; background: rgba(224,180,94,.07);
+    border: 1px solid rgba(224,180,94,.22); font: 400 11.5px/1.55 'IBM Plex Sans', sans-serif; color: #c9d0c9;
   }
-  .beta-dot {
-    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
-    background: #e0b23a; margin-left: 5px; vertical-align: middle;
-  }
-  .arch-lean-tag { font-weight: 500; opacity: 0.8; }
-  .arch-wrap:hover .scorecard { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .gp-draft-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; }
+  .gp-draft-field { border-left: 2px solid rgba(168,198,134,.5); padding-left: 10px; }
+  .gp-draft-field-lbl { font: 600 9px 'IBM Plex Mono', monospace; letter-spacing: .1em; color: #6f776f; text-transform: uppercase; }
+  .gp-draft-field-val { font: 400 12px 'IBM Plex Sans', sans-serif; color: #e6eae4; margin-top: 3px; }
+  .gp-model-row { font: 400 11px/1.5 'IBM Plex Sans', sans-serif; color: #8c948f; padding: 7px 0; border-bottom: 1px solid #22272a; }
+  .gp-model-row b { color: #e6eae4; font-weight: 600; }
+  .gp-pending-chip { opacity: .55; font-style: italic; }
+
+  .gp-footer-note { text-align: center; font: 400 11px 'IBM Plex Sans', sans-serif; color: #5f665f; margin-top: 20px; }
 </style>
 """
 
@@ -362,13 +341,6 @@ def _fmt(value, decimals=1):
     return f"{number:.{decimals}f}"
 
 
-def _pill(text, style, title=None):
-    title_attr = f' title="{html.escape(title, quote=True)}"' if title else ""
-    if text is None:
-        return f'<span class="pill pill-empty"{title_attr}>--</span>'
-    return f'<span class="pill pill-{style}"{title_attr}>{html.escape(str(text))}</span>'
-
-
 RISK_CATEGORY_META = [
     ("injury_score", "Injury"),
     ("role_usage_td_score", "Role/Usage/TD"),
@@ -376,15 +348,44 @@ RISK_CATEGORY_META = [
     ("schedule_weather_venue_score", "Schedule/Wx"),
 ]
 
-# Same >66/>34 split as the overall risk_index band, applied to each
-# category's own 0-100 conversion, so a bar's color always means the same
-# thing as the pill's color.
+# Same >66/>34 split as the overall risk_index band (see _risk_band below),
+# applied to each category's own 0-100 conversion, so a bar's color always
+# means the same thing as the row's risk pill color.
 def _risk_bar_color(score100):
     if score100 > 66:
-        return "#f87171"
+        return RISK_COLORS["high"]
     if score100 > 34:
-        return "#fbbf24"
-    return "#4ade80"
+        return RISK_COLORS["mid"]
+    return RISK_COLORS["low"]
+
+
+def _risk_band(risk_index):
+    """low/mid/high classification for a 0-100 risk_index -- same >66/>34
+    thresholds _risk_bar_color uses per-category, applied to the overall
+    composite. Single source of truth for the row pill, the risk filter
+    tabs, and the card's risk label."""
+    if risk_index is None or pd.isna(risk_index):
+        return None
+    v = float(risk_index)
+    if v > 66:
+        return "high"
+    if v > 34:
+        return "mid"
+    return "low"
+
+
+def _risk_value(row):
+    """Display risk (0-100): the board-wide min-max-scaled riskScaled column
+    when present, else the raw risk_index. Mirrors how scoreScaled is the
+    display form of final_score for OUR SCORE -- the riskiest player on the
+    board reads 100, the safest 0. Every risk *display* (the number, bars,
+    band pill/color, and the risk filter) reads through this so they stay
+    coherent; the raw risk_index still drives the Risk-adjusted view's sort
+    and the per-category bars."""
+    scaled = row.get("riskScaled")
+    if scaled is not None and pd.notna(scaled):
+        return scaled
+    return row.get("risk_index")
 
 
 def _market_badge(value_signal_market):
@@ -431,77 +432,32 @@ def _manual_override_badge(note):
     return f'<span class="sc-badge sc-badge-chronic">⚠ Manual override: {html.escape(str(note))}</span>'
 
 
-def _risk_scorecard_html(row, overall_number, band):
-    """Builds the nested <div class="scorecard"> shown by the pure-CSS
-    `.pill-risk:hover .scorecard { opacity: 1 }` rule (see RANKINGS_CSS)."""
-    name = html.escape(str(row.get("player_name") or ""))
-    position = html.escape(str(row.get("position") or ""))
-    team = html.escape(str(row.get("team") or ""))
-    adp = _fmt(row.get("adp"), 1) or "--"
-
-    cat_rows = []
+def _risk_note_text(row):
+    """Plain-language driver note for the risk profile card section --
+    names the primary category and, when both real sub-scores are present,
+    the acute/chronic injury split. Same underlying reads as the old hover
+    popover, just returned as plain text for the new card body."""
     best_label, best_score100 = None, -1
     for col, label in RISK_CATEGORY_META:
         raw = row.get(col)
         if raw is None or pd.isna(raw):
             continue
-        score100 = round((float(raw) - 1) / 4 * 100)
-        score100 = max(0, min(100, score100))
+        score100 = max(0, min(100, round((float(raw) - 1) / 4 * 100)))
         if score100 > best_score100:
             best_label, best_score100 = label, score100
-        cat_rows.append(
-            f'<div class="sc-row"><div class="sc-cat-label">{html.escape(label)}</div>'
-            f'<div class="sc-bar-track"><div class="sc-bar-fill" '
-            f'style="width:{score100}%;background:{_risk_bar_color(score100)}"></div></div>'
-            f'<div class="sc-cat-score">{score100}</div></div>'
-        )
 
-    badges = (
-        _market_badge(row.get("value_signal_market"))
-        + _chronic_injury_badge(row.get("games_missed_by_season"))
-        + _manual_override_badge(row.get("injury_override_note"))
-        + _manual_override_badge(row.get("role_usage_td_override_note"))
-    )
-    badges_html = f'<div class="sc-badges">{badges}</div>' if badges else ""
+    note = f"Driven mainly by <b>{html.escape(best_label)}</b> ({best_score100}/100)." if best_label else ""
 
-    note = (
-        f"Driven mainly by <b>{html.escape(best_label)}</b> ({best_score100}/100)."
-        if best_label else ""
-    )
-
-    # Acute/chronic injury split (plan_risk_index_reweight_dynamic.pdf
-    # Phase 2) -- disclosed so a hover shows WHY the Injury bar reads what
-    # it does, not just the blended number. Only rendered when both real
-    # sub-scores are present (older risk_variables.csv builds won't have
-    # them).
     acute = row.get("injury_acute_score")
     chronic = row.get("injury_chronic_score")
-    injury_split_note = ""
     if pd.notna(acute) and pd.notna(chronic):
         driver = "recent/acute" if float(acute) >= float(chronic) else "career/chronic pattern"
-        injury_split_note = (
-            f"Injury reads as {round((max(float(acute), float(chronic)) - 1) / 4 * 100)}/100, "
+        note += (
+            f" Injury reads as {round((max(float(acute), float(chronic)) - 1) / 4 * 100)}/100, "
             f"driven by the <b>{driver}</b> component -- acute {round((float(acute) - 1) / 4 * 100)}/100, "
             f"chronic {round((float(chronic) - 1) / 4 * 100)}/100."
         )
-
-    band_color = {"red": "#f87171", "amber": "#fbbf24", "green": "#4ade80"}[band]
-    return (
-        '<div class="scorecard">'
-        '<div class="sc-header">'
-        f'<div><div class="sc-name">{name}</div>'
-        f'<div class="sc-meta">{position} · {team} · ADP {adp}</div></div>'
-        '<div class="sc-overall">'
-        f'<div class="num" style="color:{band_color}">{round(overall_number)}<span class="of100">/100</span></div>'
-        '<div class="lbl">Risk Index</div></div>'
-        "</div>"
-        f'{"".join(cat_rows)}'
-        '<div class="sc-divider"></div>'
-        f"{badges_html}"
-        f'<div class="sc-note">{note}</div>'
-        f'{f"<div class=\"sc-note\">{injury_split_note}</div>" if injury_split_note else ""}'
-        "</div>"
-    )
+    return note.strip()
 
 
 ARCHETYPE_LABELS = {
@@ -734,227 +690,73 @@ def _archetype_metric_value(raw, kind: str) -> str | None:
     return f"{int(raw)}"
 
 
-def _archetype_scorecard_html(row, primary: str) -> str:
-    """Builds the nested <div class="scorecard"> shown by the pure-CSS
-    `.arch-wrap:hover .scorecard { opacity: 1 }` rule (see RANKINGS_CSS).
-    Shows the real metrics that drove this specific classification, not a
-    fit score for every archetype -- this taxonomy only computes real
-    pass/fail thresholds per archetype, not a continuous comparative
-    score across all six (see draftkit/rb_archetypes.py)."""
-    name = html.escape(str(row.get("player_name") or ""))
-    team = html.escape(str(row.get("team") or ""))
-    adp = _fmt(row.get("adp"), 1) or "--"
-    # RB-specific "No Role" override -- see _render_cell's matching comment.
-    label = "No Role" if primary == "unconfirmed" else ARCHETYPE_LABELS.get(primary, primary or "Unconfirmed")
+def _primary_archetype(row):
+    """Whichever position-specific archetype system applies to this row --
+    rookie fallback first, then RB/WR/QB/TE's own real primary (same
+    precedence the old hover-badge dispatch used) -- returned as data
+    (kind, primary_key, label, metrics_dict) rather than badge HTML, so
+    both the row's role subtitle and the card's sections can share one
+    lookup instead of re-deriving it per section."""
+    rookie_display_status = row.get("rookie_display_status")
+    if isinstance(rookie_display_status, str) and rookie_display_status in ("projected", "blended"):
+        tier = row.get("rookie_display_tag")
+        label = ARCHETYPE_LABELS.get(tier, tier or "Unconfirmed")
+        if rookie_display_status == "projected":
+            label = f"Projected: {label}"
+        else:
+            weight = row.get("rookie_display_weight")
+            pct = round(float(weight) * 100) if pd.notna(weight) else None
+            if pct is not None:
+                label = f"{label} -- {pct}% confirmed"
+        return ("rookie", tier, label, None)
 
-    metric_rows = []
-    for col, metric_label, kind in ARCHETYPE_METRICS.get(primary, []):
-        formatted = _archetype_metric_value(row.get(col), kind)
-        if formatted is None:
-            continue
-        metric_rows.append(
-            f'<div class="sc-row"><div class="sc-cat-label">{html.escape(metric_label)}</div>'
-            f'<div class="sc-cat-score" style="width:auto;margin-left:auto;">{formatted}</div></div>'
-        )
+    rb_primary = row.get("rb_archetype_primary")
+    if isinstance(rb_primary, str) and rb_primary:
+        label = "No Role" if rb_primary == "unconfirmed" else ARCHETYPE_LABELS.get(rb_primary, rb_primary)
+        down_split = row.get("rb_down_split")
+        if rb_primary in ("bellcow", "committee_back") and isinstance(down_split, str) and down_split in DOWN_SPLIT_LABELS:
+            label = f"{label} ({DOWN_SPLIT_LABELS[down_split]})"
+        return ("rb", rb_primary, label, ARCHETYPE_METRICS)
 
-    lean = row.get("rb_lean")
-    lean_note = ""
-    if isinstance(lean, str) and lean in LEAN_LABELS:
-        lean_note = f"Also shows a real <b>{LEAN_LABELS[lean]}</b> -- a secondary trait that doesn't rise to its own archetype."
+    wr_primary = row.get("wr_archetype_primary")
+    if isinstance(wr_primary, str) and wr_primary:
+        return ("wr", wr_primary, ARCHETYPE_LABELS.get(wr_primary, wr_primary), WR_ARCHETYPE_METRICS)
 
-    unconfirmed_note = (
-        "Real data doesn't yet clear the sample floor for a confident archetype read "
-        "(new player or limited usage) -- not a statement that he's unimportant."
-        if primary == "unconfirmed" else ""
-    )
+    qb_primary = row.get("qb_archetype_primary")
+    if isinstance(qb_primary, str) and qb_primary:
+        return ("qb", qb_primary, ARCHETYPE_LABELS.get(qb_primary, qb_primary), QB_ARCHETYPE_METRICS)
 
-    note = lean_note or unconfirmed_note or ""
-    note_html = f'<div class="sc-note">{note}</div>' if note else ""
+    te_primary = row.get("te_archetype_primary")
+    if isinstance(te_primary, str) and te_primary:
+        role_profile = row.get("te_role_profile")
+        if te_primary == "receiving_te" and isinstance(role_profile, str) and role_profile in TE_ROLE_PROFILE_LABELS:
+            label = TE_ROLE_PROFILE_LABELS[role_profile]
+        else:
+            label = ARCHETYPE_LABELS.get(te_primary, te_primary)
+        return ("te", te_primary, label, TE_ARCHETYPE_METRICS)
 
-    return (
-        '<div class="scorecard">'
-        '<div class="sc-header">'
-        f'<div><div class="sc-name">{name}</div>'
-        f'<div class="sc-meta">RB · {team} · ADP {adp}</div></div>'
-        '<div class="sc-overall">'
-        f'<div class="lbl" style="font-size:12px;color:#e6edf3;font-weight:700;">{html.escape(label)}</div>'
-        '</div>'
-        "</div>"
-        f'{"".join(metric_rows)}'
-        f'{"<div class=\"sc-divider\"></div>" if note else ""}'
-        f"{note_html}"
-        f'{_prospect_profile_html(row)}'
-        "</div>"
-    )
+    return (None, None, None, None)
 
 
-def _wr_archetype_scorecard_html(row, primary: str) -> str:
-    """WR counterpart to _archetype_scorecard_html() -- same popover
-    scaffold, WR-shaped inputs (usage tier + independent leans + QB-context
-    flag instead of RB's primary/down_split/lean). Shows the real metrics
-    behind classify_primary(), not a fit score for every tier (see
-    draftkit/wr_archetypes.py -- this taxonomy only computes real pass/fail
-    band checks, not a continuous comparative score)."""
-    name = html.escape(str(row.get("player_name") or ""))
-    team = html.escape(str(row.get("team") or ""))
-    adp = _fmt(row.get("adp"), 1) or "--"
-    label = ARCHETYPE_LABELS.get(primary, primary or "Unconfirmed")
-
-    metric_rows = []
-    for col, metric_label, kind in WR_ARCHETYPE_METRICS.get(primary, []):
-        formatted = _archetype_metric_value(row.get(col), kind)
-        if formatted is None:
-            continue
-        metric_rows.append(
-            f'<div class="sc-row"><div class="sc-cat-label">{html.escape(metric_label)}</div>'
-            f'<div class="sc-cat-score" style="width:auto;margin-left:auto;">{formatted}</div></div>'
-        )
-
-    leans = [l for l in str(row.get("wr_leans") or "none").split(",") if l in LEAN_LABELS]
-    lean_note = ""
-    if leans:
-        lean_text = ", ".join(f"<b>{LEAN_LABELS[l]}</b>" for l in leans)
-        lean_note = f"Also carries a real {lean_text} -- an independent boom-trait tag, not tied to usage tier."
-
+def _offense_context_label(row):
+    """WR carries a real, direct QB-context read (wr_qb_context) -- used
+    verbatim when present. Every other position falls back to a generic
+    band off the real offense_environment_score risk category (same 1-5 ->
+    0-100 conversion _risk_scorecard used), since no position-specific
+    "context" field exists for RB/QB/TE. Real data either way, never
+    fabricated."""
     qb_label = QB_CONTEXT_LABELS.get(row.get("wr_qb_context"))
-    qb_note = (
-        f"Plays in a real <b>{qb_label}</b>, based on his team's real season offensive EPA/play rank."
-        if qb_label else ""
-    )
-
-    unconfirmed_note = (
-        "Real data doesn't yet clear the sample floor (30 targets, 6 games) for a confident usage-tier "
-        "read -- not a statement that he's unimportant."
-        if primary == "unconfirmed" else ""
-    )
-
-    notes = [n for n in (lean_note, qb_note, unconfirmed_note) if n]
-    note_html = "".join(f'<div class="sc-note">{n}</div>' for n in notes)
-
-    return (
-        '<div class="scorecard">'
-        '<div class="sc-header">'
-        f'<div><div class="sc-name">{name}</div>'
-        f'<div class="sc-meta">WR · {team} · ADP {adp}</div></div>'
-        '<div class="sc-overall">'
-        f'<div class="lbl" style="font-size:12px;color:#e6edf3;font-weight:700;">{html.escape(label)}</div>'
-        '</div>'
-        "</div>"
-        f'{"".join(metric_rows)}'
-        f'{"<div class=\"sc-divider\"></div>" if notes else ""}'
-        f"{note_html}"
-        f'{_prospect_profile_html(row)}'
-        "</div>"
-    )
-
-
-def _qb_archetype_scorecard_html(row, primary: str) -> str:
-    """QB counterpart to _archetype_scorecard_html()/_wr_archetype_scorecard_html().
-    Single-axis taxonomy (rushing_fantasy_pct only) -- no leans, no QB-context
-    flag (that's WR's own tag for the QB it plays behind, not relevant to a
-    QB's own row). seasons_used isn't a numeric metric row (no "raw string"
-    kind exists in _archetype_metric_value()) -- surfaced in the note text
-    instead, same slot _wr_archetype_scorecard_html() uses for qb_note/etc."""
-    name = html.escape(str(row.get("player_name") or ""))
-    team = html.escape(str(row.get("team") or ""))
-    adp = _fmt(row.get("adp"), 1) or "--"
-    label = ARCHETYPE_LABELS.get(primary, primary or "Unconfirmed")
-
-    metric_rows = []
-    for col, metric_label, kind in QB_ARCHETYPE_METRICS.get(primary, []):
-        formatted = _archetype_metric_value(row.get(col), kind)
-        if formatted is None:
-            continue
-        metric_rows.append(
-            f'<div class="sc-row"><div class="sc-cat-label">{html.escape(metric_label)}</div>'
-            f'<div class="sc-cat-score" style="width:auto;margin-left:auto;">{formatted}</div></div>'
-        )
-
-    seasons_used = row.get("qb_seasons_used")
-    seasons_note = (
-        f"Pooled across real {html.escape(str(seasons_used).replace(',', ', '))} season(s) -- "
-        "QB rushing volume swings more year-to-year than RB/WR usage (contract situations, scheme "
-        "changes), so a single season isn't used alone."
-        if isinstance(seasons_used, str) and seasons_used else ""
-    )
-    unconfirmed_note = (
-        "Real data doesn't yet clear the sample floor (100 pass attempts, 4 games, pooled across up "
-        "to 2 real seasons) for a confident read -- not a statement that he's unimportant."
-        if primary == "unconfirmed" else ""
-    )
-
-    notes = [n for n in (seasons_note, unconfirmed_note) if n]
-    note_html = "".join(f'<div class="sc-note">{n}</div>' for n in notes)
-
-    return (
-        '<div class="scorecard">'
-        '<div class="sc-header">'
-        f'<div><div class="sc-name">{name}</div>'
-        f'<div class="sc-meta">QB · {team} · ADP {adp}</div></div>'
-        '<div class="sc-overall">'
-        f'<div class="lbl" style="font-size:12px;color:#e6edf3;font-weight:700;">{html.escape(label)}</div>'
-        '</div>'
-        "</div>"
-        f'{"".join(metric_rows)}'
-        f'{"<div class=\"sc-divider\"></div>" if notes else ""}'
-        f"{note_html}"
-        "</div>"
-    )
-
-
-def _te_archetype_scorecard_html(row, primary: str) -> str:
-    """TE counterpart to _qb_archetype_scorecard_html(). target_share is
-    the real primary discriminator; snap_share is a real-involvement
-    confidence gate, not a second axis (see draftkit/te_archetypes.py's
-    module docstring for the corrected-anchor reasoning)."""
-    name = html.escape(str(row.get("player_name") or ""))
-    team = html.escape(str(row.get("team") or ""))
-    adp = _fmt(row.get("adp"), 1) or "--"
-    role_profile = row.get("te_role_profile")
-    if primary == "receiving_te" and isinstance(role_profile, str) and role_profile in TE_ROLE_PROFILE_LABELS:
-        label = TE_ROLE_PROFILE_LABELS[role_profile]
-    else:
-        label = ARCHETYPE_LABELS.get(primary, primary or "Unconfirmed")
-
-    metric_rows = []
-    for col, metric_label, kind in TE_ARCHETYPE_METRICS.get(primary, []):
-        formatted = _archetype_metric_value(row.get(col), kind)
-        if formatted is None:
-            continue
-        metric_rows.append(
-            f'<div class="sc-row"><div class="sc-cat-label">{html.escape(metric_label)}</div>'
-            f'<div class="sc-cat-score" style="width:auto;margin-left:auto;">{formatted}</div></div>'
-        )
-
-    leans = [l for l in str(row.get("te_leans") or "none").split(",") if l in LEAN_LABELS]
-    lean_note = ""
-    if leans:
-        lean_text = ", ".join(f"<b>{LEAN_LABELS[l]}</b>" for l in leans)
-        lean_note = f"Also carries a real {lean_text} -- an independent boom-trait tag, not tied to usage tier."
-
-    unconfirmed_note = (
-        "Real data doesn't yet clear the sample floor (4 games, 30% snap share) for a confident "
-        "read -- not a statement that he's unimportant."
-        if primary == "unconfirmed" else ""
-    )
-
-    notes = [n for n in (lean_note, unconfirmed_note) if n]
-    note_html = "".join(f'<div class="sc-note">{n}</div>' for n in notes)
-
-    return (
-        '<div class="scorecard">'
-        '<div class="sc-header">'
-        f'<div><div class="sc-name">{name}</div>'
-        f'<div class="sc-meta">TE · {team} · ADP {adp}</div></div>'
-        '<div class="sc-overall">'
-        f'<div class="lbl" style="font-size:12px;color:#e6edf3;font-weight:700;">{html.escape(label)}</div>'
-        '</div>'
-        "</div>"
-        f'{"".join(metric_rows)}'
-        f'{"<div class=\"sc-divider\"></div>" if notes else ""}'
-        f"{note_html}"
-        "</div>"
-    )
+    if qb_label:
+        return qb_label
+    raw = row.get("offense_environment_score")
+    if raw is None or pd.isna(raw):
+        return None
+    score100 = max(0, min(100, round((float(raw) - 1) / 4 * 100)))
+    if score100 <= 34:
+        return "Strong offense context"
+    if score100 <= 66:
+        return "Average offense context"
+    return "Weak offense context"
 
 
 def _format_height_inches(value) -> str | None:
@@ -965,19 +767,50 @@ def _format_height_inches(value) -> str | None:
     return f'{feet}\'{inches}"'
 
 
-def _prospect_profile_html(row) -> str:
-    """Real-only, read-only college/draft context -- draft pick, school,
-    combine measurables, college dominator, breakout age -- for anyone with
-    real data in rookie_inputs.csv (2026 board) or backtest_rookie_inputs.csv
-    (2023-2025 real veterans), merged in with a "rookie_" prefix regardless
-    of the player's current rookie_status (see _rankings()).
+@st.cache_data(show_spinner=False)
+def _composite_rank_lookup():
+    """Per-position sorted composite distributions from the rookie
+    projection model (data/processed/rookie_projections.csv), so the draft
+    profile can show a player's composite AND where it ranks within its
+    position. Returns {POSITION: [composite, ...] sorted high->low}. Cached;
+    keyed on nothing since the CSV is a manual-refresh artifact."""
+    path = Path("data/processed/rookie_projections.csv")
+    if not path.exists():
+        return {}
+    df = pd.read_csv(path)
+    if "composite" not in df.columns or "position" not in df.columns:
+        return {}
+    df = df.dropna(subset=["composite"])
+    lookup = {}
+    for pos, grp in df.groupby(df["position"].astype(str).str.upper()):
+        lookup[pos] = sorted(pd.to_numeric(grp["composite"], errors="coerce").dropna().tolist(), reverse=True)
+    return lookup
 
-    Narrative context only -- does NOT feed OUR SCORE/risk_index (traced
-    calculate_final_recommendation_score directly: it never reads any
-    archetype field, confirmed via full-file grep before this was built)
-    and does NOT reintroduce college signal beyond what rookie_sample_weight
-    already governs for the badge/tag above it. Renders nothing if no real
-    draft_pick is on file -- no fabricated placeholders."""
+
+def _composite_position_rank(position, composite):
+    """(rank, total) for a composite within its position, or None. Rank is
+    1-based, ties share the better rank (count of strictly-higher + 1)."""
+    if composite is None or pd.isna(composite):
+        return None
+    pos = str(position or "").upper()
+    values = _composite_rank_lookup().get(pos)
+    if not values:
+        return None
+    c = float(composite)
+    rank = sum(1 for v in values if v > c) + 1
+    return rank, len(values)
+
+
+def _draft_profile_section_html(row) -> str:
+    """Real-only, read-only college/draft context for the card's Draft
+    profile collapsible -- draft pick, school, combine measurables,
+    college dominator, breakout age, for anyone with real data in
+    rookie_inputs.csv (2026 board) or backtest_rookie_inputs.csv
+    (2023-2025 real veterans), merged in with a "rookie_" prefix
+    regardless of the player's current rookie_status (see _rankings()).
+    Narrative context only -- does NOT feed OUR SCORE/risk_index. Returns
+    "" if no real draft_pick is on file -- no fabricated placeholders,
+    which is also what gates the collapsible's header off in the caller."""
     draft_pick = row.get("rookie_draft_pick")
     if draft_pick is None or pd.isna(draft_pick):
         return ""
@@ -994,531 +827,546 @@ def _prospect_profile_html(row) -> str:
     draft_season = row.get("rookie_draft_season")
     pick_label = f"#{int(draft_pick)}" + (f" ({int(draft_season)})" if pd.notna(draft_season) else "")
 
-    rows_html = [
-        f'<div class="sc-row"><div class="sc-cat-label">Draft Pick</div>'
-        f'<div class="sc-cat-score" style="width:auto;margin-left:auto;">{pick_label}</div></div>'
-    ]
+    # Composite score, shown prominently as the profile's lead field with
+    # its within-position rank (x/total) from the rookie projection model.
+    fields = []
+    composite_val = row.get("rookie_composite")
+    if composite_val is not None and pd.notna(composite_val):
+        rank_info = _composite_position_rank(row.get("position"), composite_val)
+        rank_suffix = f" ({rank_info[0]}/{rank_info[1]})" if rank_info else ""
+        fields.append((
+            "Composite Score",
+            f'<span style="color:#eef1ec;font-weight:700;">{float(composite_val):.1f}</span>'
+            f'<span style="color:#8c948f;">{rank_suffix}</span>',
+        ))
+    fields.append(("Draft capital", pick_label))
     if isinstance(college, str) and college:
-        rows_html.append(
-            f'<div class="sc-row"><div class="sc-cat-label">College</div>'
-            f'<div class="sc-cat-score" style="width:auto;margin-left:auto;">{html.escape(college)}</div></div>'
-        )
+        fields.append(("College", html.escape(college)))
     combine_bits = [b for b in (height, f"{weight} lbs" if weight else None, f"{forty}s 40yd" if forty else None) if b]
     if combine_bits:
-        rows_html.append(
-            f'<div class="sc-row"><div class="sc-cat-label">Combine</div>'
-            f'<div class="sc-cat-score" style="width:auto;margin-left:auto;">{" / ".join(combine_bits)}</div></div>'
-        )
+        fields.append(("Testing", " / ".join(combine_bits)))
     if dominator_str:
-        rows_html.append(
-            f'<div class="sc-row"><div class="sc-cat-label">College Dominator</div>'
-            f'<div class="sc-cat-score" style="width:auto;margin-left:auto;">{dominator_str}</div></div>'
-        )
+        fields.append(("College production", dominator_str))
     if breakout_age:
-        rows_html.append(
-            f'<div class="sc-row"><div class="sc-cat-label">Breakout Age</div>'
-            f'<div class="sc-cat-score" style="width:auto;margin-left:auto;">{breakout_age}</div></div>'
-        )
-    composite = _fmt(row.get("rookie_composite"), 1)
-    if composite:
-        rows_html.append(
-            f'<div class="sc-row"><div class="sc-cat-label" style="font-weight:700;color:#e6edf3;">Composite</div>'
-            f'<div class="sc-cat-score" style="width:auto;margin-left:auto;font-weight:700;color:#e6edf3;">'
-            f'{composite} <span style="font-weight:400;color:#8b949e;font-size:11px;">(pre-draft estimate, unvalidated)</span>'
-            f'</div></div>'
-        )
+        fields.append(("Archetype", f"Breakout age {breakout_age}"))
 
-    return (
-        '<div class="sc-divider"></div>'
-        '<div class="sc-note" style="font-weight:700;color:#e6edf3;margin-bottom:4px;">PROSPECT PROFILE</div>'
-        f'{"".join(rows_html)}'
-        '<div class="sc-note" style="margin-top:4px;">Real college/draft context, for reference -- '
-        "not additional weight beyond what's shown above.</div>"
+    fields_html = "".join(
+        f'<div class="gp-draft-field"><div class="gp-draft-field-lbl">{html.escape(lbl)}</div>'
+        f'<div class="gp-draft-field-val">{val}</div></div>'
+        for lbl, val in fields
     )
+    # Composite now surfaces as the lead field above; the footnote just
+    # frames the whole section as reference context.
+    note = "Real college/draft context, for reference -- not additional weight beyond what's shown above."
+    tag = "Rookie" if row.get("rookie_draft_season") is not None and pd.notna(row.get("rookie_draft_season")) else "Veteran"
 
-
-def _rookie_archetype_scorecard_html(row, status: str) -> str:
-    """Popover for a rookie_display_status of 'projected' or 'blended' --
-    draftkit/rookie_projection.py's real composite + component breakdown.
-    'status' here is the "unconfirmed"-aware display status: it matches
-    the real validation status/tag for anyone with a real, DECISIVE
-    confirmed archetype, and only diverges when the real tag is literally
-    "unconfirmed" (real snaps exist, but no real usage tier was ever
-    crossed) -- in which case it falls back to the college-based
-    projection instead of showing the bare word "Unconfirmed" (see
-    build_rookie_projections.py's dual-blend docstring; a
-    years-since-draft version of this same double-computation pattern was
-    tried and reverted for hedging ALREADY-decisive tags, which this does
-    not do).
-
-    Shows real usage metrics whenever a real rb_archetype_primary/
-    wr_archetype_primary exists at all -- including the literal value
-    "unconfirmed" -- not just when status=="blended", since a player can
-    have real (if inconclusive) NFL snaps driving this popover's fallback.
-    Reuses the exact same ARCHETYPE_METRICS/WR_ARCHETYPE_METRICS dicts and
-    _archetype_metric_value() the plain confirmed popover uses (including
-    each dict's own "unconfirmed" entry, which is real metric rows only --
-    games/touches/opportunity_share -- never a label), since
-    rb_archetype_primary/wr_archetype_primary are already merged onto every
-    row regardless of rookie status.
-
-    Explicitly labeled as an unvalidated v1 model (rookie_integration_plan
-    Phase 0 finding, verified against the real codebase before wiring this
-    in): the backtest ran and was reported honestly
-    (draftkit/scripts/run_rookie_backtest.py), but threshold/weight
-    retuning and validating draft_capital_score() against a real NFL
-    draft-trade-value chart haven't happened -- no such chart data exists
-    anywhere in this repo. Showing the composite with no caveat would imply
-    more calibration than a v1 model has earned."""
-    name = html.escape(str(row.get("player_name") or ""))
-    position = html.escape(str(row.get("position") or ""))
-    team = html.escape(str(row.get("team") or ""))
-    adp = _fmt(row.get("adp"), 1) or "--"
-    tier = row.get("rookie_display_tag")
-    label = ARCHETYPE_LABELS.get(tier, tier or "Unconfirmed")
-
-    # NaN (missing, the common case for whichever of the two columns
-    # doesn't apply to this player's position) is truthy in Python, so
-    # `row.get(...) or row.get(...)` would silently pick the NaN over a
-    # real string -- explicit isinstance/str checks instead, same pattern
-    # _render_cell's archetype branch already uses.
-    rb_primary_val = row.get("rb_archetype_primary")
-    wr_primary_val = row.get("wr_archetype_primary")
-    qb_primary_val = row.get("qb_archetype_primary")
-    real_primary, metrics_dict = (
-        (rb_primary_val, ARCHETYPE_METRICS) if isinstance(rb_primary_val, str) and rb_primary_val
-        else (wr_primary_val, WR_ARCHETYPE_METRICS) if isinstance(wr_primary_val, str) and wr_primary_val
-        else (qb_primary_val, QB_ARCHETYPE_METRICS) if isinstance(qb_primary_val, str) and qb_primary_val
-        else (None, None)
-    )
-    real_metric_rows = []
-    if real_primary:
-        for col, metric_label, kind in metrics_dict.get(real_primary, []):
+    # Composite component breakdown -- only meaningful while the pre-draft
+    # projection is still live (rookie_display_status projected/blended),
+    # since that's the only time this composite actually drives anything.
+    component_rows = ""
+    rookie_display_status = row.get("rookie_display_status")
+    if isinstance(rookie_display_status, str) and rookie_display_status in ("projected", "blended"):
+        rows = []
+        for col, label, kind in ROOKIE_COMPONENT_METRICS:
             formatted = _archetype_metric_value(row.get(col), kind)
             if formatted is None:
                 continue
-            real_metric_rows.append(
-                f'<div class="sc-row"><div class="sc-cat-label">{html.escape(metric_label)}</div>'
-                f'<div class="sc-cat-score" style="width:auto;margin-left:auto;">{formatted}</div></div>'
+            rows.append(
+                '<div style="display:flex;justify-content:space-between;font:400 11.5px \'IBM Plex Sans\',sans-serif;color:#8c948f;">'
+                f'<span>{html.escape(label)}</span>'
+                f'<span style="color:#c9d0c9;font-weight:600;font-family:\'IBM Plex Mono\',monospace;">{formatted}</span></div>'
+            )
+        if rows:
+            component_rows = (
+                '<div style="font:600 9px \'IBM Plex Mono\',monospace;letter-spacing:.1em;color:#6f776f;'
+                'text-transform:uppercase;margin:12px 0 4px;">Composite components</div>'
+                f'<div class="nest-group" style="border-left:none;padding-left:0;">{"".join(rows)}</div>'
             )
 
-    component_rows = []
-    for col, metric_label, kind in ROOKIE_COMPONENT_METRICS:
+    return (
+        f'<details class="gp-section"><summary><span>Draft profile '
+        f'<span style="font:700 9.5px \'IBM Plex Mono\',monospace;letter-spacing:.05em;'
+        f'padding:1px 7px;border-radius:5px;color:{"#b79ada" if tag == "Rookie" else "#7fa8d9"};'
+        f'background:rgba(255,255,255,.05);margin-left:8px;">{tag}</span></span>'
+        f'<span class="sec-caret sec-caret-open">▾</span><span class="sec-caret sec-caret-closed">▸</span></summary>'
+        f'<div class="gp-section-body"><div class="gp-draft-grid">{fields_html}</div>'
+        f'{component_rows}'
+        f'<div style="font:400 10.5px/1.5 \'IBM Plex Sans\',sans-serif;color:#6f776f;font-style:italic;margin-top:11px;">{note}</div>'
+        f'</div></details>'
+    )
+
+
+def _safe_float(value, default=0.0):
+    try:
+        if value is None or pd.isna(value):
+            return default
+    except TypeError:
+        pass
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def _initials(name):
+    parts = [p for p in str(name or "").split() if p]
+    if not parts:
+        return "?"
+    if len(parts) == 1:
+        return parts[0][:2].upper()
+    return (parts[0][0] + parts[-1][0]).upper()
+
+
+def _sleeper_player_id(player_id):
+    """Normalize the merged Sleeper player_id (arrives as a float like
+    9221.0 after the pandas merge) into the bare integer string Sleeper's
+    CDN path expects, or None if it isn't a usable id."""
+    if player_id is None or (isinstance(player_id, float) and pd.isna(player_id)):
+        return None
+    try:
+        return str(int(float(player_id)))
+    except (TypeError, ValueError):
+        text = str(player_id).strip()
+        return text or None
+
+
+def _avatar_html(name, player_id=None, large=False):
+    """Circular avatar: a Sleeper CDN headshot layered over an initials
+    fallback. player_id is the Sleeper id (see _rankings()); Sleeper serves
+    a real head-crop JPEG for valid ids and 403s otherwise. The headshot is
+    a `background-image` overlay so a 403 simply doesn't paint (no broken-
+    image icon, and no JS/onerror needed -- Streamlit's HTML sanitizer
+    strips event handlers), revealing the initials underneath."""
+    cls = "gp-avatar gp-avatar-lg" if large else "gp-avatar"
+    initials = html.escape(_initials(name))
+    sid = _sleeper_player_id(player_id)
+    if sid is None:
+        return f'<span class="{cls}"><span class="gp-avatar-ini">{initials}</span></span>'
+    # thumb crop for the table row, full-res for the larger card avatar
+    variant = "" if large else "thumb/"
+    url = f"https://sleepercdn.com/content/nfl/players/{variant}{sid}.jpg"
+    return (
+        f'<span class="{cls}"><span class="gp-avatar-ini">{initials}</span>'
+        f'<span class="gp-avatar-img" style="background-image:url(\'{url}\');"></span></span>'
+    )
+
+
+def _rank_delta(row):
+    """ADP rank minus display rank -- positive means we rank him EARLIER
+    than the market. Computed fresh off ADP Rk/display_rank (not the fixed
+    "Engine vs ADP" column, which is pinned to the Median view's rank) so
+    it stays correct under the Ceiling/Risk-adjusted views too."""
+    adp_rank = row.get("ADP Rk")
+    display_rank = row.get("display_rank")
+    if adp_rank is None or pd.isna(adp_rank) or display_rank is None or pd.isna(display_rank):
+        return None
+    return float(adp_rank) - float(display_rank)
+
+
+def _delta_cell_html(delta, suffix):
+    if delta is None or pd.isna(delta):
+        return '<span style="color:#8c948f;">--</span>'
+    d = float(delta)
+    if d > 0.5:
+        return f'<span style="color:#7fc98a;">▲ {d:.1f}{suffix}</span>'
+    if d < -0.5:
+        return f'<span style="color:#e08a7f;">▼ {abs(d):.1f}{suffix}</span>'
+    return '<span style="color:#8c948f;">● in line</span>'
+
+
+def _market_callout(rank_delta):
+    if rank_delta is None:
+        return {"arrow": "●", "color": "#8c948f", "bg": "rgba(168,198,134,.06)",
+                "bd": "#262b2e", "text": "No market comparison available."}
+    d = float(rank_delta)
+    if d > 0.5:
+        return {"arrow": "▲", "color": "#7fc98a", "bg": "rgba(127,201,138,.09)", "bd": "rgba(127,201,138,.3)",
+                "text": f"Model likes him {d:.1f} spots more than the market"}
+    if d < -0.5:
+        return {"arrow": "▼", "color": "#e08a7f", "bg": "rgba(224,138,127,.09)", "bd": "rgba(224,138,127,.3)",
+                "text": f"Model is {abs(d):.1f} spots more cautious than the market"}
+    return {"arrow": "●", "color": "#8c948f", "bg": "rgba(168,198,134,.06)", "bd": "#262b2e",
+            "text": "Model agrees with the market on this one"}
+
+
+def _risk_minibars_html(risk_index):
+    band = _risk_band(risk_index)
+    color = RISK_COLORS.get(band, "#8c948f")
+    filled = 0 if risk_index is None or pd.isna(risk_index) else min(4, max(1, math.ceil(float(risk_index) / 25)))
+    return "".join(
+        f'<span style="height:{h}px;background:{color if i < filled else "#2a3033"}"></span>'
+        for i, h in enumerate((7, 10, 13, 16))
+    )
+
+
+def _metric_detail_rows_html(primary_key, metrics_dict, row):
+    """Plain label/value rows (no bar -- most of these metrics, like games
+    played or depth-chart rank, don't share a common 0-100 domain) for
+    whichever real archetype metrics drove this player's role read.
+    Continues the exact reads the old hover popover used."""
+    if not primary_key or not metrics_dict:
+        return ""
+    rows = []
+    for col, label, kind in metrics_dict.get(primary_key, []):
         formatted = _archetype_metric_value(row.get(col), kind)
         if formatted is None:
             continue
-        component_rows.append(
-            f'<div class="sc-row"><div class="sc-cat-label">{html.escape(metric_label)}</div>'
-            f'<div class="sc-cat-score" style="width:auto;margin-left:auto;">{formatted}</div></div>'
+        rows.append(
+            '<div style="display:flex;justify-content:space-between;font:400 11.5px \'IBM Plex Sans\',sans-serif;color:#8c948f;">'
+            f'<span>{html.escape(label)}</span>'
+            f'<span style="color:#c9d0c9;font-weight:600;font-family:\'IBM Plex Mono\',monospace;">{formatted}</span></div>'
         )
+    return "".join(rows)
 
-    composite = _fmt(row.get("rookie_composite"), 1)
-    draft_season = row.get("rookie_draft_season")
-    season_label = f"real {int(draft_season)}" if pd.notna(draft_season) else "real"
-    if status == "blended":
-        weight = row.get("rookie_display_weight")
-        pct = round(float(weight) * 100) if pd.notna(weight) else None
-        status_note = (
-            f"Blending the pre-draft projection with {season_label} usage ({pct}% confirmed "
-            f"weight, based on real sample size). Will shift fully to the confirmed read once "
-            f"real usage clears the sample floor."
-            if pct is not None else ""
-        )
-    elif real_primary:
-        # Real snaps exist (real_primary is on file), but the real read
-        # resolved to "unconfirmed" -- not "no data yet". Different from
-        # a true zero-snap rookie; say so honestly.
-        status_note = (
-            f"Real {season_label} usage exists but hasn't resolved into a clear archetype yet "
-            f"-- leaning on the college-based projection in the meantime. Composite: {composite}."
-            if composite else
-            f"Real {season_label} usage exists but hasn't resolved into a clear archetype yet "
-            f"-- leaning on the college-based projection in the meantime."
-        )
+
+def _bar_row_html(label, value, pct, color, nested=False):
+    sign = "+" if value > 0 else ""
+    cls = "bar-row-grid nested" if nested else "bar-row-grid"
+    track_cls = "bar-track thin" if nested else "bar-track"
+    fill_cls = "bar-fill thin" if nested else "bar-fill"
+    return (
+        f'<div class="{cls}"><span class="bar-row-lbl">{html.escape(label)}</span>'
+        f'<span class="{track_cls}"><span class="{fill_cls}" style="width:{pct:.1f}%;background:{color}"></span></span>'
+        f'<span class="bar-val">{sign}{value:.1f}</span></div>'
+    )
+
+
+def _scoring_breakdown_section_html(row):
+    """Real four-component Base Value breakdown (draft_analysis.py's
+    calculate_base_value_score()) -- shown as-is rather than force-fit into
+    the design handoff's invented example categories (base/VOR/ADP
+    adjustment/scenario adjustment), since this is the honest shape of
+    what the engine actually computes. Nested group below it is whichever
+    real per-position archetype usage metrics drove the role read, when
+    any exist."""
+    vor = _safe_float(row.get("base_value_vor_component"))
+    proj = _safe_float(row.get("base_value_projection_component"))
+    market = _safe_float(row.get("base_value_market_component"))
+    risk = _safe_float(row.get("base_value_risk_component"))
+    top_max = max(abs(vor), abs(proj), abs(market), abs(risk), 1.0)
+
+    rows_html = (
+        _bar_row_html("Value over replacement", vor, min(100, abs(vor) / top_max * 100), "#5b87c4")
+        + _bar_row_html("Within-position projection", proj, min(100, abs(proj) / top_max * 100), "#7fc98a")
+        + _bar_row_html("Market (ADP) swing", market, min(100, abs(market) / top_max * 100), "#7fc98a" if market >= 0 else "#e08a7f")
+        + _bar_row_html("Risk penalty", risk, min(100, abs(risk) / top_max * 100), "#7fc98a" if risk >= 0 else "#e08a7f")
+    )
+
+    _, primary_key, _, metrics_dict = _primary_archetype(row)
+    nested_rows = _metric_detail_rows_html(primary_key, metrics_dict, row)
+    nested_html = (
+        '<div style="font:400 11px \'IBM Plex Sans\',sans-serif;color:#7c847e;margin:11px 0 7px;'
+        'padding-top:10px;border-top:1px dashed #262b2e;">Real usage metrics behind the role read:</div>'
+        f'<div class="nest-group">{nested_rows}</div>'
+    ) if nested_rows else ""
+
+    total = _safe_float(row.get("final_score"))
+    return (
+        '<details class="gp-section"><summary><span>Scoring breakdown</span>'
+        '<span class="sec-caret sec-caret-open">▾</span><span class="sec-caret sec-caret-closed">▸</span></summary>'
+        '<div class="gp-section-body">'
+        '<div style="display:flex;justify-content:space-between;align-items:baseline;padding-bottom:8px;'
+        'border-bottom:1px dashed #262b2e;margin-bottom:10px;">'
+        '<span style="font:700 12.5px \'IBM Plex Sans\',sans-serif;color:#e6eae4;">Our score</span>'
+        f'<span style="font:800 16px Archivo,sans-serif;color:#a8c686;">{total:.1f}</span></div>'
+        f'<div style="display:flex;flex-direction:column;gap:6px;">{rows_html}</div>'
+        f'{nested_html}'
+        '</div></details>'
+    )
+
+
+def _risk_profile_section_html(row):
+    risk_index = _risk_value(row)
+    band = _risk_band(risk_index)
+    label = RISK_LABELS.get(band, "--")
+
+    cat_rows = []
+    for col, cat_label in RISK_CATEGORY_META:
+        raw = row.get(col)
+        if raw is None or pd.isna(raw):
+            continue
+        score100 = max(0, min(100, round((float(raw) - 1) / 4 * 100)))
+        # Fixed 0-60 scale across every player (not this row's own max) so
+        # bars are comparable player-to-player.
+        pct = min(100, score100 / 60 * 100)
+        cat_rows.append(_bar_row_html(cat_label, float(score100), pct, _risk_bar_color(score100)))
+
+    note = _risk_note_text(row)
+    badges = (
+        _market_badge(row.get("value_signal_market"))
+        + _chronic_injury_badge(row.get("games_missed_by_season"))
+        + _manual_override_badge(row.get("injury_override_note"))
+        + _manual_override_badge(row.get("role_usage_td_override_note"))
+    )
+    badges_html = f'<div class="sc-badges" style="margin-top:10px;">{badges}</div>' if badges else ""
+    risk_num = _safe_float(risk_index)
+
+    return (
+        '<details class="gp-section"><summary>'
+        f'<span>Risk profile · {risk_num:.0f}/100 · {html.escape(label)}</span>'
+        '<span class="sec-caret sec-caret-open">▾</span><span class="sec-caret sec-caret-closed">▸</span></summary>'
+        '<div class="gp-section-body">'
+        '<div style="display:flex;justify-content:space-between;align-items:baseline;padding-bottom:8px;'
+        'border-bottom:1px dashed #262b2e;margin-bottom:10px;">'
+        '<span style="font:700 12.5px \'IBM Plex Sans\',sans-serif;color:#e6eae4;">Risk score</span>'
+        f'<span style="font:800 16px Archivo,sans-serif;color:#e0b45e;">{risk_num:.0f} / 100</span></div>'
+        f'<div style="display:flex;flex-direction:column;gap:7px;">{"".join(cat_rows)}</div>'
+        '<div style="font:400 10.5px \'IBM Plex Sans\',sans-serif;color:#6f776f;margin-top:9px;">'
+        'Bars share a fixed 0-60 scale across every player.</div>'
+        f'{badges_html}'
+        + (f'<div class="gp-risk-note"><span style="color:#e0b45e;font-weight:600;">In plain terms -- </span>{note}</div>' if note else "")
+        + '</div></details>'
+    )
+
+
+def _model_details_section_html(row):
+    confidence = row.get("archetype_confidence")
+    if confidence is None or pd.isna(confidence):
+        confidence = "High" if row.get("projection_source") == "real" else "Low"
+    dq = "Real" if row.get("projection_source") == "real" else "Replacement fallback"
+
+    notes = []
+    if bool(row.get("model_override_applied")) and pd.notna(row.get("model_override_note")):
+        notes.append(("This team's own research", row.get("model_override_note")))
+    if pd.notna(row.get("projection_adjustment_pct")) and pd.notna(row.get("projection_adjustment_note")):
+        notes.append(("Manual projection adjustment", row.get("projection_adjustment_note")))
+    if pd.notna(row.get("model_adjustment_pct")) and pd.notna(row.get("model_adjustment_note")):
+        notes.append(("Model correction", row.get("model_adjustment_note")))
+
+    notes_html = "".join(
+        f'<div class="gp-model-row"><b>{html.escape(str(src))}</b> -- {html.escape(str(note))}.</div>'
+        for src, note in notes
+    ) or '<div class="gp-model-row">No sourced adjustments on file for this player.</div>'
+
+    return (
+        '<details class="gp-section"><summary><span>Model details</span>'
+        '<span class="sec-caret sec-caret-open">▾</span><span class="sec-caret sec-caret-closed">▸</span></summary>'
+        '<div class="gp-section-body">'
+        '<div style="display:flex;gap:16px;flex-wrap:wrap;font:400 11.5px \'IBM Plex Sans\',sans-serif;color:#8c948f;">'
+        f'<span>Confidence: <b style="color:#e6eae4;">{html.escape(str(confidence))}</b></span>'
+        f'<span>Data quality: <b style="color:#e6eae4;">{html.escape(str(dq))}</b></span></div>'
+        '<div style="font:600 9px \'IBM Plex Mono\',monospace;letter-spacing:.1em;color:#6f776f;'
+        'text-transform:uppercase;margin:12px 0 4px;">Sourced adjustments</div>'
+        f'{notes_html}'
+        '</div></details>'
+    )
+
+
+def _ticker_html(row, scoreScaled, grade):
+    display_rank = row.get("display_rank")
+    market_rank = row.get("ADP Rk")
+    delta = _rank_delta(row)
+    delta_txt, delta_color = "● even w/ market", "#8c948f"
+    if delta is not None:
+        if delta > 0.5:
+            delta_txt, delta_color = f"▲ {delta:.0f} vs market", "#7fc98a"
+        elif delta < -0.5:
+            delta_txt, delta_color = f"▼ {abs(delta):.0f} vs market", "#e08a7f"
+
+    band = _risk_band(_risk_value(row))
+    risk_color = RISK_COLORS.get(band, "#8c948f")
+    grade_color = GRADE_COLORS.get(grade, "#e6eae4")
+    proj_ppg = _safe_float(row.get("projection_points")) / 17 if pd.notna(row.get("projection_points")) else None
+    risk_index = _risk_value(row)
+
+    cells = [
+        ("MKT RANK", f"#{int(market_rank)}" if pd.notna(market_rank) else "--", "#f4f6f2"),
+        ("VS MARKET", delta_txt, delta_color),
+        ("OUR RANK", f"#{int(display_rank)}" if pd.notna(display_rank) else "--", "#a8c686"),
+        ("ADP", _fmt(row.get("adp"), 1) or "--", "#c9d0c9"),
+        ("OUR SCORE", f"{scoreScaled:.1f}", "#a8c686"),
+        ("PROJ PPG", f"{proj_ppg:.1f}" if proj_ppg is not None else "--", "#c9d0c9"),
+        ("RISK", f"{risk_index:.0f} · {RISK_LABELS.get(band, '--').upper()}" if pd.notna(risk_index) else "--", risk_color),
+        ("GRADE", (grade or "--").upper(), grade_color),
+    ]
+    return "".join(
+        f'<span class="gp-ticker-cell"><span>{lbl}</span><span style="color:{color};">{html.escape(str(val))}</span></span>'
+        for lbl, val, color in cells
+    )
+
+
+def _render_player_card_html(row, scoreScaled, grade):
+    name = row.get("player_name") or ""
+    position = str(row.get("position") or "").upper()
+    team = row.get("team") or ""
+    tier = row.get("tier")
+    tier_id = None if tier is None or pd.isna(tier) else int(tier)
+    tier_color = TIER_BAND_COLORS[(max(tier_id, 1) - 1) % len(TIER_BAND_COLORS)] if tier_id else "#8c948f"
+    grade_color = GRADE_COLORS.get(grade, "#e6eae4")
+    display_rank = row.get("display_rank")
+
+    proj_ppg = _safe_float(row.get("projection_points")) / 17 if pd.notna(row.get("projection_points")) else None
+    floor_ppg = _safe_float(row.get("floor_projection")) / 17 if pd.notna(row.get("floor_projection")) else None
+    ceiling_ppg = _safe_float(row.get("ceiling_projection")) / 17 if pd.notna(row.get("ceiling_projection")) else None
+
+    band = _risk_band(_risk_value(row))
+    risk_color = RISK_COLORS.get(band, "#8c948f")
+    risk_label = RISK_LABELS.get(band, "--")
+
+    callout = _market_callout(_rank_delta(row))
+
+    _, _, role_label, _ = _primary_archetype(row)
+    role_short = role_label or position
+    context_label = _offense_context_label(row)
+    reasons = row.get("recommendation_reasons")
+    why = (
+        ". ".join(reasons) + "."
+        if isinstance(reasons, list) and reasons
+        else "Base Value: VOR + within-position projection, ADP and risk as small adjustments."
+    )
+    verdict = f"{grade or 'Unrated'} {position} as a {role_short.lower()}"
+    if risk_label != "--":
+        verdict += f", carrying {risk_label.lower()} risk."
     else:
-        status_note = (
-            f"Pre-season projection -- no real NFL snaps yet. Composite: {composite}."
-            if composite else "Pre-season projection -- no real NFL snaps yet."
+        verdict += "."
+
+    chips = [f'Role: <b>{html.escape(role_short)}</b>']
+    if context_label:
+        chips.append(f'Context: <b>{html.escape(context_label)}</b>')
+    bye = row.get("bye_week")
+    if pd.notna(bye):
+        chips.append(f'Bye <b>Wk {int(bye)}</b>')
+    sos_rank = row.get("season_sos_rank")
+    if pd.notna(sos_rank):
+        sos_band = "Favorable" if sos_rank <= 11 else "Neutral" if sos_rank <= 21 else "Tough"
+        sos_color = {"Favorable": "#7fc98a", "Neutral": "#e0b45e", "Tough": "#e08a7f"}[sos_band]
+        chips.append(f'Season SOS <b style="color:{sos_color};">{sos_band}</b>')
+    chips_html = "".join(f'<span class="gp-chip-tag">{c}</span>' for c in chips)
+    # Playoff SOS / week 15-17 opponent+defense-rank: no weekly matchup
+    # dataset exists in the pipeline yet -- placeholder, not fabricated.
+    pending_chip = '<span class="gp-chip-tag gp-pending-chip">Playoff SOS -- pending</span>'
+
+    proj_ppg_str = f"{proj_ppg:.1f}" if proj_ppg is not None else "--"
+
+    range_html = ""
+    if proj_ppg is not None and floor_ppg is not None and ceiling_ppg is not None:
+        dot_pct = (
+            max(0.0, min(100.0, (proj_ppg - floor_ppg) / (ceiling_ppg - floor_ppg) * 100))
+            if ceiling_ppg > floor_ppg else 50.0
         )
-
-    disclaimer = (
-        "This is a v1, unvalidated model -- the composite score and tier thresholds "
-        "haven't been retuned against the real backtest yet. Treat as directional, not precise."
-    )
-
-    # QB-only disclosure (claude_code_plan_qb_rookie_projection.pdf) -- the
-    # rushing-lean tier for 13 of 32 real QBs in the consolidated dataset is
-    # an explicit assumption (no real college rushing data captured), never
-    # presented at the same confidence as a real measured/verified number.
-    rushing_status = row.get("rookie_rushing_data_status")
-    rushing_note = (
-        '<div class="sc-note" style="margin-top:6px;">Assumed non-rushing QB -- no real college '
-        "rushing data captured for this player, not independently verified.</div>"
-        if rushing_status == "assumed_non_rusher" else ""
-    )
-
-    real_section = ""
-    if real_metric_rows:
-        real_section = (
-            '<div class="sc-note" style="font-weight:700;color:#e6edf3;margin-bottom:4px;">REAL USAGE</div>'
-            f'{"".join(real_metric_rows)}'
-            '<div class="sc-divider"></div>'
-            '<div class="sc-note" style="font-weight:700;color:#e6edf3;margin-bottom:4px;">PROSPECT COMPOSITE</div>'
+        range_html = (
+            '<div class="gp-range-block">'
+            f'<div style="font:700 18px \'IBM Plex Mono\',monospace;color:#eef1ec;">{proj_ppg:.1f} '
+            '<span style="font:400 11px \'IBM Plex Sans\',sans-serif;color:#8c948f;">projected PPG (17-game)</span></div>'
+            '<div class="gp-range-track"><span class="gp-range-fill"></span>'
+            f'<span class="gp-range-dot" style="left:calc({dot_pct:.1f}% - 6px);"></span></div>'
+            f'<div class="gp-range-labels"><span>FLOOR {floor_ppg:.1f}</span><span>CEILING {ceiling_ppg:.1f}</span></div>'
+            '</div>'
         )
 
     return (
-        '<div class="scorecard">'
-        '<div class="sc-header">'
-        f'<div><div class="sc-name">{name}</div>'
-        f'<div class="sc-meta">{position} · {team} · ADP {adp}</div></div>'
-        '<div class="sc-overall">'
-        f'<div class="lbl" style="font-size:12px;color:#e6edf3;font-weight:700;">{html.escape(label)}</div>'
+        '<div class="gp-card">'
+        f'<div class="gp-ticker">{_ticker_html(row, scoreScaled, grade)}</div>'
+        '<div class="gp-card-head"><div class="gp-card-head-left">'
+        f'<div class="gp-card-rank">#{int(display_rank) if pd.notna(display_rank) else "--"}</div>'
+        f'{_avatar_html(name, row.get("player_id"), large=True)}'
+        '<div>'
+        f'<div class="gp-card-name">{html.escape(str(name))}</div>'
+        f'<div class="gp-card-postteam">{html.escape(position)} · {html.escape(str(team))}</div>'
+        + (f'<span class="gp-tier-pill" style="color:{tier_color};">TIER {tier_id}</span>' if tier_id else "")
+        + '</div></div>'
+        '<div class="gp-card-score">'
+        f'<div class="gp-card-score-num">{scoreScaled:.1f}</div>'
+        '<div class="gp-card-score-lbl">Our score</div>'
+        f'<div class="gp-card-grade" style="color:{grade_color};">{html.escape(grade or "--")}</div>'
+        '</div></div>'
+        '<div class="gp-stat3">'
+        f'<div class="gp-stat3-cell"><div class="gp-stat3-num">{proj_ppg_str}</div>'
+        '<div class="gp-stat3-lbl">Proj PPG</div></div>'
+        f'<div class="gp-stat3-cell"><div class="gp-stat3-num">{_fmt(row.get("adp"), 1) or "--"}</div>'
+        '<div class="gp-stat3-lbl">ADP</div></div>'
+        '<div class="gp-stat3-cell">'
+        f'<div style="display:flex;align-items:center;justify-content:center;gap:6px;">'
+        f'<span style="width:8px;height:8px;border-radius:99px;background:{risk_color};"></span>'
+        f'<span style="font:700 14px \'IBM Plex Sans\',sans-serif;color:#eef1ec;">{risk_label}</span></div>'
+        f'<div class="gp-stat3-lbl">Risk {_fmt(_risk_value(row), 0) or "--"}</div></div>'
         '</div>'
-        "</div>"
-        f'{real_section}'
-        f'{"".join(component_rows)}'
-        '<div class="sc-divider"></div>'
-        f'<div class="sc-note">{status_note}</div>'
-        f'<div class="sc-note" style="margin-top:6px;">{disclaimer}</div>'
-        f'{rushing_note}'
-        f'{_prospect_profile_html(row)}'
-        "</div>"
+        f'<div class="gp-callout" style="background:{callout["bg"]};border:1px solid {callout["bd"]};">'
+        f'<div class="gp-callout-arrow" style="color:{callout["color"]};">{callout["arrow"]}</div>'
+        f'<div><div class="gp-callout-text">{html.escape(callout["text"])}</div>'
+        f'<div class="gp-callout-sub">Ranked #{int(display_rank) if pd.notna(display_rank) else "--"} · '
+        f'Market rank #{int(row.get("ADP Rk")) if pd.notna(row.get("ADP Rk")) else "--"} · '
+        f'ADP {_fmt(row.get("adp"), 1) or "--"}</div></div></div>'
+        '<div style="padding:16px 20px 6px;">'
+        '<div class="gp-verdict-lbl">Verdict</div>'
+        f'<div class="gp-verdict">{html.escape(verdict)}</div></div>'
+        '<div class="gp-why-block">'
+        f'<div class="gp-why">{html.escape(why)}</div>'
+        f'<div class="gp-chips-row">{chips_html}{pending_chip}</div>'
+        '</div>'
+        f'{range_html}'
+        f'{_scoring_breakdown_section_html(row)}'
+        f'{_risk_profile_section_html(row)}'
+        f'{_draft_profile_section_html(row)}'
+        f'{_model_details_section_html(row)}'
+        '</div>'
     )
 
 
-def _render_rookie_archetype_badge(row, status: str) -> str:
-    """Pre-season/still-inconclusive rookie badge
-    (draftkit/rookie_projection.py). Shown while rookie_display_status is
-    'projected' or 'blended' -- the "unconfirmed"-aware display status,
-    which matches real usage-sample confidence for any player with a
-    real, DECISIVE tag and only falls back to the college projection when
-    the real tag is literally "unconfirmed" (real snaps exist, but no
-    real usage tier was ever crossed). A years-since-draft display cap was
-    tried and reverted for a different reason -- see blend_rookie_tag()'s
-    docstring: it kept a stale pre-draft composite partially overriding an
-    ALREADY-CONFIRMED real archetype, which this does not do. Once a
-    player's real read is either decisive OR the sample clears the floor,
-    rookie_display_status becomes 'confirmed' and _render_cell falls
-    through to the ordinary RB/WR confirmed-archetype rendering
-    automatically -- no hedge, no percentage, and never the word
-    "Unconfirmed"."""
-    tier = row.get("rookie_display_tag")
-    label = ARCHETYPE_LABELS.get(tier, tier or "Unconfirmed")
-    tier_badge_class = f"arch-{ARCHETYPE_LABELS.get(tier, 'Unconfirmed')}"
+def _render_row_html(row, view):
+    display_rank = row.get("display_rank")
+    scoreScaled = _safe_float(row.get("scoreScaled"))
+    grade = row.get("grade")
+    name = row.get("player_name") or ""
+    position = str(row.get("position") or "").upper()
+    team = row.get("team") or ""
+    pos_color = POSITION_COLORS.get(position, "#8c948f")
 
-    if status == "projected":
-        badge_text = f"Projected: {label}"
-        status_class = "arch-projected"
-        beta_html = '<span class="beta-dot"></span>'
-    else:  # blended
-        weight = row.get("rookie_display_weight")
-        pct = round(float(weight) * 100) if pd.notna(weight) else None
-        badge_text = f"{label} — {pct}% confirmed" if pct is not None else label
-        status_class = "arch-blended"
-        beta_html = ""
+    _, _, role_label, _ = _primary_archetype(row)
+    role_short = role_label or position
 
-    return (
-        f'<span class="arch-wrap"><span class="arch-badge {tier_badge_class} {status_class}">'
-        f"{html.escape(badge_text)}{beta_html}</span>"
-        f"{_rookie_archetype_scorecard_html(row, status)}</span>"
+    adp_txt = _fmt(row.get("adp"), 1) or "--"
+    proj_source = row.get("ceiling_projection") if view == "ceiling" and pd.notna(row.get("ceiling_projection")) else row.get("projection_points")
+    proj_txt = _fmt(proj_source, 0) or "--"
+
+    risk_index = _risk_value(row)
+    band = _risk_band(risk_index)
+    risk_color = RISK_COLORS.get(band, "#8c948f")
+    risk_txt = _fmt(risk_index, 0) or "--"
+
+    vs_adp_html = _delta_cell_html(_rank_delta(row), " vs ADP")
+    vs_vegas_html = _delta_cell_html(row.get("position_rank_gap"), " spots")
+
+    summary_grid = (
+        '<div class="gp-row-grid">'
+        f'<div class="gp-cell-rank">{int(display_rank) if pd.notna(display_rank) else "--"}</div>'
+        '<div class="gp-cell-player">'
+        f'{_avatar_html(name, row.get("player_id"))}'
+        '<div style="min-width:0;">'
+        f'<div class="gp-cell-name">{html.escape(str(name))}</div>'
+        f'<div class="gp-cell-role">{html.escape(role_short)}</div>'
+        '</div></div>'
+        '<div class="gp-cell-pos">'
+        f'<span style="font:600 11.5px \'IBM Plex Mono\',monospace;color:{pos_color};">{html.escape(position)}</span>'
+        f'<span class="gp-cell-team">{html.escape(str(team))}</span></div>'
+        f'<div class="gp-cell-num">{adp_txt}</div>'
+        f'<div class="gp-cell-num gp-cell-num-strong">{proj_txt}</div>'
+        '<div class="gp-score-wrap">'
+        f'<div style="display:flex;align-items:baseline;gap:6px;">'
+        f'<span class="gp-score-num">{scoreScaled:.1f}</span><span class="gp-score-of100">/100</span></div>'
+        f'<span class="gp-score-bar-track"><span class="gp-score-bar-fill" style="width:{scoreScaled:.1f}%;"></span></span>'
+        '</div>'
+        '<div class="gp-risk-cell">'
+        f'<span class="gp-risk-bars">{_risk_minibars_html(risk_index)}</span>'
+        f'<span class="gp-risk-num" style="color:{risk_color};">{risk_txt}</span></div>'
+        f'<div class="gp-cell-delta">{vs_adp_html}</div>'
+        f'<div class="gp-cell-delta">{vs_vegas_html}</div>'
+        '<div class="gp-caret"><span class="gp-caret-open">▾</span><span class="gp-caret-closed">▸</span></div>'
+        '</div>'
     )
+    card = _render_player_card_html(row, scoreScaled, grade)
+    return f'<details class="gp-row"><summary>{summary_grid}</summary>{card}</details>'
 
 
-def _render_cell(row, column, style):
-    value = row.get(column)
-
-    if style == "rank":
-        return _fmt(value, 0) or ""
-    if style == "player":
-        return html.escape(str(value or ""))
-
-    if style == "pos":
-        # Position rank shown as the reference does it -- RB1/WR3 -- colored by
-        # position, which is why it isn't a plain number pill.
-        position = str(row.get("position") or "").upper()
-        number = _fmt(value, 0)
-        if number is None:
-            return '<span class="pill pill-empty">--</span>'
-        color = POSITION_COLORS.get(position, "#64748b")
-        return (
-            f'<span class="pill" style="background:{color}22;color:{color};'
-            f'border:1px solid {color}55">{html.escape(position)}{number}</span>'
-        )
-
-    if style == "archetype":
-        # Rookie projections gate FIRST, on rookie_status -- not on whether
-        # rb_archetype_primary/wr_archetype_primary is present. Verified
-        # this matters: a rookie can already have a real (if "unconfirmed")
-        # row in rb_archetypes.csv/wr_archetypes.csv while
-        # blend_rookie_tag() still correctly reports "blended" (once
-        # sample_weight clears 0) -- checking rb_archetype_primary first
-        # would silently swallow real "blended" cases into the plain
-        # veteran "Unconfirmed" badge instead. Once a rookie's real sample
-        # is large enough for blend_rookie_tag() to report "confirmed",
-        # rookie_status no longer matches either branch below and this
-        # falls through to the ordinary RB/WR rendering automatically --
-        # no extra code needed for that transition. Gates on
-        # rookie_display_status (the "unconfirmed"-aware fallback), NOT
-        # rookie_status (real usage-sample confidence, reserved for
-        # backtest/validation ground truth). The two agree for any player
-        # with a real, DECISIVE tag (bellcow, alpha, committee_back...) --
-        # a years-since-draft display cap was tried and reverted for
-        # exactly this reason (see blend_rookie_tag()'s docstring): it kept
-        # a real, already-confirmed archetype (e.g. Ashton Jeanty's real
-        # 2025 bellcow season) partially hedged just because too few
-        # calendar years had passed. They diverge only when the real tag is
-        # literally "unconfirmed" -- real snaps exist, but no real usage
-        # tier was ever crossed -- in which case rookie_display_status
-        # falls back to the college-based projection instead of showing
-        # the bare word "Unconfirmed".
-        rookie_display_status = row.get("rookie_display_status")
-        if isinstance(rookie_display_status, str) and rookie_display_status in ("projected", "blended"):
-            return _render_rookie_archetype_badge(row, rookie_display_status)
-
-        # RB and WR each have their own real taxonomy (rb_archetype_primary
-        # / wr_archetype_primary), never both populated for the same row --
-        # position-exclusive by construction (build_rb_archetypes.py only
-        # emits RB rows, build_wr_archetypes.py only WR rows). Every other
-        # position has neither merged in, so the cell renders blank rather
-        # than a misleading "--" pill.
-        rb_primary = row.get("rb_archetype_primary")
-        if isinstance(rb_primary, str) and rb_primary:
-            # RB-specific override: "No Role" reads better than the shared
-            # "Unconfirmed" label for a real usage-tier taxonomy (explicit
-            # user correction 2026-08-15) -- WR's own "unconfirmed" (a
-            # different, insufficient-sample meaning) keeps the shared
-            # label via ARCHETYPE_LABELS below, unaffected.
-            label = "No Role" if rb_primary == "unconfirmed" else ARCHETYPE_LABELS.get(rb_primary, rb_primary)
-            down_split = row.get("rb_down_split")
-            if rb_primary in ("bellcow", "committee_back") and isinstance(down_split, str) and down_split in DOWN_SPLIT_LABELS:
-                label = f"{label} ({DOWN_SPLIT_LABELS[down_split]})"
-            lean = row.get("rb_lean")
-            lean_html = ""
-            if isinstance(lean, str) and lean in LEAN_LABELS:
-                lean_html = f'<span class="arch-lean-tag"> · {html.escape(LEAN_LABELS[lean])}</span>'
-            badge_class = f"arch-{ARCHETYPE_LABELS.get(rb_primary, 'Unconfirmed')}"
-            return (
-                f'<span class="arch-wrap"><span class="arch-badge {badge_class}">'
-                f"{html.escape(label)}{lean_html}</span>"
-                f"{_archetype_scorecard_html(row, rb_primary)}</span>"
-            )
-
-        wr_primary = row.get("wr_archetype_primary")
-        if isinstance(wr_primary, str) and wr_primary:
-            label = ARCHETYPE_LABELS.get(wr_primary, wr_primary)
-            leans = [l for l in str(row.get("wr_leans") or "none").split(",") if l in LEAN_LABELS]
-            qb_label = QB_CONTEXT_LABELS.get(row.get("wr_qb_context"))
-            tags = [LEAN_LABELS[l] for l in leans] + ([qb_label] if qb_label else [])
-            tag_html = "".join(f'<span class="arch-lean-tag"> · {html.escape(t)}</span>' for t in tags)
-            badge_class = f"arch-{ARCHETYPE_LABELS.get(wr_primary, 'Unconfirmed')}"
-            return (
-                f'<span class="arch-wrap"><span class="arch-badge {badge_class}">'
-                f"{html.escape(label)}{tag_html}</span>"
-                f"{_wr_archetype_scorecard_html(row, wr_primary)}</span>"
-            )
-
-        qb_primary = row.get("qb_archetype_primary")
-        if isinstance(qb_primary, str) and qb_primary:
-            label = ARCHETYPE_LABELS.get(qb_primary, qb_primary)
-            badge_class = f"arch-{ARCHETYPE_LABELS.get(qb_primary, 'Unconfirmed')}"
-            return (
-                f'<span class="arch-wrap"><span class="arch-badge {badge_class}">'
-                f"{html.escape(label)}</span>"
-                f"{_qb_archetype_scorecard_html(row, qb_primary)}</span>"
-            )
-
-        te_primary = row.get("te_archetype_primary")
-        if isinstance(te_primary, str) and te_primary:
-            role_profile = row.get("te_role_profile")
-            if te_primary == "receiving_te" and isinstance(role_profile, str) and role_profile in TE_ROLE_PROFILE_LABELS:
-                label = TE_ROLE_PROFILE_LABELS[role_profile]
-                badge_class = f"arch-{label.replace(' ', '-')}"
-            else:
-                label = ARCHETYPE_LABELS.get(te_primary, te_primary)
-                badge_class = f"arch-{ARCHETYPE_LABELS.get(te_primary, 'Unconfirmed')}"
-            leans = [l for l in str(row.get("te_leans") or "none").split(",") if l in LEAN_LABELS]
-            tag_html = "".join(f'<span class="arch-lean-tag"> · {html.escape(LEAN_LABELS[l])}</span>' for l in leans)
-            return (
-                f'<span class="arch-wrap"><span class="arch-badge {badge_class}">'
-                f"{html.escape(label)}{tag_html}</span>"
-                f"{_te_archetype_scorecard_html(row, te_primary)}</span>"
-            )
-
-        return ""
-
-    if style == "risk":
-        # Composite 0-100 risk_index (v2: four weighted categories), red/
-        # amber/green banded, with a hover POPOVER (not a plain title=
-        # tooltip -- see _risk_scorecard_html) showing the four category
-        # bars, a market badge, an optional chronic-injury badge, and a
-        # templated note naming the primary driver.
-        if value is None or pd.isna(value):
-            return '<span class="pill pill-empty">--</span>'
-        number = float(value)
-        band = "red" if number > 66 else "amber" if number > 34 else "green"
-        return (
-            f'<span class="pill pill-{band} pill-risk">{html.escape(_fmt(number, 0) or "")}'
-            f"{_risk_scorecard_html(row, number, band)}</span>"
-        )
-
-    if style == "signed":
-        # vs MKT: positive means the sportsbook ranks him better within his
-        # position than ADP does. Same sign convention as the old tooltip.
-        if value is None or pd.isna(value):
-            return '<span class="pill pill-empty">--</span>'
-        number = float(value)
-        if number == 0:
-            return _pill("0", "muted")
-        return _pill(f"{number:+.0f}", "green" if number > 0 else "red")
-
-    if column == "projection_points":
-        # PROJECTED PTS gets a visible marker when a manual
-        # PROJECTION_MANUAL_ADJUSTMENTS override (draft_analysis.py) has
-        # been applied -- the displayed number already includes the
-        # adjustment (same effective-value pattern as the injury-override
-        # badge: the number IS the real, effective one used for scoring,
-        # never silently hidden behind an unadjusted display).
-        text = _fmt(value, 1)
-        # This project's own researched value (draft_analysis.py's
-        # apply_model_projection_override, 2026-08-21) takes priority --
-        # when applied, it already REPLACED this cell's number (and
-        # cleared projection_adjustment_pct below, so the two markers
-        # never both fire for the same row). Distinct marker/color from
-        # the legacy PROJECTION_MANUAL_ADJUSTMENTS one on purpose: this
-        # means "this team's own dated research," not an older editorial
-        # guess.
-        if bool(row.get("model_override_applied")):
-            note = row.get("model_override_note") or ""
-            marker = (
-                f' <span class="proj-adj model-corrected" title="{html.escape(str(note), quote=True)}">'
-                f'✓</span>'
-            )
-            return _pill(text, "green") + marker
-        pct = row.get("projection_adjustment_pct")
-        if pd.notna(pct):
-            note = row.get("projection_adjustment_note") or ""
-            direction = "proj-adj-pos" if float(pct) > 0 else "proj-adj-neg"
-            marker = (
-                f' <span class="proj-adj {direction}" title="{html.escape(str(note), quote=True)}">'
-                f'{"+" if float(pct) > 0 else ""}{float(pct):.0f}%</span>'
-            )
-            return _pill(text, "green") + marker
-        return _pill(text, "green")
-
-    if column == "model_projection_points":
-        # A blank MODEL PROJ cell can mean three different real things
-        # (position excluded, player not identifiable in the model's
-        # historical data, or identified but with too little NFL history to
-        # project from) -- per review, none of those should render as an
-        # identical unexplained "--". Every blank gets a tooltip naming the
-        # real reason, matching the QB column-header disclosure but at the
-        # per-cell level so it doesn't require a user to already know to
-        # hover the header.
-        text = _fmt(value, 1)
-        if text is not None:
-            # Diagnosed-defect correction (model_proj_staleness_fix_plan.pdf,
-            # Step 4) takes priority over the bare continuity flag below: a
-            # player in MODEL_PROJECTION_CORRECTIONS (build_live_projections_v1.py)
-            # has already had this exact staleness bug individually verified
-            # and fixed, via a SEPARATE column (model_projection_points_adjusted)
-            # -- model_projection_points itself (`value` here) is never
-            # touched. Rendered with a visibly different marker/color from
-            # continuity-flag's "!" on purpose: that one means "verify this,
-            # unresolved," this one means "known bug, already corrected."
-            adj_pct = row.get("model_adjustment_pct")
-            if pd.notna(adj_pct):
-                adjusted_value = row.get("model_projection_points_adjusted")
-                adj_text = _fmt(adjusted_value, 1) if pd.notna(adjusted_value) else text
-                note = row.get("model_adjustment_note")
-                title = "Diagnosed model staleness bug, individually verified and corrected -- not an unresolved flag."
-                if pd.notna(note) and str(note).strip():
-                    title += f" ({note})"
-                marker = (
-                    f' <span class="proj-adj model-corrected" title="{html.escape(title, quote=True)}">'
-                    f'{"+" if float(adj_pct) > 0 else ""}{float(adj_pct):.0f}%</span>'
-                )
-                return _pill(adj_text, "green") + marker
-            # Roster continuity guardrail (roster_continuity_fix_plan.pdf,
-            # Step 5): this model was fit on historical features that
-            # assume roster continuity (same team, same teammates). A
-            # player who changed teams or whose direct same-position
-            # competitor departed/arrived this offseason breaks that
-            # assumption -- the number above is real and correctly
-            # computed, but rests on a premise (last season's team
-            # context, or a committee split) that no longer holds. Flagged
-            # rather than silently trusted, same principle as the
-            # manual-adjustment marker just above.
-            flags = []
-            if bool(row.get("team_changed")):
-                flags.append("changed teams this offseason")
-            if bool(row.get("competitor_departed")):
-                flags.append("a real same-position competitor departed")
-            if bool(row.get("competitor_arrived")):
-                flags.append("a real same-position competitor arrived")
-            if flags:
-                # pd.notna(), not `or ""` -- a missing continuity_note comes
-                # back from the CSV as float NaN, which is truthy in Python
-                # (only 0/None/""/etc are falsy), so `note or ""` and
-                # `if note:` both silently let a real NaN through and
-                # rendered the literal text "(nan)" in the tooltip.
-                note = row.get("continuity_note")
-                title = "Situational change this offseason -- verify before trusting this number. " + "; ".join(flags).capitalize() + "."
-                if pd.notna(note) and str(note).strip():
-                    title += f" ({note})"
-                marker = f' <span class="proj-adj continuity-flag" title="{html.escape(title, quote=True)}">⚠</span>'
-                return _pill(text, "green") + marker
-            return _pill(text, "green")
-        position = str(row.get("position") or "").upper()
-        status = row.get("model_projection_status")
-        # Rookie-score fallback (rb_model_fix_plan.pdf, Phase 1): a real
-        # rookie with model_projection_status=="insufficient_history" (no
-        # NFL outcome history to predict from) but a real, already-computed
-        # pre-draft composite (rookie_projection.py) gets THIS substitute
-        # value instead of a blank cell -- visibly marked as a substitute,
-        # never conflated with the real outcome-trained model's own output.
-        fallback_value = row.get("model_projection_points_fallback")
-        if pd.notna(fallback_value):
-            fallback_note = row.get("model_projection_fallback_note")
-            title = "Rookie-score fallback -- NOT a real outcome-trained model prediction."
-            if pd.notna(fallback_note) and str(fallback_note).strip():
-                title += f" ({fallback_note})"
-            marker = f' <span class="proj-adj rookie-fallback" title="{html.escape(title, quote=True)}">≈</span>'
-            return _pill(_fmt(fallback_value, 1), "amber") + marker
-        if position not in ("RB", "WR", "TE"):
-            reason = "Model projection not built for this position -- see MODEL PROJ column header for why."
-        elif status == "no_crosswalk_match":
-            reason = "No model projection -- couldn't confidently match this player to historical performance data."
-        elif status == "insufficient_history":
-            reason = "No model projection -- identified, but not enough real NFL game history yet to build one (rookie or very limited prior usage)."
-        else:
-            reason = "No model projection available for this player."
-        return _pill(None, style, title=reason)
-
-    decimals = 1 if style in {"green", "amber"} else 0
-    return _pill(_fmt(value, decimals), style)
+TIER_BAND_DESC = "Grouped at the largest real score gaps on today's board -- not a fixed scale."
 
 
-def _sort_link(key, label, tooltip, current_key, current_dir):
-    """Header link toggling ?sort=&dir=. target=_self keeps it in-tab."""
-    is_sorted = key == current_key
-    next_dir = "desc" if (is_sorted and current_dir == "asc") else "asc"
-    arrow = ""
-    if is_sorted:
-        arrow = " ▲" if current_dir == "asc" else " ▼"
-    classes = ' class="sorted"' if is_sorted else ""
-    # title= gives beginners a plain-English explanation on hover; there is no
-    # column_config help bubble once we render the table ourselves.
-    title = f' title="{html.escape(tooltip, quote=True)}"' if tooltip else ""
-    return (
-        f'<th{classes}{title}><a target="_self" href="?sort={key}&dir={next_dir}">'
-        f"{html.escape(label)}{arrow}</a></th>"
-    )
-
-
-def render_rankings_table(board, sort_key="", sort_dir="asc", show_tier_bands=True):
-    header = "".join(
-        _sort_link(key, label, tooltip, sort_key, sort_dir)
-        for key, label, _, _, tooltip in TABLE_COLUMNS
+def render_rankings_table(board, view, show_tier_bands):
+    header = (
+        '<div class="gp-row-grid gp-thead">'
+        '<div>Rank</div><div>Player</div><div>Pos</div><div>ADP</div><div>Projection</div>'
+        '<div>Our score</div><div>Risk</div><div>vs ADP</div><div>vs Vegas</div><div></div>'
+        '</div>'
     )
 
     body = []
@@ -1530,34 +1378,18 @@ def render_rankings_table(board, sort_key="", sort_dir="asc", show_tier_bands=Tr
             if tier_id != last_tier:
                 last_tier = tier_id
                 label = "Unranked" if tier_id is None else f"Tier {tier_id}"
-                if tier_id is None:
-                    color = "#64748b"
-                else:
-                    # -1 so Tier 1 gets the first palette color, not the second.
-                    color = TIER_BAND_COLORS[
-                        (max(tier_id, 1) - 1) % len(TIER_BAND_COLORS)
-                    ]
+                color = "#8c948f" if tier_id is None else TIER_BAND_COLORS[(max(tier_id, 1) - 1) % len(TIER_BAND_COLORS)]
                 body.append(
-                    f'<tr class="tier-band"><td colspan="{len(TABLE_COLUMNS)}">'
-                    f'<div class="tier-band-inner" style="background:{color}">'
-                    f"{label}</div></td></tr>"
+                    f'<div class="tier-band"><span class="tier-band-bar" style="background:{color};"></span>'
+                    f'<span class="tier-band-label" style="color:{color};">{label}</span>'
+                    f'<span class="tier-band-desc">{TIER_BAND_DESC}</span></div>'
                 )
+        body.append(_render_row_html(row, view))
 
-        cells = "".join(
-            f'<td class="col-{style if style in {"rank", "player"} else "val"}">'
-            f"{_render_cell(row, column, style)}</td>"
-            for _, _, column, style, _ in TABLE_COLUMNS
-        )
-        body.append(f"<tr>{cells}</tr>")
-
-    return (
-        '<div class="gp-table-wrap"><table class="gp-table">'
-        f"<thead><tr>{header}</tr></thead><tbody>{''.join(body)}</tbody>"
-        "</table></div>"
-    )
+    return f'<div class="gp-table-wrap"><div class="gp-table-inner">{header}{"".join(body)}</div></div>'
 
 
-st.set_page_config(page_title="Top 250 Rankings", layout="wide")
+st.set_page_config(page_title="Top 250 Rankings", layout="wide", initial_sidebar_state="collapsed")
 
 # Still needed: the scoring engine reads roster_settings / drafted_players /
 # current_pick_number from session state. init_session_state() seeds the
@@ -1605,6 +1437,7 @@ def _scoring_version():
         Path("data/processed/sportsbook_vs_adp_comparison.csv"),
         Path("data/processed/model_projections_v1.csv"),
         Path("data/processed/risk_variables.csv"),
+        Path("data/processed/team_schedule_risk.csv"),
         Path("data/processed/rb_archetypes.csv"),
         Path("data/processed/wr_archetypes.csv"),
         Path("data/processed/qb_archetypes.csv"),
@@ -1661,10 +1494,32 @@ def _rankings(_version):
     # board.insert(0, "Rank", ...). Joining position_rank here would just
     # be immediately overwritten there, so it's dropped rather than left
     # as dead code.
-    for column in ("expert_rank",):
+    # floor_projection/ceiling_projection/bye_week/archetype_confidence
+    # (Rankings Lab redesign, 2026-08-24) -- real columns already on
+    # master_players.csv, just not carried through the scoring pipeline.
+    # Same join pattern as expert_rank above.
+    # player_id here is the Sleeper player ID (source frame comes from
+    # draftkit/data_sources/sleeper_source.py, api.sleeper.app/v1/players/nfl).
+    # Carried through purely so the avatar can pull a Sleeper CDN headshot
+    # (https://sleepercdn.com/content/nfl/players/thumb/<id>.jpg) -- display
+    # only, never scored.
+    for column in ("expert_rank", "floor_projection", "ceiling_projection", "bye_week", "archetype_confidence", "player_id"):
         if column in source.columns and "player_name" in source.columns:
             extra = source[["player_name", column]].drop_duplicates("player_name")
             df = df.merge(extra, on="player_name", how="left", suffixes=("", "_src"))
+
+    # Team schedule risk -- optional, manually refreshed (see
+    # draftkit/scripts/build_schedule_data.py). season_sos_rank feeds the
+    # card's Season SOS chip. Playoff-week-specific SOS/opponent data isn't
+    # produced by this script (see its docstring -- a weeks-15-17-only
+    # variant was tried and deliberately widened to whole-season), so the
+    # card's Playoff SOS renders as a placeholder rather than this.
+    schedule_path = Path("data/processed/team_schedule_risk.csv")
+    if schedule_path.exists():
+        schedule_df = pd.read_csv(schedule_path)
+        keep_cols = [c for c in ("team", "season_sos_rank") if c in schedule_df.columns]
+        if "team" in keep_cols and "team" in df.columns:
+            df = df.merge(schedule_df[keep_cols], on="team", how="left")
 
     # Sportsbook vs. ADP comparison -- optional, manually refreshed (see
     # draftkit/scripts/compare_sportsbook_vs_adp.py). Skip silently if it
@@ -1941,6 +1796,19 @@ def _rankings(_version):
         if "player_name" in rookie_keep_cols:
             df = df.merge(rookie_df[rookie_keep_cols], on="player_name", how="left")
 
+    # Dad's-league scoring -- an alternate projection that reworks the model
+    # score under a no-PPR, TD-and-tiered-yardage format (see
+    # draftkit/dads_scoring.py). Adds dads_projection_points / dads_vor /
+    # dads_final_score, all NaN for players without a stat projection. The
+    # standard final_score is untouched; the main flow swaps these in only
+    # when the Dad's League scoring model is selected. Skip silently if the
+    # stat-projection source is missing, same convention as the merges above.
+    try:
+        from draftkit.dads_scoring import add_dads_scores
+        df = add_dads_scores(df)
+    except Exception:
+        pass
+
     return df
 
 
@@ -1978,36 +1846,161 @@ if rankings_df.empty:
     st.error("No draftable players found (none have a real ADP or projection).")
     st.stop()
 
-st.markdown(RANKINGS_CSS, unsafe_allow_html=True)
-st.markdown('<h1 class="gp-title">Rankings</h1>', unsafe_allow_html=True)
+def _freshness_stamp(path):
+    p = Path(path)
+    if not p.exists():
+        return None
+    return datetime.fromtimestamp(p.stat().st_mtime).strftime("%b %d, %I:%M %p")
 
-# Position chips. st.button rather than HTML links so this stays independent
-# of the sort query-param state below -- mixing the two makes widget state and
-# URL state fight each other.
+
+st.markdown(RANKINGS_CSS, unsafe_allow_html=True)
+
+st.markdown(
+    '<div class="gp-header"><div class="gp-header-left">'
+    '<span class="gp-logo">FF</span><span class="gp-wordmark">Rankings Lab</span>'
+    '<div class="gp-nav"><span class="active">Board</span>'
+    '<span>Projections</span><span>Methodology</span>'
+    '<span>Draft assistant</span></div></div>'
+    '<div class="gp-chips">'
+    '<span class="gp-chip"><span class="gp-chip-dot"></span>Snapshot · not live</span>'
+    '<span class="gp-chip">12-team · Half-PPR</span>'
+    '</div></div>',
+    unsafe_allow_html=True,
+)
+# Tool switcher -- the single-page dropdown that replaces Streamlit's
+# default left sidebar nav. Selecting another tool navigates via
+# st.switch_page (see draftkit/ui_helpers.render_tool_nav).
+render_tool_nav("Rankings Board")
+
+# Scoring model selector -- the standard board vs a second score setting
+# built from Dad's League scoring (draftkit/dads_scoring.py). Only offered
+# when dad's scores actually computed (stat-projection source present); the
+# board swap itself happens just before ranking, below.
+SCORE_MODES = {
+    "Standard (12-team Half-PPR)": "standard",
+    "Dad's League": "dads",
+}
+_dads_available = "dads_final_score" in rankings_df.columns and rankings_df["dads_final_score"].notna().any()
+if _dads_available:
+    _score_label = st.selectbox(
+        "Scoring model", list(SCORE_MODES.keys()), key="score_mode_select",
+    )
+    score_mode = SCORE_MODES[_score_label]
+    if score_mode == "dads":
+        st.caption(
+            "Dad's League: no PPR, no per-yard points -- scored on TDs (rush 5, "
+            "pass/rec 4), interceptions/fumbles, and per-game tiered yardage "
+            "bonuses. Projection re-derived from stat totals, with yardage "
+            "modeled game-by-game (per-game variance around the bucket cliffs, "
+            "not the season average); TD-length bonuses use an expected value."
+        )
+else:
+    score_mode = "standard"
+
+_stamps = [
+    ("VEGAS", _freshness_stamp("data/processed/sportsbook_vs_adp_comparison.csv")),
+    ("EXPERT CONSENSUS", _freshness_stamp("data/processed/master_players.csv")),
+    ("RISK DATA", _freshness_stamp("data/processed/risk_variables.csv")),
+    ("ADP", _freshness_stamp("data/processed/master_players.csv")),
+]
+_stamps_html = "".join(
+    f'<span>{lbl} <b>{html.escape(val)}</b></span>' for lbl, val in _stamps if val
+)
+
+st.markdown(
+    '<div class="gp-title-row">'
+    '<div><div class="gp-eyebrow">2026 Redraft · Preseason board</div>'
+    '<h1 class="gp-title">Consensus Rankings</h1>'
+    '<p class="gp-subhead">Curated analyst sheet with model-assisted scoring. '
+    'Click any player to open their full card.</p></div></div>'
+    f'<div class="gp-stamps">{_stamps_html}</div>',
+    unsafe_allow_html=True,
+)
+
+# Filter/view state -- three independent st.session_state keys (position,
+# view, risk), each an ordinary Streamlit widget rather than HTML links, so
+# they never fight the query-param sort mechanism the old column-header
+# links used (that mechanism is gone now: the new design has no per-column
+# sort, only the view toggle below).
 if "pos_filter" not in st.session_state:
     st.session_state["pos_filter"] = "Overall"
+if "view" not in st.session_state:
+    st.session_state["view"] = "median"
+if "risk_filter" not in st.session_state:
+    st.session_state["risk_filter"] = "ALL"
 
-_chip_cols = st.columns([1, 1, 1, 1, 1, 6])
-for _col, _label in zip(_chip_cols, POSITION_CHIPS):
+_reset_col, _export_col = st.columns([1, 1])
+with _reset_col:
+    if st.button("Reset filters", key="reset_filters"):
+        st.session_state["pos_filter"] = "Overall"
+        st.session_state["view"] = "median"
+        st.session_state["risk_filter"] = "ALL"
+        if "search_query" in st.session_state:
+            del st.session_state["search_query"]
+        st.rerun()
+
+_chip_cols = st.columns([1, 1, 1, 1, 1, 1, 1, 1, 4])
+for _col, _label in zip(_chip_cols[:5], POSITION_CHIPS):
     with _col:
         if st.button(
-            _label,
-            key=f"chip_{_label}",
-            width="stretch",
+            _label, key=f"chip_{_label}", width="stretch",
             type="primary" if st.session_state["pos_filter"] == _label else "secondary",
         ):
             st.session_state["pos_filter"] = _label
             st.rerun()
+for _col, (_key, _label) in zip(_chip_cols[5:8], VIEW_TABS):
+    with _col:
+        if st.button(
+            _label, key=f"view_{_key}", width="stretch",
+            type="primary" if st.session_state["view"] == _key else "secondary",
+        ):
+            st.session_state["view"] = _key
+            st.rerun()
 
 position_filter = st.session_state["pos_filter"]
+view = st.session_state["view"]
+VIEW_NOTES = {
+    "median": "Sorted by our score (median projection).",
+    "ceiling": "Re-sorted by ceiling outcome -- high-upside players rise.",
+    "riskAdj": "Re-sorted by score minus a risk penalty.",
+}
+st.markdown(f'<div class="gp-view-note">{VIEW_NOTES[view]}</div>', unsafe_allow_html=True)
 
-_search_col, _export_col, _count_col = st.columns([3, 1, 1])
+_search_col, _risk_cols_wrap, _count_col = st.columns([3, 4, 2])
 with _search_col:
     search_query = st.text_input(
-        "Search", placeholder="Search players...", label_visibility="collapsed"
+        "Search", placeholder="Search player or team", label_visibility="collapsed",
+        key="search_query",
     )
+_risk_cols = _risk_cols_wrap.columns(4)
+for _col, (_key, _label) in zip(_risk_cols, RISK_TABS):
+    with _col:
+        if st.button(
+            _label, key=f"risk_{_key}", width="stretch",
+            type="primary" if st.session_state["risk_filter"] == _key else "secondary",
+        ):
+            st.session_state["risk_filter"] = _key
+            st.rerun()
+risk_filter = st.session_state["risk_filter"]
 
 board = rankings_df.copy()
+
+# Second score setting: when the Dad's League scoring model is active, swap
+# dad's reworked projection/VOR/score in for the standard ones and re-sort,
+# BEFORE Rank is assigned. Everything downstream (Rank, tiers, scoreScaled,
+# grades, the risk-adjusted/ceiling re-sorts, VOR text) reads these columns,
+# so the whole board re-derives under dad's scoring with no further changes.
+# Players with no dad's projection (NaN) sort last, same as the market/proj
+# fallbacks elsewhere.
+if score_mode == "dads" and "dads_final_score" in board.columns:
+    board["final_score"] = board["dads_final_score"]
+    board["projection_points"] = board["dads_projection_points"]
+    if "dads_vor" in board.columns:
+        board["value_over_replacement_points"] = board["dads_vor"]
+    board = board.sort_values(
+        "final_score", ascending=False, na_position="last", kind="stable"
+    ).reset_index(drop=True)
+
 # Rank is assigned BEFORE filtering so a player keeps his true overall rank
 # when you narrow to one position -- filtering to RB should show RB1 as
 # overall #1, not renumber him.
@@ -2122,57 +2115,176 @@ if "final_score" in board.columns and "position" in board.columns:
 if "final_score" in board.columns:
     board["tier"] = _assign_automatic_tiers(board)
 
+# scoreScaled (cosmetic 0-100 display value for "Our score", the row's
+# progress bar, and the card header) and grade -- both computed HERE, once,
+# on the full TOP_N Overall board, same rationale as tier above: stays
+# fixed when narrowing to one position rather than shifting under the
+# filter. Neither touches final_score/sort order -- display-only.
+if "final_score" in board.columns:
+    _final_numeric = pd.to_numeric(board["final_score"], errors="coerce")
+    _lo, _hi = _final_numeric.min(), _final_numeric.max()
+    if pd.notna(_lo) and pd.notna(_hi) and _hi > _lo:
+        board["scoreScaled"] = ((_final_numeric - _lo) / (_hi - _lo) * 100).round(1)
+    else:
+        board["scoreScaled"] = 50.0
+
+    # riskScaled -- the same cosmetic 0-100 min-max treatment as scoreScaled
+    # above, applied to risk_index so the displayed risk uses the full
+    # 0-100 range (board-riskiest = 100, safest = 0) and reads on the same
+    # scale as OUR SCORE. Computed here on the full TOP_N Overall board so
+    # it stays fixed when narrowing to one position. Display only: the raw
+    # risk_index column is left untouched for the Risk-adjusted sort.
+    if "risk_index" in board.columns:
+        _risk_numeric = pd.to_numeric(board["risk_index"], errors="coerce")
+        _rlo, _rhi = _risk_numeric.min(), _risk_numeric.max()
+        if pd.notna(_rlo) and pd.notna(_rhi) and _rhi > _rlo:
+            board["riskScaled"] = ((_risk_numeric - _rlo) / (_rhi - _rlo) * 100).round(1)
+        else:
+            board["riskScaled"] = _risk_numeric.round(1)
+
+    _pct_rank = _final_numeric.rank(pct=True) * 100
+
+    def _grade_for_pct(p):
+        if pd.isna(p):
+            return "Speculative"
+        if p >= 95:
+            return "Elite"
+        if p >= 80:
+            return "Great"
+        if p >= 50:
+            return "Strong"
+        if p >= 20:
+            return "Solid"
+        return "Speculative"
+
+    board["grade"] = _pct_rank.apply(_grade_for_pct)
+
+    # Risk-adjusted view's re-sort score -- uses the richer 4-category
+    # risk_index (risk_variables.csv) rather than re-deriving from the
+    # single injury_risk aggregate base_value_risk_component already nets
+    # out of final_score, so this is a genuinely different resort. Display
+    # heuristic only; never feeds final_score/tiering.
+    _risk_for_adj = pd.to_numeric(board.get("risk_index"), errors="coerce").fillna(0.0)
+    board["riskAdjScore"] = (_final_numeric.fillna(0.0) - (_risk_for_adj / 100.0) * RISK_ADJ_VIEW_PENALTY).round(3)
+
+    # Ceiling view's re-sort score: final_score + a variance-driven upside
+    # bonus (see CEILING_VIEW_BONUS). Upside (0..1) blends TD-dependence
+    # (role_usage_td_score, 1-5) and the volatility diagnostic
+    # (volatility_diagnostic, ~0-1.5) from risk_variables.csv, plus a lift
+    # for event/big-play archetypes. Missing signals -> no bonus, so those
+    # players just hold their median position. Display heuristic only.
+    _td = pd.to_numeric(board.get("role_usage_td_score"), errors="coerce")
+    _td_norm = ((_td - 1.0) / 4.0).clip(0.0, 1.0)
+    _vol = pd.to_numeric(board.get("volatility_diagnostic"), errors="coerce")
+    _vol_norm = (_vol / 1.0).clip(0.0, 1.0)
+    # Blend whichever signals a player has (mean of present components).
+    _upside = pd.concat([_td_norm, _vol_norm], axis=1).mean(axis=1, skipna=True)
+    if "Scoring Type" in board.columns:
+        _event_lift = board["Scoring Type"].astype(str).eq("TD / big play").map({True: 0.15, False: 0.0})
+        _upside = (_upside.fillna(0.0) + _event_lift).clip(0.0, 1.0)
+    _upside = _upside.fillna(0.0)
+    # Weight the bonus by within-board relevance (percentile of final_score).
+    # final_score is VOR-based and mostly negative (replacement baseline),
+    # densely packed at the bottom -- a flat bonus there would catapult
+    # irrelevant deep-bench TD vultures over startable players. The
+    # percentile weight concentrates the reshuffle among genuinely
+    # draftable players, where upside actually matters.
+    _relevance = _final_numeric.rank(pct=True).fillna(0.0)
+    board["ceilingScore"] = (_final_numeric.fillna(0.0) + _upside * CEILING_VIEW_BONUS * _relevance).round(3)
+
 if position_filter != "Overall":
     board = board[board["position"].astype(str).str.upper() == position_filter]
+
+if risk_filter != "ALL":
+    # Filter on the same scaled value the row displays (riskScaled when
+    # present, else raw risk_index) so the Low/Medium/High tabs match the
+    # band pills shown on the board.
+    _risk_for_filter = board["riskScaled"] if "riskScaled" in board.columns else board.get("risk_index")
+    board = board[
+        pd.to_numeric(_risk_for_filter, errors="coerce").apply(_risk_band) == risk_filter
+    ]
 
 if search_query:
     board = board[
         board["player_name"].astype(str).str.contains(search_query, case=False, na=False)
     ]
 
-# Sort state lives in the URL so the table's <th> links can drive it -- there
-# is no Streamlit widget behind a custom HTML table. Unknown column names are
-# ignored rather than raising, so a hand-edited URL can't break the page.
-_params = st.query_params
-_sort_key = _params.get("sort", "")
-_sort_dir = _params.get("dir", "asc")
-_sort_column = SORTABLE_COLUMNS.get(_sort_key)
-
-if _sort_column and _sort_column in board.columns:
-    board = board.sort_values(
-        _sort_column, ascending=(_sort_dir != "desc"), na_position="last", kind="stable"
-    )
+# View controls sort + rank renumbering + whether tier bands show, entirely
+# replacing the old column-header sort-link/query-param mechanism -- the
+# new design has no per-column sort, only this 3-way toggle.
+if view == "ceiling" and "ceilingScore" in board.columns:
+    board = board.sort_values("ceilingScore", ascending=False, na_position="last", kind="stable")
+    board["display_rank"] = range(1, len(board) + 1)
+    show_tier_bands = False
+elif view == "riskAdj" and "riskAdjScore" in board.columns:
+    board = board.sort_values("riskAdjScore", ascending=False, na_position="last", kind="stable")
+    board["display_rank"] = range(1, len(board) + 1)
     show_tier_bands = False
 else:
-    # Default view groups into contiguous tier blocks. Automatic tiers
-    # (2026-08-17) are assigned sequentially over the already Rank-sorted
-    # board (see _assign_automatic_tiers()), so they are contiguous by
-    # construction -- this sort is a defensive no-op against Rank order,
-    # not a real reordering, unlike the old FantasyPros-sourced tier this
-    # replaced (which genuinely could interleave with engine Rank). The
-    # "#" column still carries each player's true engine rank.
+    # Median: tier/Rank order (tiers are already contiguous in Rank order
+    # by construction -- see _assign_automatic_tiers()). Tier bands show
+    # only here, and only with no active search (search disables them,
+    # same as the old sort-link behavior did).
     if "tier" in board.columns:
-        board = board.sort_values(
-            ["tier", "Rank"], na_position="last", kind="stable"
-        )
-    show_tier_bands = True
+        board = board.sort_values(["tier", "Rank"], na_position="last", kind="stable")
+    board["display_rank"] = board["Rank"]
+    show_tier_bands = not bool(search_query)
 
 with _export_col:
+    # Clean, spreadsheet-friendly export that mirrors the on-screen board
+    # rather than dumping the full internal engine frame: the visible table
+    # columns plus the key card summary fields (Tier / Grade / Archetype /
+    # Risk band), in the current sort order, already narrowed by the active
+    # position/risk/search filters, and under the active scoring model. The
+    # same display values the UI renders (display_rank, scoreScaled,
+    # riskScaled, grade, the vs-ADP delta) so the file matches what's shown.
+    _vs_adp = pd.to_numeric(board.apply(_rank_delta, axis=1), errors="coerce").round(1)
+    _risk_scaled = pd.to_numeric(board.get("riskScaled"), errors="coerce")
+    export_df = pd.DataFrame(
+        {
+            "Rank": board.get("display_rank"),
+            "Player": board.get("player_name"),
+            "Pos": board.get("position"),
+            "Team": board.get("team"),
+            "Tier": board.get("tier"),
+            "Grade": board.get("grade"),
+            "Archetype": board.get("Archetype"),
+            "ADP": pd.to_numeric(board.get("adp"), errors="coerce").round(1),
+            "Projection": pd.to_numeric(board.get("projection_points"), errors="coerce").round(1),
+            "Our Score": pd.to_numeric(board.get("scoreScaled"), errors="coerce"),
+            "Risk": _risk_scaled,
+            "Risk Band": _risk_scaled.apply(lambda v: RISK_LABELS.get(_risk_band(v), "")),
+            "vs ADP": _vs_adp,
+            "vs Vegas (spots)": pd.to_numeric(board.get("position_rank_gap"), errors="coerce").round(1),
+        }
+    )
+    _score_tag = "dads_league" if score_mode == "dads" else "standard"
     st.download_button(
-        "Export",
-        data=board.to_csv(index=False).encode("utf-8"),
-        file_name="guaranteed_play_rankings.csv",
+        "Export CSV",
+        data=export_df.to_csv(index=False).encode("utf-8"),
+        file_name=f"guaranteed_play_rankings_{_score_tag}.csv",
         mime="text/csv",
         width="stretch",
+        type="primary",
+    )
+    _score_note = "Dad's League scoring" if score_mode == "dads" else "Standard (Half-PPR) scoring"
+    st.markdown(
+        f'<div class="gp-export-caption">Exports the {len(board)} rows shown &middot; {_score_note}</div>',
+        unsafe_allow_html=True,
     )
 with _count_col:
     st.markdown(
-        f'<div class="gp-count">{len(board)} players</div>', unsafe_allow_html=True
+        f'<div class="gp-count">{len(board)} / {len(rankings_df.head(TOP_N))} PLAYERS</div>',
+        unsafe_allow_html=True,
     )
 
+st.markdown(render_rankings_table(board, view, show_tier_bands), unsafe_allow_html=True)
+
 st.markdown(
-    render_rankings_table(board, sort_key=_sort_key, sort_dir=_sort_dir,
-                          show_tier_bands=show_tier_bands),
+    '<div class="gp-footer-note">'
+    'Base Value weights are analyst-set and sensitivity-tested, not backtested against '
+    'real outcomes. Floor/ceiling are the projection model\'s own real range, not a '
+    'simulation.</div>',
     unsafe_allow_html=True,
 )
 

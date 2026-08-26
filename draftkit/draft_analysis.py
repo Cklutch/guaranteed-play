@@ -1014,6 +1014,44 @@ def _position_replacement_rank(position):
     return max(int(round(league_size * (starter_slots + flex_slot_share))), 1)
 
 
+# VOR-baseline-only override of _position_replacement_rank, for positions
+# where the roster-formula rank and the position's real depth diverge.
+#
+# TE (investigated 2026-08-26, user-reported "TEs rank too high overall" +
+# "mid/late TE crowd"): the roster formula gives TE rank 17 (12 teams x
+# (1 starter + 2 flex x 0.2 TE-flex-share) = 16.8), which _position_
+# replacement_rank still returns unchanged for its OTHER two callers
+# (build_tier_calibration's real-outcomes lookup, build_position_vor_
+# spans' down_span for strategy_scale) -- both are a separate, legacy
+# scoring path (position_value_score/strategy_scale) that never reaches
+# final_score/Our Score (see calculate_base_value_score: VOR + projection
+# percentile + market + risk, no strategy_scale) and isn't surfaced on
+# either active page (Home.py, draft_center.py). Rank 17 is correct THERE
+# -- it's where the 2015-2025 realized-outcomes curve goes flat instead of
+# collapsing every non-elite TE to the old 0.05 floor (see build_tier_
+# calibration's docstring, 2026-08-21 fix).
+#
+# But real TE PROJECTED production is itself nearly flat from TE7 through
+# TE20+ (measured: TE10 112.0 pts vs TE17 104.9 -- a 7-point spread across
+# 7 ranks), while WR/RB production keeps falling steeply over that same
+# range. So a replacement baseline drawn from TE17 sits IN that flat zone,
+# giving every mid/late TE a VOR near zero -- rather than the deeply
+# negative VOR a same-ADP WR/RB gets (measured, ADP 145-175: WR -7 to -62,
+# RB -47 to -92, TE 0 to +7) -- which is what inflated the whole tier onto
+# the board 25-70 spots ahead of where the real market drafts them
+# (measured mean/median ADP-rank-minus-our-rank: TE +25.4/+23.5, vs RB
+# -14.4/-2.0, WR -2.2/0.0, QB -15.4/-14.0 -- TE alone is a huge outlier).
+#
+# The real market's own signal for where TE stops being meaningfully
+# scarce is TE9: real ADP jumps from ~92 (TE9) to ~153 (TE10), a 60-pick
+# cliff dwarfing every other position's rank-to-rank gap at that depth.
+# Anchoring the VOR baseline there (rather than TE17) keeps the elite
+# tier's fair, market-beating edge (Bowers/McBride still +7/+8, unaffected
+# -- they're well above either baseline) while giving the flat mid/late
+# crowd a real, negative VOR instead of a false near-zero one.
+VOR_REPLACEMENT_RANK_OVERRIDES = {"TE": 9}
+
+
 def build_position_replacement_baselines(df, pos_col, proj_col):
     """
     Estimate position-specific replacement baselines for cross-position scoring.
@@ -1030,7 +1068,8 @@ def build_position_replacement_baselines(df, pos_col, proj_col):
             baselines[position] = 0.0
             continue
 
-        replacement_idx = min(_position_replacement_rank(position) - 1, len(pos_df) - 1)
+        rank = VOR_REPLACEMENT_RANK_OVERRIDES.get(position, _position_replacement_rank(position))
+        replacement_idx = min(rank - 1, len(pos_df) - 1)
 
         baselines[position] = float(pos_df.iloc[replacement_idx][proj_col])
 
@@ -1348,6 +1387,13 @@ def positional_tier_factor(position, positional_adp_rank, calibration):
 # this entry. Every percentage below is an editorial magnitude estimate, not
 # a verified fact -- the underlying situations (trades, coach quotes) are
 # independently verified real news; the specific number is a judgment call.
+# Sizing/mechanism/confidence rules for every entry below: see
+# research/news_override_policy.md (written 2026-08-26 by extracting the
+# rules already applied consistently across these entries -- most load-
+# bearing rule: only add an entry HERE (a season-points cut) when there's a
+# real, DECISIVE detail (a confirmed return week, a confirmed role split);
+# an uncertain/pending situation belongs in INJURY_MANUAL_OVERRIDES
+# instead, see build_risk_variables.py).
 PROJECTION_MANUAL_ADJUSTMENTS = {
     "DeVonta Smith": {
         "pct": 12.0,

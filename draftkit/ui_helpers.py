@@ -13,6 +13,40 @@ from draftkit.draft_state import (
 )
 
 
+# Single-entry tool switcher. Replaces Streamlit's default multipage
+# sidebar nav (the left "toolbar") with one top-of-page dropdown shared by
+# every page, so the app reads as a single surface where you pick a tool.
+# Ordered dict: label shown in the dropdown -> page path passed to
+# st.switch_page. Add future tools here.
+TOOL_PAGES = {
+    "Rankings Board": "Home.py",
+    "Draft Assistant": "pages/1_Draft_Mode.py",
+}
+
+
+def render_tool_nav(current_label, container=None):
+    """Render the tool dropdown and navigate when the selection changes.
+
+    `current_label` is this page's key in TOOL_PAGES. The widget's stored
+    value always matches the page you're on (any change immediately
+    switches you there), so a plain body-level comparison can't bounce:
+    on a fresh load session_state is empty and the index defaults to the
+    current page; after any switch the stored value equals the page landed
+    on. Pass `container` (e.g. a column) to place the dropdown; defaults to
+    the main body."""
+    target = container if container is not None else st
+    labels = list(TOOL_PAGES.keys())
+    choice = target.selectbox(
+        "Tool",
+        labels,
+        index=labels.index(current_label),
+        key="tool_nav",
+        label_visibility="collapsed",
+    )
+    if choice != current_label:
+        st.switch_page(TOOL_PAGES[choice])
+
+
 def render_league_settings_sidebar():
     with st.sidebar:
         st.header("Draft Controls")

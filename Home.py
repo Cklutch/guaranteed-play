@@ -2076,7 +2076,15 @@ with st.popover("🎚️ Adjust a player"):
                      "positive raises it, negative lowers it.",
             )
             _target_pts = round(_current_board_pts * (1 + _pct_from_current / 100), 1)
-            _equiv_pct_vs_raw = round((_target_pts / _raw_pts - 1) * 100, 1) if _raw_pts else 0.0
+            # `if _raw_pts` (not `!= 0`) was the exact shape of the real bug
+            # fixed in resolve_projection_base() (2026-08-27, Trevor Lawrence)
+            # -- NaN is truthy in Python, so that guard silently let a NaN
+            # raw value through into a NaN pct instead of hitting the 0.0
+            # fallback. resolve_projection_base() no longer returns NaN (it
+            # raises instead, caught above), but guarding on the actual
+            # condition intended -- a genuine zero projection -- rather than
+            # bare truthiness avoids reintroducing the same class of bug.
+            _equiv_pct_vs_raw = round((_target_pts / _raw_pts - 1) * 100, 1) if _raw_pts != 0 else 0.0
             _fake_entry = {
                 "player": _adj_player,
                 "reason": f"Manual adjustment via Rankings page ({_pct_from_current:+.1f}% from current), "

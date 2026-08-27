@@ -512,7 +512,6 @@ player_id,player_name,position,team,bye_week,age,injury_status,projection_points
 13075.0,Myles Price,WR,MIN,,24.0,Active,0.0,187.0,,,,,,,,real,unclassified,0.0,30.0,,,,70.0,STEADY,
 13101.0,Gage Larvadain,WR,CLE,,24.0,Active,0.0,188.0,,,,,,,,real,unclassified,0.0,30.0,,,,70.0,STEADY,
 13394.0,Josh Cameron,WR,JAX,,23.0,Active,0.0,189.0,,,,,216.0,315.0,,real,unclassified,0.0,30.0,,,,70.0,STEADY,
-,Kenneth Gainwell,RB,TB,10.0,,,,,37.0,9.0,,,107.4,108.0,108.0,,unclassified,0.0,,,,,,,
 11638.0,Ricky Pearsall,WR,SF,8.0,25.0,IR,,,44.0,8.0,,,119.1,121.0,102.0,,deep_threat_wr,0.355,85.0,,,,,,
 2449.0,Stefon Diggs,WR,WAS,,32.0,Active,,,62.0,10.0,,,116.0,117.0,165.0,,possession_wr,0.248,30.0,,,,,,-7.0
 1479.0,Keenan Allen,WR,LAC,7.0,33.0,Active,,,103.0,13.0,,,206.7,207.0,289.0,,unclassified,0.0,30.0,,,,,,
@@ -3938,5 +3937,4 @@ player_id,player_name,position,team,bye_week,age,injury_status,projection_points
 11189.0,Zay Malone,WR,,,23.0,Active,,,,,,,,,,,unclassified,0.0,30.0,,,,,,
 7211.0,Zimari Manning,WR,,,26.0,Active,,,,,,,,,,,unclassified,0.0,30.0,,,,,,
 11159.0,Zion Bowens,WR,,,24.0,Active,,,,,,,,,,,unclassified,0.0,30.0,,,,,,
-8122.0,Zonovan Knight,RB,ARI,,25.0,Active,,,,,,,,,,,goal_line_rb,0.19,30.0,,,,,,
 1976.0,Zurlon Tipton,RB,,,30.0,Inactive,,,,,,,,,,,unclassified,0.0,30.0,,,,,,

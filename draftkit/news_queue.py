@@ -83,14 +83,44 @@ def apply_injury_override(entry, score=None):
 def resolve_projection_base(player_name):
     """Return (raw_base_points, current_effective_points, layer) for this
     player -- the RAW number a projection_pct edit multiplies against, and
-    the number currently on the board. These differ for anyone already
-    covered by a prior model_projections_v1.csv correction (raw is the
-    unadjusted model output; current is that correction's own output) --
-    a percent change always applies to raw, never stacks on the current
+    the number currently on the board.
+
+    Real bug fixed 2026-08-27 (found live: Trevor Lawrence's Apply silently
+    did nothing): this used to only check model_projection_points /
+    model_projection_points_adjusted, but apply_model_projection_override()
+    in draft_analysis.py -- the function that actually decides what
+    projection_points shows on the board -- has a THIRD tier this one
+    didn't know about: model_projection_points_fallback (a book-anchored
+    or name-keyed placeholder value, used when no real
+    MODEL_PROJECTION_CORRECTIONS entry exists yet). For any player in that
+    third tier, model_projection_points/_adjusted are both NaN, so this
+    returned raw=NaN. NaN is truthy in Python, so the caller's `if raw`
+    guards didn't catch it either -- it silently propagated into a NaN
+    pct, which apply_projection_override() then wrote into
+    model_adjustment_pct. That NaN write is the actual reason the edit
+    appeared to do nothing: apply_model_projection_override()'s own
+    `.notna()` check on model_adjustment_pct now saw NaN, decided this
+    row was "not corrected" after all, and fell back to the unchanged
+    fallback value -- so the board kept showing the original number.
+
+    Mirrors apply_model_projection_override()'s exact 3-tier priority so
+    the two can never disagree on which number is "real" for a given
+    player: (1) a real correction (model_adjustment_pct notna) -> raw is
+    model_projection_points, current is model_projection_points_adjusted;
+    (2) a fallback (model_projection_points_fallback notna, excluding the
+    generic "Rookie-score fallback" composite placeholder that function
+    also excludes -- see its own docstring for why) -> that fallback value
+    is BOTH raw and current, since there's no separate "unadjusted model
+    output" for a fallback-only row; (3) master_players.csv's raw
+    projection_points.
+
+    A percent change always applies to raw, never stacks on the current
     adjusted number. Shared by apply_projection_override() and
     preview_projection_rank() so the preview can never show a different
     number than Apply would actually produce. Raises if the player can't
-    be found (or is ambiguous) in EITHER file."""
+    be found (or is ambiguous) in EITHER file, or if the resolved raw
+    value is NaN (a real, still-unresolved gap upstream -- surfacing it
+    is better than silently propagating NaN like the old code did)."""
     model_df = pd.read_csv(MODEL_PROJECTIONS_PATH) if MODEL_PROJECTIONS_PATH.exists() else pd.DataFrame()
     idx = model_df.index[model_df["player_name"] == player_name] if not model_df.empty else pd.Index([])
 
@@ -99,16 +129,32 @@ def resolve_projection_base(player_name):
 
     if len(idx) == 1:
         i = idx[0]
-        raw = float(model_df.at[i, "model_projection_points"])
-        current = float(model_df.at[i, "model_projection_points_adjusted"])
-        return raw, current, "model_projections_v1.csv"
+        pct = model_df.at[i, "model_adjustment_pct"] if "model_adjustment_pct" in model_df.columns else None
+        if pd.notna(pct):
+            raw = float(model_df.at[i, "model_projection_points"])
+            current = float(model_df.at[i, "model_projection_points_adjusted"])
+            if pd.isna(raw) or pd.isna(current):
+                raise ValueError(
+                    f"{player_name}: model_adjustment_pct is set but the points columns are NaN "
+                    f"in model_projections_v1.csv -- inconsistent row, needs a data fix."
+                )
+            return raw, current, "model_projections_v1.csv"
+
+        fallback = model_df.at[i, "model_projection_points_fallback"] if "model_projection_points_fallback" in model_df.columns else None
+        fallback_note = model_df.at[i, "model_projection_fallback_note"] if "model_projection_fallback_note" in model_df.columns else None
+        is_composite_placeholder = isinstance(fallback_note, str) and "Rookie-score fallback" in fallback_note
+        if pd.notna(fallback) and not is_composite_placeholder:
+            value = float(fallback)
+            return value, value, "model_projections_v1.csv (fallback)"
 
     master_df = pd.read_csv(MASTER_PLAYERS_PATH, low_memory=False)
     midx = master_df.index[master_df["player_name"] == player_name]
     if len(midx) != 1:
         raise ValueError(f"{player_name}: expected 1 row in master_players.csv, found {len(midx)}")
-    raw = float(master_df.at[midx[0], "projection_points"])
-    return raw, raw, "master_players.csv"
+    raw = master_df.at[midx[0], "projection_points"]
+    if pd.isna(raw):
+        raise ValueError(f"{player_name}: projection_points is NaN in master_players.csv -- nothing to adjust from.")
+    return float(raw), float(raw), "master_players.csv"
 
 
 def apply_projection_override(entry, pct=None):
@@ -117,10 +163,12 @@ def apply_projection_override(entry, pct=None):
     reviewer revised the number before applying. Returns (before, after,
     layer) for the confirmation message."""
     value = entry["value"] if pct is None else float(pct)
+    if value != value:  # NaN check without importing math -- NaN != NaN is always True
+        raise ValueError(f"{entry['player']}: refusing to apply a NaN pct (upstream bug -- check the caller).")
     raw, before, layer = resolve_projection_base(entry["player"])
     after = round(raw * (1 + value / 100), 1)
 
-    if layer == "model_projections_v1.csv":
+    if layer.startswith("model_projections_v1.csv"):
         df = pd.read_csv(MODEL_PROJECTIONS_PATH)
         i = df.index[df["player_name"] == entry["player"]][0]
         df.at[i, "model_projection_points_adjusted"] = after

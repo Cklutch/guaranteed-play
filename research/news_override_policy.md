@@ -36,10 +36,11 @@ The mechanism split in §1 now also decides who signs off:
   §7), no human review gate. This is the lever §1 already calls "cheap to
   be wrong about."
 - **Any projection cut (`PROJECTION_MANUAL_ADJUSTMENTS`) always goes to
-  human review**, regardless of confidence -- drafted into `research/
-  pending_news_adjustments.md`, same as before. This is the lever that
-  "moves rank/tier and OUR SCORE directly," per §1's own rationale for
-  reserving it for decisive information.
+  human review**, regardless of confidence -- drafted as an entry in
+  `research/pending_news_adjustments.json`, resolved via the in-app News
+  Queue page (`pages/2_News_Queue.py`; added 2026-08-26, see §7a). This
+  is the lever that "moves rank/tier and OUR SCORE directly," per §1's
+  own rationale for reserving it for decisive information.
 - A risk-only finding that does NOT clear §3's confidence bar still goes to
   review, same as before -- mechanism type only fast-tracks entries that
   were already going to be acted on; it never lowers the bar for acting at
@@ -119,9 +120,11 @@ Before drafting anything, check ALL of:
   (Precedent: Pearsall, Christian Kirk, Mahomes, Alec Pierce, Charbonnet
   were all checked and skipped this way in the same sweep that surfaced
   Burden and Nacua.)
-- Prior entries in `research/pending_news_adjustments.md` for the same
-  player/story, so a daily sweep doesn't duplicate an item still awaiting
-  review.
+- Prior entries in `research/pending_news_adjustments.json` (the live
+  queue) and `research/pending_news_adjustments.md` (historical,
+  informational-only findings) for the same player/story, so a daily
+  sweep doesn't duplicate an item still awaiting review or re-surface
+  something already logged as not-actionable.
 
 An existing entry for a DIFFERENT reason doesn't block a new one -- Burden
 already had a `PROJECTION_MANUAL_ADJUSTMENTS` entry for role/opportunity
@@ -163,3 +166,60 @@ with no review gate in front of it:
 4. The daily report-back names anything auto-accepted explicitly, not just
    the review-queue additions -- "silently correct" isn't good enough for
    something that changed the live board unsupervised.
+
+## 7a. How Lane B (human review) gets applied (added 2026-08-26)
+
+The prior version of this had the sweep append a prose write-up to
+`research/pending_news_adjustments.md`, and applying meant hand-editing
+`INJURY_MANUAL_OVERRIDES` + re-patching the CSV, the same as an
+auto-accept but with a human doing the steps. That's gone now for
+day-to-day resolving -- it's still fine for occasional judgment calls,
+but the routine act of clicking "yes, apply this" doesn't need a code
+edit every time.
+
+**The sweep** appends one JSON object per finding to `research/
+pending_news_adjustments.json` (create as `[]` if missing):
+
+```json
+{
+  "player": "Player Name",
+  "mechanism": "injury_score",
+  "value": 3.5,
+  "reason": "one paragraph, same rigor as §6",
+  "source": "outlet(s), date(s)",
+  "confidence": "one paragraph, per §3",
+  "date": "YYYY-MM-DD"
+}
+```
+
+`mechanism` is `"injury_score"` for a risk-only finding (the normal
+case), `"projection_pct"` for a projection-cut candidate (rare -- §1's
+decisive-detail bar), or `"informational"` for something logged but not
+actionable (the Love case). §6's documentation standard still applies in
+full -- the JSON fields just replace the markdown bullets, nothing is
+allowed to get thinner.
+
+**The app** (`pages/2_News_Queue.py`, backed by `draftkit/news_queue.py`)
+renders each entry as a card:
+- `injury_score` entries get an **Apply** button -- it patches
+  `risk_variables.csv` via the exact same `player_from_variable_row()` /
+  `risk_index()` / `load_weights()` call the auto-accept path uses (§7
+  step 2), then removes the entry from the JSON and appends a line to
+  `research/applied_news_overrides_log.md`. No code edit, no Claude in
+  the loop, one click.
+- `projection_pct` entries are flagged as needing a manual code edit --
+  the button is deliberately NOT wired to rewrite `draft_analysis.py`'s
+  `PROJECTION_MANUAL_ADJUSTMENTS` dict from a web form. That lever still
+  goes through a real edit + review, matching §1a's reasoning for why it
+  gets the higher bar in the first place.
+- Every entry (any mechanism) gets a **Dismiss** button -- removes it
+  from the queue and logs it as dismissed, for a finding that turns out
+  not worth acting on.
+
+`INJURY_MANUAL_OVERRIDES` in `build_risk_variables.py` is still the
+durable source of truth for the next full pipeline rebuild (same caveat
+as §7: that rebuild isn't runnable in this environment right now). A
+Lane B entry applied via the queue does NOT add itself to that dict --
+the CSV patch is what makes it live today; syncing the dict is a
+periodic housekeeping pass (done whenever that file is next touched for
+another reason), not part of resolving the queue.

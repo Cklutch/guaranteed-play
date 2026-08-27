@@ -371,6 +371,34 @@ INJURY_MANUAL_OVERRIDES = {
                   "suspension review following a May arrest -- no discipline decided yet",
         "date": "2026-08-26",
     },
+    # Luther Burden (added 2026-08-26, human-reviewed via research/pending_
+    # news_adjustments.md): real groin injury at Bears practice (Aug 8),
+    # missing the rest of the preseason, team "hopeful" for Week 1 -- short
+    # of a decisive missed-games timeline (same standard as Jeanty), so
+    # risk-only, no projection cut. His existing PROJECTION_MANUAL_
+    # ADJUSTMENTS entry (+10%, DJ Moore trade/camp-role opportunity) is
+    # unrelated -- opportunity, not this injury -- and stays untouched;
+    # this is an ADDITIONAL, separate injury-score entry.
+    "Luther Burden": {
+        "score": 3.5,
+        "reason": "Groin injury at practice (Aug 8), missing rest of preseason -- team "
+                  "\"hopeful\" for Week 1 but no confirmed return date",
+        "date": "2026-08-26",
+    },
+    # Puka Nacua (added 2026-08-26, human-reviewed via research/pending_
+    # news_adjustments.md): real, still-unresolved suspension risk tied to
+    # a civil lawsuit (alleged biting + antisemitic remark) -- Schefter says
+    # missing Week 1 vs. SF "can't be ruled out," multiple outlets frame it
+    # as a genuine coin flip. No discipline decided, no charges filed as of
+    # this entry -- same shape as the Jacobs precedent (real, live,
+    # undecided legal/suspension risk, not a physical injury), so
+    # risk-only, no projection cut despite the high stakes (top-4 ADP).
+    "Puka Nacua": {
+        "score": 3.5,
+        "reason": "Real, unresolved NFL suspension risk tied to a civil lawsuit -- "
+                  "Schefter says missing Week 1 \"can't be ruled out,\" nothing decided",
+        "date": "2026-08-26",
+    },
 }
 
 

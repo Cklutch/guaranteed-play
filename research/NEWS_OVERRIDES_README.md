@@ -28,9 +28,9 @@ found:
  │ searches    │              ANY projection cut, or a risk-only
  │ the news    │              finding below the confidence bar
  └─────────────┘              ┌────────────────────────────────┐
-                               │ drafted into pending_news_       │
-                               │ adjustments.md -- you say what   │
-                               │ to apply, I wire it in           │
+                               │ appended to pending_news_        │
+                               │ adjustments.json -- click Apply  │
+                               │ or Dismiss on the News Queue page│
                                └────────────────────────────────┘
 ```
 
@@ -49,7 +49,7 @@ something has already cleared the bar for acting on at all.
 |---|---|---|
 | **The scheduled sweep** | Runs daily, searches for camp/injury/suspension news, filters to relevant players, drafts candidates | `nfl-camp-news-watch` task — file at `C:\Users\19054\.claude\scheduled-tasks\nfl-camp-news-watch\SKILL.md` |
 | **The policy** | The rules the sweep (and I) follow: which mechanism to use, how to size an entry, what confidence is enough to act | [`research/news_override_policy.md`](news_override_policy.md) |
-| **The pending queue (Lane B)** | Candidates awaiting your decision — nothing here is live | [`research/pending_news_adjustments.md`](pending_news_adjustments.md) |
+| **The pending queue (Lane B)** | Candidates awaiting your decision — nothing here is live. Resolved in-app: open the "News Queue" page, click Apply or Dismiss on each card | `research/pending_news_adjustments.json` + `pages/2_News_Queue.py` |
 | **The audit log (Lane A)** | Everything applied WITHOUT your review — the record that makes auto-accept reversible/checkable after the fact | `research/applied_news_overrides_log.md` |
 | **Risk-only overrides** | Bumps a player's `injury_score` (1–5 scale) — for real-but-undecided situations. Lane A lives here. | `INJURY_MANUAL_OVERRIDES` in `draftkit/scripts/build_risk_variables.py` |
 | **Projection overrides** | Cuts a player's season points by a % — only for real, *decisive* situations (a confirmed return week, a confirmed role split). Lane B only — never auto-applied. | `PROJECTION_MANUAL_ADJUSTMENTS` in `draftkit/draft_analysis.py` |
@@ -64,18 +64,19 @@ Not hypotheticals — these are the actual entries in the repo right now.
 **2. The policy, applied to a real decision** (from `news_override_policy.md`):
 > Nacua: a real, unresolved suspension risk, multiple named outlets, but "no discipline decided" (nothing decisive) → policy §1 says **risk-only**, not a projection cut. Severity is a live legal risk with no physical injury attached → policy §2's tier table puts that at **3.5**, same tier as Jacobs' entry.
 
-**3. A pending-queue entry** (from `pending_news_adjustments.md`, awaiting your decision):
-```markdown
-## Luther Burden -- 2026-08-26
-- **What**: Suffered a groin injury at Bears practice (Aug 8), expected to
-  miss the rest of the preseason; team "hopeful" for Week 1.
-- **Source**: DAZN, CBS Sports camp injury trackers (2026-08-24/25 roundups)
-- **Suggested mechanism**: INJURY_MANUAL_OVERRIDES, score 3.5
-- **Reasoning**: "Hopeful for Week 1" is short of a decisive timeline, so
-  risk-only, no projection cut.
-- **Confidence**: Medium-high. Multiple outlets, consistent detail, but no
-  single definitive return date yet.
+**3. A pending-queue entry** (real format, `research/pending_news_adjustments.json` — this exact Burden entry has since been applied and cleared; shown here as a format reference):
+```json
+{
+  "player": "Luther Burden",
+  "mechanism": "injury_score",
+  "value": 3.5,
+  "reason": "Suffered a groin injury at Bears practice (Aug 8), expected to miss the rest of the preseason; team \"hopeful\" for Week 1. \"Hopeful for Week 1\" is short of a decisive timeline, so risk-only, no projection cut.",
+  "source": "DAZN, CBS Sports camp injury trackers (2026-08-24/25 roundups)",
+  "confidence": "Medium-high. Multiple outlets, consistent detail, but no single definitive return date yet.",
+  "date": "2026-08-26"
+}
 ```
+It shows up in the News Queue page as a card with the same content, plus an Apply button that patches `risk_variables.csv` directly.
 
 **4. A live risk-only override** (already applied, from `INJURY_MANUAL_OVERRIDES`):
 ```python
@@ -104,11 +105,11 @@ not just the final number.
 
 ## How to do the common things
 
-**See what's pending review (Lane B)** → open [`research/pending_news_adjustments.md`](pending_news_adjustments.md). Empty file means a quiet day, not a broken task.
+**See what's pending review (Lane B)** → open the app's "News Queue" page (dropdown nav, top of any page). Empty queue means a quiet day, not a broken task.
 
-**See what's been auto-applied (Lane A)** → open [`research/applied_news_overrides_log.md`](applied_news_overrides_log.md). This is the one worth spot-checking occasionally, since nothing gated it going in.
+**See what's been auto-applied (Lane A) or resolved from the queue** → open [`research/applied_news_overrides_log.md`](applied_news_overrides_log.md). This is the one worth spot-checking occasionally, since Lane A entries went live with nothing gating them going in.
 
-**Apply a pending (Lane B) entry** → tell me which one(s). I wire it into the right dict, patch `data/processed/risk_variables.csv` to match (a full rebuild needs a data file this environment doesn't have — see CLAUDE.md), verify it on the live board, then delete the entry from the pending file.
+**Apply a pending (Lane B) `injury_score` entry** → open the News Queue page and click Apply. No code edit, no need to ask me — it patches `data/processed/risk_variables.csv` directly through the same functions the real pipeline uses. A `projection_pct` entry (rare) is flagged in the queue as needing a real code edit instead — tell me which one and I'll wire it into `PROJECTION_MANUAL_ADJUSTMENTS` and verify it on the live board.
 
 **Undo something auto-applied (Lane A)** → tell me which player looks wrong. Same reversal either way: edit the dict entry (or remove it), re-patch the CSV, log the correction.
 
@@ -122,11 +123,12 @@ not just the final number.
 
 - **Schedule**: daily, 7:19 AM local.
 - **Model**: set to `haiku` in the task's frontmatter — *unconfirmed* whether the scheduler actually honors this field (not a documented option on the scheduling tool). Worth checking after a couple of real runs.
-- **Mode**: two-lane, as of today (this was a same-day policy change — see below). Risk-only + high-confidence auto-applies (Lane A); any projection cut always waits for you (Lane B).
+- **Mode**: two-lane. Risk-only + high-confidence auto-applies (Lane A); any projection cut always waits for you (Lane B).
+- **Lane B resolution**: now an in-app queue (`research/pending_news_adjustments.json` + the "News Queue" page) instead of hand-editing a markdown file — added 2026-08-26, see policy §7a.
 - **Scope**: top ~150 players by ADP.
-- **Pending in Lane B right now**: Burden (injury, uncovered) and Nacua (suspension risk, uncovered) — both drafted BEFORE the Lane A/B split existed, so they're sitting in the review queue rather than auto-applied. Love was checked and logged as not-actionable.
-- **Lane A audit log**: empty so far — the split was just added, nothing has gone through it yet.
-- **Already covered** (won't be re-flagged): Jeanty, Jacobs, Tyson, DeVonta Smith, Luther Burden (role-only reason), Corum.
+- **Pending in Lane B right now**: none — Burden and Nacua (the two entries drafted before this app page existed) were reviewed and applied via the queue. Love was checked and logged as not-actionable (kept in `pending_news_adjustments.md`, now a historical/informational log, not a queue).
+- **Lane A audit log**: empty so far — no auto-accept has run yet. `applied_news_overrides_log.md` also now records Lane B applies/dismissals from the queue page.
+- **Already covered** (won't be re-flagged): Jeanty, Jacobs, Tyson, DeVonta Smith, Luther Burden (both the role-only AND injury reasons), Nacua, Corum.
 
 ## Known gaps / things worth your critique
 

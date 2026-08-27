@@ -2,11 +2,12 @@
 Top 250 rankings -- the static preseason board.
 
 This page itself has no navigation, no draft-state controls, and no draft
-actions. Draft Mode has been restored to pages/, so Streamlit's multipage
-nav is active again; the remaining pages (Player Cards, Team Outlook, Draft
-Lab, Player Compare, Tier Desperation, Component Audit) are still parked in
-pages_archive/ rather than deleted, and moving any of them into pages/
-brings them back the same way.
+actions. Draft Mode, News Queue, and Component Audit have all been
+restored to pages/, so Streamlit's multipage nav is active again; Team
+Outlook is the one page still parked in pages_archive/ rather than
+deleted, and moving it into pages/ brings it back the same way. (Player
+Cards, Draft Lab, Tier Desperation, Player Compare, and Live Rankings were
+removed outright -- see CHANGELOG.md.)
 
 Scoring is unchanged -- this reads the same draftkit engine and the same
 data/processed/master_players.csv that Draft Mode uses. Because there is no

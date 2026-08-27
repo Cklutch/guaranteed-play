@@ -1,3 +1,17 @@
+"""Top-100 Component Audit -- scoring-transparency tool, revived from
+pages_archive/9_Component_Audit.py (2026-08-26). Ranks the current scoring
+features by average influence on final_score and flags any component
+responsible for more than 20% of observed score variance -- a self-check
+on the Base Value engine, cross-referenced against a championship-equity
+model and a simulated availability-probability pass.
+
+Unlike the other live pages this one keeps the sidebar (League Settings,
+via render_league_settings_sidebar()) rather than hiding it -- that's real,
+load-bearing UI here, not leftover chrome. Only the default Streamlit
+multipage nav LIST is suppressed, so the shared TOOL_PAGES dropdown above
+stays the one way to switch tools.
+"""
+
 import pandas as pd
 import streamlit as st
 
@@ -7,13 +21,24 @@ from draftkit.draft_analysis import build_recommendation_rankings_df
 from draftkit.draft_simulation import calculate_availability_probability
 from draftkit.draft_state import init_session_state, keep_session_state_alive
 from draftkit.ranking_component_audit import build_top_100_component_audit
-from draftkit.ui_helpers import render_league_settings_sidebar
-
+from draftkit.ui_helpers import render_league_settings_sidebar, render_tool_nav
 
 st.set_page_config(page_title="Component Audit", layout="wide")
 
+st.markdown(
+    """
+    <style>
+      .stApp, header[data-testid="stHeader"] { background: #0d0f10 !important; }
+      [data-testid="stSidebarNav"] { display: none !important; }
+      body, .stApp p, .stApp div, .stApp span { color: #eef1ec; }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 init_session_state()
 keep_session_state_alive()
+render_tool_nav("Component Audit")
 render_league_settings_sidebar()
 
 st.title("Top 100 Component Audit")

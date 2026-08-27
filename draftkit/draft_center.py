@@ -20,9 +20,8 @@ import math
 import pandas as pd
 
 from draftkit.live_draft import (
-    recommend_picks, diverse_slate,
-    ROSTER_CAPS, QB_HOLD_UNTIL_ROUND,
-    TE_HOLD_ROUND_START, TE_HOLD_ROUND_END, TE_HOLD_VALUE_MARGIN,
+    recommend_picks, diverse_slate, elite_available_for,
+    ROSTER_CAPS, ELITE_HOLD_ROUND, NO_ELITE_HOLD_ROUND, POSITION_VALUE_MARGIN,
 )
 
 # --- palette (from the design handoff) ----------------------------------
@@ -286,6 +285,17 @@ def _rec_card_html(row, surv_pick, mode="rec", model_rank=None):
         ribbon_text = None
     head_top = "18px" if ribbon_text else "2px"
 
+    breakout_badge = ""
+    if row.get("is_breakout_v1"):
+        prob = row.get("breakout_probability_v1")
+        prob_txt = f" {float(prob) * 100:.0f}%" if pd.notna(prob) else ""
+        breakout_badge = (
+            f'<span style="display:inline-block;font:700 9px \'IBM Plex Mono\',monospace;'
+            f'letter-spacing:.05em;padding:2px 7px;border-radius:6px;margin-left:6px;'
+            f'background:rgba(224,180,94,.16);color:#e0b45e;white-space:nowrap" '
+            f'title="Backtested breakout-probability model (WR only, research-stage)">🚀 BREAKOUT{prob_txt}</span>'
+        )
+
     ribbon = (
         f'<div style="position:absolute;top:0;left:0;right:0;background:{accent};color:#0d0f10;'
         f"font:900 9.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;text-align:center;padding:4px 0;"
@@ -311,7 +321,7 @@ def _rec_card_html(row, surv_pick, mode="rec", model_rank=None):
         f'<div style="display:flex;align-items:center;gap:11px;margin-top:{head_top}">'
         f'<span style="width:46px;height:46px;border-radius:11px;background:#1d2124 {_headshot_bg(row.get("player_id"))};background-size:cover;background-position:center top;border:1px solid #2a3033;flex-shrink:0"></span>'
         f'<div style="min-width:0">'
-        f'<div style="font:800 15px Archivo,sans-serif;color:#f4f6f2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{_e(row["player_name"])}</div>'
+        f'<div style="font:800 15px Archivo,sans-serif;color:#f4f6f2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{_e(row["player_name"])}{breakout_badge}</div>'
         f'<div style="font:400 10.5px \'IBM Plex Sans\',sans-serif;color:#8c948f">{_e(row["team"])} · Bye {bye_txt} · ADP {adp_txt}</div>'
         f'</div>'
         f'<span style="margin-left:auto;font:900 15px Archivo,sans-serif;color:{pc}">{_e(pos)}</span>'
@@ -507,11 +517,13 @@ def render_command_center(pool, drafted, my_team, drafted_by, num_picks,
     prepared = prepare_pool(pool, drafted, drafted_by, my_team, my_next)
     avail = prepared[~prepared["drafted"]].copy()
 
+    is_manual = sleeper_code == "Manual"
+    source_label = "MANUAL" if is_manual else f"SLEEPER · {sleeper_code}"
     if complete:
-        sync = dict(text=f"COMPLETE · SLEEPER · {sleeper_code}" if sleeper_code else "DRAFT COMPLETE",
+        sync = dict(text=f"COMPLETE · {source_label}" if sleeper_code else "DRAFT COMPLETE",
                     tc="#7fc98a", dot="#7fc98a", glow="0 0 7px #7fc98a")
     elif sleeper_code:
-        sync = dict(text=f"LIVE · SLEEPER · {sleeper_code}", tc="#7fc98a", dot="#7fc98a", glow="0 0 7px #7fc98a")
+        sync = dict(text=f"LIVE · {source_label}", tc="#7fc98a", dot="#7fc98a", glow="0 0 7px #7fc98a")
     else:
         sync = dict(text="NOT SYNCED · demo", tc="#e0b45e", dot="#e0b45e", glow="none")
     clock_color = "#a8c686" if i_am_on_clock else "#f4f6f2"
@@ -545,6 +557,8 @@ def render_command_center(pool, drafted, my_team, drafted_by, num_picks,
                         if needs else "Starters are set — take the highest-scored player available."))
     elif my_pick_now:
         next_move = f"Your next pick is #{my_pick_now}. " + (f"{needs[0]} is your priority." if needs else "Best available.")
+    elif sleeper_code == "Manual":
+        next_move = "Set your draft slot above to track your team, needs, and byes live."
     else:
         next_move = "Paste your Sleeper draft link and set your slot to track your team live."
 
@@ -652,13 +666,18 @@ def render_command_center(pool, drafted, my_team, drafted_by, num_picks,
                     mine_pos = mine_df["position"].astype(str).str.upper().value_counts().to_dict() if not mine_df.empty else {}
                     if cp in ROSTER_CAPS and mine_pos.get(cp, 0) >= ROSTER_CAPS[cp]:
                         filter_reason = f"You already have a {cp} — position cap reached."
-                    elif cp == "QB" and scoring_mode != "dads" and rnd and rnd < QB_HOLD_UNTIL_ROUND:
-                        filter_reason = f"QB hold active until round {QB_HOLD_UNTIL_ROUND} (standard scoring)."
-                    elif (cp == "TE" and scoring_mode != "dads" and rnd
-                          and TE_HOLD_ROUND_START <= rnd <= TE_HOLD_ROUND_END):
-                        filter_reason = (f"TE hold active in rounds {TE_HOLD_ROUND_START}–"
-                                         f"{TE_HOLD_ROUND_END} (standard scoring). Only a TE fallen "
-                                         f"{TE_HOLD_VALUE_MARGIN}+ picks past ADP breaks through.")
+                    elif cp in ("QB", "TE") and scoring_mode != "dads" and rnd:
+                        elite_left = elite_available_for(pool, avail, cp)
+                        hold_round = ELITE_HOLD_ROUND if elite_left else NO_ELITE_HOLD_ROUND
+                        if rnd < hold_round:
+                            filter_reason = (
+                                (f"{cp} hold active until round {hold_round} (standard scoring) — "
+                                 f"an elite {cp} is still on the board, only at value (fallen to/past his ADP).")
+                                if elite_left else
+                                (f"No elite {cp} left on the board — hold active until round {hold_round} "
+                                 f"(standard scoring). Only a {cp} fallen {POSITION_VALUE_MARGIN}+ picks "
+                                 f"past ADP breaks through.")
+                            )
                 best_scored = full_scored.iloc[0] if full_scored is not None and not full_scored.empty else None
                 compare_html = _compare_section_html(
                     prep_row, scored_row, best_scored, surv_pick, avail, needs, mine_df,

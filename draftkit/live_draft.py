@@ -69,6 +69,11 @@ ROSTER_CAPS = {"QB": 1, "TE": 1}
 # nudge -- it cancels out and the board is pure best-player-available. The
 # lean only emerges as you actually fill positions and imbalances appear.
 NEED_BONUS = 6.0           # any position with an open starter slot
+# QB/TE need bonuses are lower (2026-08-27): matches the elite/no-elite
+# QB/TE hold discipline above -- a QB- or TE-shaped roster hole shouldn't
+# pull as hard as an RB/WR one, since the whole strategy is to actively
+# avoid filling either early. RB/WR keep the flat NEED_BONUS.
+NEED_BONUS_OVERRIDES = {"TE": 3.0, "QB": 4.0}
 SATURATION_PENALTY = 6.0   # per extra body once the starter slots are full
 
 # Positional scarcity bonus: NEED_BONUS is deliberately flat, so "barely the
@@ -81,17 +86,19 @@ SATURATION_PENALTY = 6.0   # per extra body once the starter slots are full
 SCARCITY_BONUS_PER_POINT = 0.3   # x (our_score gap to the #2 player at the position)
 SCARCITY_BONUS_MAX = 10.0        # cap so a huge gap can't swamp value/risk
 
-# Charlie's (standard-scoring) QB discipline: don't recommend a mid QB
-# early -- only an ELITE QB AT VALUE before the hold round. Dad's league
-# needs a good QB, so it's exempt (scoring_mode="dads").
-QB_HOLD_UNTIL_ROUND = 10   # before this round, suppress non-elite QBs (standard only)
-ELITE_QB_RANK = 3          # a top-N positional QB counts as "elite"
-
-# Charlie's TE discipline: rounds 6-9 are a bad window to spend a pick on a
-# TE unless he's fallen well past his ADP (a genuine bargain) -- otherwise
-# hold. Standard scoring only; Dad's league is exempt (same reasoning as QB).
-TE_HOLD_ROUND_START, TE_HOLD_ROUND_END = 6, 9
-TE_HOLD_VALUE_MARGIN = 15  # picks past ADP required to count as "a great deal"
+# Charlie's (standard-scoring) QB/TE discipline, unified across both
+# positions (2026-08-27): never draft a QB or TE at his ADP -- only at
+# value, and the round you're allowed to start doing that depends on
+# whether an ELITE option is still on the board. An elite guy (top-N at
+# the position by our_score) can be taken at value any round before
+# ELITE_HOLD_ROUND; if no elite option remains, the position is fully
+# suppressed until NO_ELITE_HOLD_ROUND, and even then only at a real
+# discount, not a marginal one. Dad's league needs a good QB, so it's
+# exempt (scoring_mode="dads") -- same exemption both positions always had.
+ELITE_POSITION_RANK = 3     # a top-N positional QB/TE counts as "elite"
+ELITE_HOLD_ROUND = 7        # elite-at-value allowed any round before this
+NO_ELITE_HOLD_ROUND = 9     # no elite left -> fully suppressed until this round
+POSITION_VALUE_MARGIN = 15  # picks past ADP required once no elite remains ("a great deal")
 
 # Recommendation-slate diversity: never let one position monopolize the
 # cards -- fixes "all four suggestions are WRs".
@@ -224,6 +231,7 @@ def build_candidate_pool(score_col="final_score", pool_size=300):
     cols = [
         "player_name", "player_id", "position", "team", "bye_week", "our_score",
         "injury_risk", "injury_status", "overall_risk", "position_tier", "adp", score_col,
+        "is_breakout_v1", "breakout_probability_v1",
     ]
     return board[[c for c in cols if c in board.columns]].reset_index(drop=True)
 
@@ -242,6 +250,64 @@ def _roster_bye_counts(pool, my_team):
         key = (str(r.get("position")).upper(), int(bye))
         counts[key] = counts.get(key, 0) + 1
     return counts
+
+
+def elite_available_for(pool, avail, position):
+    """Whether an elite player (top ELITE_POSITION_RANK at `position` by
+    our_score, per the full `pool`) is still undrafted (present in `avail`)
+    -- exposed for draft_center.py's "why was this filtered" explainer, so
+    it stays in sync with _apply_elite_position_discipline()'s own elite
+    lookup rather than a second, possibly-drifting copy of the same logic."""
+    position = position.upper()
+    still_on_board = pool[pool["position"].astype(str).str.upper() == position]
+    elite_names = set(
+        still_on_board.sort_values("our_score", ascending=False)["player_name"].head(ELITE_POSITION_RANK)
+    )
+    avail_names = set(avail.loc[avail["position"].astype(str).str.upper() == position, "player_name"])
+    return bool(elite_names & avail_names)
+
+
+def _apply_elite_position_discipline(avail, pool, position, current_round, current_pick):
+    """Charlie's QB/TE discipline, unified (2026-08-27): never draft this
+    position at his ADP, only at value -- and the round that becomes
+    permissible depends on whether an ELITE option is still on the board.
+
+      * An elite player (top ELITE_POSITION_RANK at the position by
+        our_score) can be taken any round before ELITE_HOLD_ROUND, but
+        only at value (fallen to/past his own ADP -- not a reach above it).
+      * If no elite option remains, the WHOLE position is suppressed until
+        NO_ELITE_HOLD_ROUND, and even then only at a real discount
+        (POSITION_VALUE_MARGIN picks past ADP), not a marginal one.
+      * From NO_ELITE_HOLD_ROUND on with no elite left, or past
+        ELITE_HOLD_ROUND generally, the position is unrestricted.
+
+    `pool` (not `avail`) supplies the elite lookup so a drafted elite player
+    still counts as "no longer available" rather than reappearing via
+    `avail`'s own filtering order."""
+    if current_round is None:
+        return avail
+    is_pos = avail["position"].astype(str).str.upper() == position
+    if not is_pos.any():
+        return avail
+
+    still_on_board = pool[pool["position"].astype(str).str.upper() == position]
+    elite_names = set(
+        still_on_board.sort_values("our_score", ascending=False)["player_name"].head(ELITE_POSITION_RANK)
+    )
+    elite_available = bool(elite_names & set(avail.loc[is_pos, "player_name"]))
+
+    hold_round = ELITE_HOLD_ROUND if elite_available else NO_ELITE_HOLD_ROUND
+    if current_round >= hold_round:
+        return avail
+
+    adp = pd.to_numeric(avail.get("adp"), errors="coerce")
+    pick = current_pick if current_pick else 0
+    if elite_available:
+        at_value = adp.notna() & (adp <= pick)
+        keep = avail["player_name"].isin(elite_names) & (at_value if current_pick else True)
+    else:
+        keep = adp.notna() & ((pick - adp) >= POSITION_VALUE_MARGIN)
+    return avail[(~is_pos) | keep].copy()
 
 
 def diverse_slate(ordered, n, max_per_pos=MAX_RECS_PER_POSITION):
@@ -307,31 +373,11 @@ def recommend_picks(pool, drafted_players=None, my_team=None, weights=None, top_
     over_cap = _pos.map(lambda p: p in ROSTER_CAPS and have.get(p, 0) >= ROSTER_CAPS[p])
     avail = avail[~over_cap.values].copy()
 
-    # Charlie's QB discipline (standard scoring only): before the hold round,
-    # drop every QB except an elite one available at value (fallen to/past
-    # his ADP). Dad's league is exempt.
-    if scoring_mode != "dads" and current_round is not None and current_round < QB_HOLD_UNTIL_ROUND:
-        elite_qbs = set(
-            pool[pool["position"].astype(str).str.upper() == "QB"]
-            .sort_values("our_score", ascending=False)["player_name"].head(ELITE_QB_RANK)
-        )
-        is_qb = avail["position"].astype(str).str.upper() == "QB"
-        adp = pd.to_numeric(avail.get("adp"), errors="coerce")
-        at_value = adp.notna() & (adp <= (current_pick if current_pick else 0))
-        keep_qb = avail["player_name"].isin(elite_qbs) & (at_value if current_pick else True)
-        avail = avail[(~is_qb) | keep_qb].copy()
-
-    # Charlie's TE discipline (standard scoring only): rounds 6-9, drop every
-    # TE unless he's fallen at least TE_HOLD_VALUE_MARGIN picks past his ADP
-    # -- a genuine bargain, not just "slightly better value." Dad's exempt.
-    if (scoring_mode != "dads" and current_round is not None
-            and TE_HOLD_ROUND_START <= current_round <= TE_HOLD_ROUND_END):
-        is_te = avail["position"].astype(str).str.upper() == "TE"
-        adp = pd.to_numeric(avail.get("adp"), errors="coerce")
-        great_deal = adp.notna() & (
-            (current_pick if current_pick else 0) - adp >= TE_HOLD_VALUE_MARGIN
-        )
-        avail = avail[(~is_te) | great_deal].copy()
+    # Charlie's QB/TE discipline (standard scoring only, Dad's exempt) --
+    # unified elite-gated hold, see _apply_elite_position_discipline().
+    if scoring_mode != "dads":
+        avail = _apply_elite_position_discipline(avail, pool, "QB", current_round, current_pick)
+        avail = _apply_elite_position_discipline(avail, pool, "TE", current_round, current_pick)
 
     if avail.empty:
         return avail
@@ -347,7 +393,7 @@ def recommend_picks(pool, drafted_players=None, my_team=None, weights=None, top_
     def need_pts(pos):
         filled, target = have.get(pos, 0), STARTER_TARGETS.get(pos, 0)
         if filled < target:
-            return NEED_BONUS                         # flat: uniform at an empty roster
+            return NEED_BONUS_OVERRIDES.get(pos, NEED_BONUS)   # flat per position, TE lower
         return -SATURATION_PENALTY * (filled - target + 1)
 
     # Roster-level risk budget: scale the per-player risk penalty by how much

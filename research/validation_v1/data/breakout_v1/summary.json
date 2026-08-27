@@ -1,0 +1,354 @@
+{
+  "seed": 17,
+  "timestamp_utc": "2026-08-27T04:27:39.544924+00:00",
+  "target": "Beat_ADP_By_12",
+  "adp_max": 150,
+  "summaries": [
+    {
+      "position": "WR",
+      "spec": "FULL",
+      "start_season": 2017,
+      "test_seasons": 7,
+      "features": [
+        "overall_adp",
+        "prior_snap_share",
+        "prior_targets_per_route_run",
+        "div_opportunity_minus_efficiency",
+        "prior_garbage_time_share",
+        "prior_route_participation_rate",
+        "prior_durability_score",
+        "age"
+      ],
+      "auc_delta": {
+        "mean": 0.035,
+        "ci_lo": -0.0068,
+        "ci_hi": 0.0764,
+        "seasons_improved": 0.714,
+        "excludes_zero": false
+      },
+      "brier_delta": {
+        "mean": -0.0098,
+        "ci_lo": -0.0333,
+        "ci_hi": 0.0117,
+        "seasons_improved": 0.714,
+        "excludes_zero": false
+      },
+      "logloss_delta": {
+        "mean": -0.0104,
+        "ci_lo": -0.0584,
+        "ci_hi": 0.0396,
+        "seasons_improved": 0.714,
+        "excludes_zero": false
+      },
+      "topdecile_delta": {
+        "mean": 0.119,
+        "ci_lo": 0.0708,
+        "ci_hi": 0.1667,
+        "seasons_improved": 0.714,
+        "excludes_zero": true
+      },
+      "auc_base_pooled": 0.7032,
+      "auc_exp_pooled": 0.7382,
+      "topdecile_base_pooled": 0.1905,
+      "topdecile_exp_pooled": 0.3095,
+      "final_classification": "Weak Research Signal"
+    },
+    {
+      "position": "WR",
+      "spec": "CORE",
+      "start_season": 2014,
+      "test_seasons": 10,
+      "features": [
+        "overall_adp",
+        "prior_snap_share",
+        "div_opportunity_minus_efficiency",
+        "prior_garbage_time_share",
+        "prior_durability_score",
+        "age"
+      ],
+      "auc_delta": {
+        "mean": 0.0155,
+        "ci_lo": -0.031,
+        "ci_hi": 0.0604,
+        "seasons_improved": 0.5,
+        "excludes_zero": false
+      },
+      "brier_delta": {
+        "mean": -0.0165,
+        "ci_lo": -0.0248,
+        "ci_hi": -0.0085,
+        "seasons_improved": 0.9,
+        "excludes_zero": true
+      },
+      "logloss_delta": {
+        "mean": -0.0354,
+        "ci_lo": -0.0527,
+        "ci_hi": -0.017,
+        "seasons_improved": 0.9,
+        "excludes_zero": true
+      },
+      "topdecile_delta": {
+        "mean": 0.05,
+        "ci_lo": -0.0667,
+        "ci_hi": 0.15,
+        "seasons_improved": 0.5,
+        "excludes_zero": false
+      },
+      "auc_base_pooled": 0.7102,
+      "auc_exp_pooled": 0.7258,
+      "topdecile_base_pooled": 0.2167,
+      "topdecile_exp_pooled": 0.2667,
+      "final_classification": "No Signal"
+    },
+    {
+      "position": "WR",
+      "spec": "CAPITAL",
+      "start_season": 2010,
+      "test_seasons": 13,
+      "features": [
+        "overall_adp",
+        "estimated_draft_round",
+        "draft_pick_overall",
+        "years_since_drafted",
+        "age"
+      ],
+      "auc_delta": {
+        "mean": -0.0124,
+        "ci_lo": -0.0261,
+        "ci_hi": -0.0003,
+        "seasons_improved": 0.308,
+        "excludes_zero": true
+      },
+      "brier_delta": {
+        "mean": 0.0029,
+        "ci_lo": 0.0001,
+        "ci_hi": 0.0059,
+        "seasons_improved": 0.308,
+        "excludes_zero": true
+      },
+      "logloss_delta": {
+        "mean": 0.0074,
+        "ci_lo": 0.0006,
+        "ci_hi": 0.0145,
+        "seasons_improved": 0.308,
+        "excludes_zero": true
+      },
+      "topdecile_delta": {
+        "mean": -0.0385,
+        "ci_lo": -0.1026,
+        "ci_hi": 0.0385,
+        "seasons_improved": 0.231,
+        "excludes_zero": false
+      },
+      "auc_base_pooled": 0.7136,
+      "auc_exp_pooled": 0.7011,
+      "topdecile_base_pooled": 0.259,
+      "topdecile_exp_pooled": 0.2205,
+      "final_classification": "No Signal"
+    },
+    {
+      "position": "RB",
+      "spec": "FULL",
+      "start_season": 2017,
+      "test_seasons": 6,
+      "features": [
+        "overall_adp",
+        "prior_snap_share",
+        "prior_targets_per_route_run",
+        "div_opportunity_minus_efficiency",
+        "prior_garbage_time_share",
+        "prior_route_participation_rate",
+        "prior_durability_score",
+        "age"
+      ],
+      "auc_delta": {
+        "mean": -0.0349,
+        "ci_lo": -0.0932,
+        "ci_hi": 0.0111,
+        "seasons_improved": 0.333,
+        "excludes_zero": false
+      },
+      "brier_delta": {
+        "mean": -0.0065,
+        "ci_lo": -0.0138,
+        "ci_hi": 0.0,
+        "seasons_improved": 0.833,
+        "excludes_zero": false
+      },
+      "logloss_delta": {
+        "mean": -0.0063,
+        "ci_lo": -0.0224,
+        "ci_hi": 0.0059,
+        "seasons_improved": 0.667,
+        "excludes_zero": false
+      },
+      "topdecile_delta": {
+        "mean": -0.025,
+        "ci_lo": -0.2,
+        "ci_hi": 0.1417,
+        "seasons_improved": 0.333,
+        "excludes_zero": false
+      },
+      "auc_base_pooled": 0.7503,
+      "auc_exp_pooled": 0.7153,
+      "topdecile_base_pooled": 0.2667,
+      "topdecile_exp_pooled": 0.2417,
+      "final_classification": "No Signal"
+    },
+    {
+      "position": "RB",
+      "spec": "CORE",
+      "start_season": 2014,
+      "test_seasons": 9,
+      "features": [
+        "overall_adp",
+        "prior_snap_share",
+        "div_opportunity_minus_efficiency",
+        "prior_garbage_time_share",
+        "prior_durability_score",
+        "age"
+      ],
+      "auc_delta": {
+        "mean": -0.0248,
+        "ci_lo": -0.0476,
+        "ci_hi": -0.0016,
+        "seasons_improved": 0.222,
+        "excludes_zero": true
+      },
+      "brier_delta": {
+        "mean": 0.0012,
+        "ci_lo": -0.0038,
+        "ci_hi": 0.0066,
+        "seasons_improved": 0.444,
+        "excludes_zero": false
+      },
+      "logloss_delta": {
+        "mean": 0.0026,
+        "ci_lo": -0.0094,
+        "ci_hi": 0.0152,
+        "seasons_improved": 0.556,
+        "excludes_zero": false
+      },
+      "topdecile_delta": {
+        "mean": -0.0667,
+        "ci_lo": -0.1556,
+        "ci_hi": 0.0,
+        "seasons_improved": 0.0,
+        "excludes_zero": false
+      },
+      "auc_base_pooled": 0.7398,
+      "auc_exp_pooled": 0.715,
+      "topdecile_base_pooled": 0.2667,
+      "topdecile_exp_pooled": 0.2,
+      "final_classification": "No Signal"
+    },
+    {
+      "position": "RB",
+      "spec": "CAPITAL",
+      "start_season": 2010,
+      "test_seasons": 13,
+      "features": [
+        "overall_adp",
+        "estimated_draft_round",
+        "draft_pick_overall",
+        "years_since_drafted",
+        "age"
+      ],
+      "auc_delta": {
+        "mean": -0.0112,
+        "ci_lo": -0.0205,
+        "ci_hi": -0.0021,
+        "seasons_improved": 0.308,
+        "excludes_zero": true
+      },
+      "brier_delta": {
+        "mean": -0.0029,
+        "ci_lo": -0.0057,
+        "ci_hi": -0.0001,
+        "seasons_improved": 0.692,
+        "excludes_zero": true
+      },
+      "logloss_delta": {
+        "mean": -0.008,
+        "ci_lo": -0.0145,
+        "ci_hi": -0.0009,
+        "seasons_improved": 0.692,
+        "excludes_zero": true
+      },
+      "topdecile_delta": {
+        "mean": -0.0269,
+        "ci_lo": -0.1077,
+        "ci_hi": 0.0423,
+        "seasons_improved": 0.077,
+        "excludes_zero": false
+      },
+      "auc_base_pooled": 0.7427,
+      "auc_exp_pooled": 0.7316,
+      "topdecile_base_pooled": 0.2846,
+      "topdecile_exp_pooled": 0.2577,
+      "final_classification": "No Signal"
+    }
+  ],
+  "calibrations": [
+    {
+      "n": 415,
+      "brier": 0.2113,
+      "intercept": -1.6031,
+      "slope": 0.6313,
+      "mean_pred": 0.4254,
+      "actual_rate": 0.1614,
+      "position": "WR",
+      "spec": "FULL"
+    },
+    {
+      "n": 599,
+      "brier": 0.2038,
+      "intercept": -1.5906,
+      "slope": 0.7625,
+      "mean_pred": 0.419,
+      "actual_rate": 0.1553,
+      "position": "WR",
+      "spec": "CORE"
+    },
+    {
+      "n": 771,
+      "brier": 0.2201,
+      "intercept": -1.6311,
+      "slope": 0.7978,
+      "mean_pred": 0.4481,
+      "actual_rate": 0.1595,
+      "position": "WR",
+      "spec": "CAPITAL"
+    },
+    {
+      "n": 299,
+      "brier": 0.221,
+      "intercept": -1.7766,
+      "slope": 0.6437,
+      "mean_pred": 0.4398,
+      "actual_rate": 0.1438,
+      "position": "RB",
+      "spec": "FULL"
+    },
+    {
+      "n": 446,
+      "brier": 0.2176,
+      "intercept": -1.8181,
+      "slope": 0.6932,
+      "mean_pred": 0.4296,
+      "actual_rate": 0.1345,
+      "position": "RB",
+      "spec": "CORE"
+    },
+    {
+      "n": 661,
+      "brier": 0.2226,
+      "intercept": -1.7497,
+      "slope": 0.7345,
+      "mean_pred": 0.4438,
+      "actual_rate": 0.1498,
+      "position": "RB",
+      "spec": "CAPITAL"
+    }
+  ]
+}

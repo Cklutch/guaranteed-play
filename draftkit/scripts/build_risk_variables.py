@@ -399,6 +399,41 @@ INJURY_MANUAL_OVERRIDES = {
                   "Schefter says missing Week 1 \"can't be ruled out,\" nothing decided",
         "date": "2026-08-26",
     },
+    # Jayden Higgins (added 2026-08-27, auto-accept): CONFIRMED torn ACL,
+    # suffered during joint practices with the Raiders (per multiple outlets
+    # covering the Patriots-Texans Kayshon Boutte trade the same week -- "a
+    # week after Houston lost wide receiver Jayden Higgins to a torn ACL
+    # during joint practices with the Las Vegas Raiders" is stated as
+    # established context, not a rumor, across ESPN/NFL.com/CBS Sports
+    # coverage). Season-ending, no timeline ambiguity -- the most decisive
+    # possible injury tier. Pre-override pipeline had him at 1.0/Active,
+    # meaning the automated Sleeper-status feed had not yet caught this at
+    # all. Ceiling score, same tier as Tyson's confirmed multi-week
+    # absence -- if anything more decisive, since an ACL tear has no
+    # realistic in-season return. A PROJECTION_MANUAL_ADJUSTMENTS cut is
+    # also clearly warranted (near-total loss of 2026 value) but drafted to
+    # research/pending_news_adjustments.json for review per SS1a rather than
+    # applied here, same as every projection-affecting lever.
+    "Jayden Higgins": {
+        "score": 5.0,
+        "reason": "Confirmed torn ACL during joint practices with the Raiders -- season-ending",
+        "date": "2026-08-27",
+    },
+    # TreVeyon Henderson (added 2026-08-27, auto-accept): real, fresh
+    # ankle/leg injury -- did not finish an August 2026 practice after
+    # slipping on a cut, per multiple outlets covering Patriots training
+    # camp. Return timeline unconfirmed as of this entry -- same shape as
+    # the Jeanty precedent (real current injury, no decisive missed-games
+    # number yet), scored the same 4.0 rather than the 5.0 ceiling. Notably,
+    # real depth-chart reporting names Rhamondre Stevenson (not Henderson)
+    # as the Patriots' clear early-down RB1 even before this injury --
+    # documented here for context, but that's a role/usage read, not itself
+    # grounds for an injury_score change on its own.
+    "TreVeyon Henderson": {
+        "score": 4.0,
+        "reason": "Ankle/leg injury -- did not finish practice (late Aug 2026), return timeline unconfirmed",
+        "date": "2026-08-27",
+    },
 }
 
 

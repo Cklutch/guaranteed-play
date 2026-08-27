@@ -1295,7 +1295,12 @@ MODEL_PROJECTION_CORRECTIONS = {
                 "147.6. Raw model output 133.8 -> 147.6 = +10.3%, +22.5% above Book (120.45).",
         "date": "2026-08-20",
     },
-    "00-0038608": {  # Kayshon Boutte (NE) -- companion to Brown (00-0035676)
+    # NOTE 2026-08-27: this entry PREDATES Boutte's confirmed trade to Houston
+    # (Aug 24-25, 2026) and its central premise -- a crowded NE room with
+    # Brown+Doubs both newly added -- no longer applies, since he left that
+    # room. A replacement correction is PROPOSED but deliberately NOT applied,
+    # pending review: see research/pending_news_adjustments.json.
+    "00-0038608": {  # Kayshon Boutte (traded to HOU 2026-08-27; entry written while on NE)
         "pct": -20.3,
         "note": "Companion entry to Brown's (00-0035676) correction. CHECKED before trusting his "
                 "raw rate: 6 of his 33 real 2025 catches went for TDs (18.2%), vs. NE teammates "

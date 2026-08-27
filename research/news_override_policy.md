@@ -207,11 +207,27 @@ renders each entry as a card:
   step 2), then removes the entry from the JSON and appends a line to
   `research/applied_news_overrides_log.md`. No code edit, no Claude in
   the loop, one click.
-- `projection_pct` entries are flagged as needing a manual code edit --
-  the button is deliberately NOT wired to rewrite `draft_analysis.py`'s
-  `PROJECTION_MANUAL_ADJUSTMENTS` dict from a web form. That lever still
-  goes through a real edit + review, matching §1a's reasoning for why it
-  gets the higher bar in the first place.
+- `projection_pct` entries ALSO get an **Apply** button (2026-08-27,
+  user-directed -- this used to require a manual code edit; see below for
+  why that changed). It patches whichever layer actually takes effect for
+  that player: `model_projections_v1.csv`'s `model_projection_points_adjusted`
+  if he has a row there (that layer silently overrides
+  `PROJECTION_MANUAL_ADJUSTMENTS` for anyone it covers -- see §1's own
+  caution about exactly this), else `master_players.csv`'s
+  `projection_points` directly. Either way the number is baked into the
+  data file the same "CSV patch now, dict sync later" way §7 already
+  treats injury_score -- if this player later also gets a
+  `PROJECTION_MANUAL_ADJUSTMENTS` dict entry during a housekeeping pass,
+  don't double-apply on top of an already-baked-in number.
+- The value on EITHER kind of card is editable before clicking Apply --
+  a proposal can be approved exactly as written, or revised right there
+  (change the number, then Apply). §1a's reasoning for the higher bar on
+  projection-affecting changes was never about which FILE receives the
+  write -- it's that a human has to actually look at the number and
+  decide. An editable field with a real Apply button still requires
+  that; it just no longer requires that decision to be expressed as a
+  source-code edit. Revising can also still happen in conversation with
+  Claude instead of in the app -- either rewrites the same queue entry.
 - Every entry (any mechanism) gets a **Dismiss** button -- removes it
   from the queue and logs it as dismissed, for a finding that turns out
   not worth acting on.

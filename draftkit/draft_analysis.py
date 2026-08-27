@@ -920,6 +920,41 @@ def get_adp_value_debug_info():
     }
 
 
+# Perf fix (2026-08-27, load-time investigation): calculate_tier_bonus()'s
+# only caller runs it once per player in a 3900+-row loop, passing the SAME
+# tiers_df/tier_summary_df object every time -- but the function used to
+# re-filter both DataFrames from scratch on every call (a fresh
+# .astype(str).str.lower() pass over tiers_df included), profiled at 14.4s
+# of a 40s cold board build (38% of total time) for what should be an O(1)
+# lookup. This single-slot, id()-keyed cache holds the dict-ified lookup
+# for whichever (tiers_df, tier_summary_df) pair was built most recently --
+# safe because the hot loop only ever has one such pair live at a time
+# within a single build_recommendation_rankings_df() call, and a fresh
+# call always constructs fresh DataFrame objects (fresh ids) anyway.
+_TIER_BONUS_LOOKUP_CACHE: dict = {}
+
+
+def _tier_bonus_lookups(tiers_df, tier_summary_df):
+    key = (id(tiers_df), id(tier_summary_df))
+    cached = _TIER_BONUS_LOOKUP_CACHE.get(key)
+    if cached is not None:
+        return cached
+
+    tp = tiers_df.assign(_k=tiers_df["Player"].astype(str).str.lower())
+    tp = tp.drop_duplicates(subset="_k", keep="first")  # first match wins, matching the old .iloc[0]
+    player_tier = dict(zip(tp["_k"], tp["Tier"].astype(int)))
+
+    ts = tier_summary_df.assign(_k=tier_summary_df["Position"].astype(str).str.upper())
+    ts = ts.drop_duplicates(subset="_k", keep="first")
+    summary_lookup = {
+        r["_k"]: (int(r["Tier"]), str(r["Tier Status"])) for _, r in ts.iterrows()
+    }
+
+    _TIER_BONUS_LOOKUP_CACHE.clear()  # only ever need the most recent pair
+    _TIER_BONUS_LOOKUP_CACHE[key] = (player_tier, summary_lookup)
+    return player_tier, summary_lookup
+
+
 def calculate_tier_bonus(player_name, position, tiers_df=None, tier_summary_df=None):
     if tiers_df is None:
         tiers_df = build_position_tiers_df()
@@ -929,19 +964,14 @@ def calculate_tier_bonus(player_name, position, tiers_df=None, tier_summary_df=N
     if tiers_df.empty or tier_summary_df.empty:
         return 1.0
 
-    player_match = tiers_df[
-        tiers_df["Player"].astype(str).str.lower() == str(player_name).lower()
-    ]
-    summary_match = tier_summary_df[
-        tier_summary_df["Position"].astype(str).str.upper() == str(position).upper()
-    ]
+    player_tier_lookup, summary_lookup = _tier_bonus_lookups(tiers_df, tier_summary_df)
 
-    if player_match.empty or summary_match.empty:
+    player_tier = player_tier_lookup.get(str(player_name).lower())
+    summary = summary_lookup.get(str(position).upper())
+    if player_tier is None or summary is None:
         return 1.0
 
-    player_tier = int(player_match.iloc[0]["Tier"])
-    current_tier = int(summary_match.iloc[0]["Tier"])
-    tier_status = str(summary_match.iloc[0]["Tier Status"])
+    current_tier, tier_status = summary
 
     if player_tier != current_tier:
         return 1.0
@@ -1955,7 +1985,7 @@ def _build_base_recommendation_rankings_df():
     need_weights = get_position_need_weights()
     team_profile = get_team_profile()
     tiers_df = build_position_tiers_df()
-    tier_summary_df = build_tier_summary_df()
+    tier_summary_df = build_tier_summary_df(tiers_df=tiers_df)
 
     rows = []
     for _, row in df.iterrows():
@@ -3298,8 +3328,17 @@ def build_position_tiers_df(drop_threshold=12.0):
     return pd.DataFrame(rows)
 
 
-def build_tier_summary_df(drop_threshold=12.0):
-    tiers_df = build_position_tiers_df(drop_threshold=drop_threshold)
+def build_tier_summary_df(drop_threshold=12.0, tiers_df=None):
+    """`tiers_df`: pass an already-built frame (same drop_threshold) to skip
+    rebuilding it -- perf fix (2026-08-27), same load-time investigation as
+    calculate_tier_bonus's lookup cache. The hot loop in
+    _build_base_recommendation_rankings_df() was calling
+    build_position_tiers_df() once directly AND again implicitly through
+    this function's own default, profiled at ~2.5s per real rebuild.
+    Every other caller is unaffected -- the default (None) still rebuilds
+    exactly as before."""
+    if tiers_df is None:
+        tiers_df = build_position_tiers_df(drop_threshold=drop_threshold)
     if tiers_df.empty:
         return pd.DataFrame()
 

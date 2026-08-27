@@ -194,6 +194,31 @@ def get_database_debug_info():
     return info
 
 
+def _denormalize_string_dtypes(df):
+    """Convert pandas 3.0's default pyarrow-backed `str` columns to plain
+    numpy `object` dtype (2026-08-27, load-time perf fix).
+
+    pandas 3.0 sets `future.infer_string=True` by default, so read_csv/
+    read_sql give string columns the pyarrow-backed `str` dtype. That's
+    fine for vectorized ops, but the scoring pipeline does several
+    full-pool `.iterrows()` passes (build_recommendation_rankings_df,
+    build_signal_trust_report, build_market_disagreement_df,
+    build_position_tiers_df), and every per-row scalar access on a
+    pyarrow-backed column (`row["player_name"]`) routes through pyarrow's
+    compute/take machinery -- profiled as the single largest remaining
+    cost of a cold board build. Object-dtype string columns extract a
+    plain Python str with none of that overhead. Behaviorally identical
+    for every op the app uses (comparisons, `.str`, merges, groupby); the
+    conversion is paid once here because this loader is @st.cache_data
+    cached."""
+    if df.empty:
+        return df
+    str_cols = [c for c in df.columns if df[c].dtype == "str"]
+    if str_cols:
+        df = df.astype({c: "object" for c in str_cols})
+    return df
+
+
 @st.cache_data(show_spinner=False)
 def _load_players_df_cached(source_type, source_path, source_mtime):
     path = Path(source_path)
@@ -225,14 +250,14 @@ def _load_players_df_cached(source_type, source_path, source_mtime):
 
             df = pd.read_sql_query(f"SELECT * FROM {selected_table}", conn)
             conn.close()
-            return df
+            return _denormalize_string_dtypes(df)
 
         except Exception:
             return pd.DataFrame()
 
     if source_type == "csv":
         try:
-            return pd.read_csv(path)
+            return _denormalize_string_dtypes(pd.read_csv(path))
         except Exception:
             return pd.DataFrame()
 

@@ -1453,6 +1453,15 @@ PROJECTION_MANUAL_ADJUSTMENTS = {
     # work is shrinking toward Rico Dowdle) -- a split-the-difference number
     # wouldn't accurately reflect either real direction. Add once the
     # picture clarifies, consistent with "forward, seeded opportunistically."
+
+    # Broncos backfield (checked 2026-08-27, no entry needed): a "set to
+    # market" nudge was considered and REJECTED on inspection -- the board
+    # already has Harvey ahead of Dobbins (161.6 vs 141.5) in market ADP
+    # order, via their existing model_projections_v1.csv companion entries.
+    # The raw FantasyPros projection_points in master_players.csv still read
+    # the other way (Harvey 154.6, Dobbins 161.8), which is misleading if
+    # read on its own -- the model-correction layer is what the board
+    # actually scores off.
 }
 
 
@@ -2754,6 +2763,56 @@ def apply_adp_anchor(recommendations_df, lam=ADP_ANCHOR_LAMBDA, use_confidence_c
     return out
 
 
+def _attach_sleeper_value_gap(master_df):
+    """_build_base_recommendation_rankings_df() builds its return frame from
+    an explicit dict of named fields (see its `rows.append({...})`), so any
+    master_players.csv column not in that fixed list -- including
+    sleeper_value_gap, added by apply_sleeper_adp_overlay.py -- never
+    survives into base_df even though it's sitting right there in the CSV.
+    `adp` itself is explicitly listed there so it DOES flow through; only
+    this derived column needs pulling back in, same pattern as
+    _attach_breakout_tags() above."""
+    if "player_name" not in master_df.columns:
+        return master_df
+    if not MASTER_PLAYERS_PATH.exists():
+        return master_df
+    master = pd.read_csv(MASTER_PLAYERS_PATH, low_memory=False)
+    if "sleeper_value_gap" not in master.columns:
+        return master_df
+    gap = master[["player_name", "sleeper_value_gap"]].drop_duplicates("player_name")
+    return master_df.merge(gap, on="player_name", how="left")
+
+
+MASTER_PLAYERS_PATH = Path("data/processed/master_players.csv")
+BREAKOUT_TAGS_PATH = Path("data/processed/breakout_tags_2026.csv")
+
+
+def _attach_breakout_tags(master_df):
+    """Merge in the WR breakout_score_v1 tag (research/MODEL_REGISTRY.md --
+    RESEARCH_ONLY, not a scoring input) for the display badge only. Written
+    by research/validation_v1/score_current_wr_pool_v1.py: top 15-20 WRs by
+    a validated, backtested (not yet season-proven) breakout-probability
+    model, cut at a natural gap rather than a fixed count. Deliberately does
+    NOT touch final_score, tier, or any ranking -- badge-only, same as the
+    rookie_display_tag pattern elsewhere in this pipeline."""
+    master_df["is_breakout_v1"] = False
+    master_df["breakout_probability_v1"] = pd.NA
+    if not BREAKOUT_TAGS_PATH.exists():
+        return master_df
+    tags = pd.read_csv(BREAKOUT_TAGS_PATH)
+    if tags.empty or "player_name" not in tags.columns:
+        return master_df
+    tags = tags[["player_name", "breakout_probability_v1", "breakout_rank"]].drop_duplicates("player_name")
+    master_df = master_df.merge(
+        tags, on="player_name", how="left", suffixes=("", "_tag"),
+    )
+    if "breakout_probability_v1_tag" in master_df.columns:
+        master_df["breakout_probability_v1"] = master_df["breakout_probability_v1_tag"]
+        master_df = master_df.drop(columns=["breakout_probability_v1_tag"])
+    master_df["is_breakout_v1"] = master_df["breakout_rank"].notna()
+    return master_df
+
+
 def build_master_recommendations_df(component_weights=None, drop_threshold=12.0):
     """
     Build transparent master recommendations from all existing scoring systems.
@@ -2764,6 +2823,8 @@ def build_master_recommendations_df(component_weights=None, drop_threshold=12.0)
         return pd.DataFrame()
 
     master_df = base_df.copy()
+    master_df = _attach_breakout_tags(master_df)
+    master_df = _attach_sleeper_value_gap(master_df)
 
     adp_value_df = build_adp_value_rankings_df()
     if not adp_value_df.empty:

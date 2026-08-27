@@ -2,11 +2,11 @@
 Top 250 rankings -- the static preseason board.
 
 This page itself has no navigation, no draft-state controls, and no draft
-actions. Draft Mode, News Queue, and Component Audit have all been
-restored to pages/, so Streamlit's multipage nav is active again; Team
-Outlook is the one page still parked in pages_archive/ rather than
-deleted, and moving it into pages/ brings it back the same way. (Player
-Cards, Draft Lab, Tier Desperation, Player Compare, and Live Rankings were
+actions. Draft Mode and News Queue have both been restored to pages/, so
+Streamlit's multipage nav is active again; Team Outlook is the one page
+still parked in pages_archive/ rather than deleted, and moving it into
+pages/ brings it back the same way. (Player Cards, Draft Lab, Tier
+Desperation, Player Compare, Live Rankings, and Component Audit were
 removed outright -- see CHANGELOG.md.)
 
 Scoring is unchanged -- this reads the same draftkit engine and the same
@@ -27,7 +27,7 @@ handoff's own stated behavior rather than fighting it.
 import html
 import json
 import math
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
 
 import pandas as pd
@@ -37,6 +37,9 @@ from draftkit.age_context import age_note
 from draftkit.archetypes import archetype_label, risk_profile
 from draftkit.data_access import load_players_df
 from draftkit.draft_analysis import build_recommendation_rankings_df
+from draftkit.news_queue import (
+    apply_projection_override, preview_projection_rank, resolve_projection_base,
+)
 from draftkit.draft_state import init_session_state
 from draftkit.ui_helpers import render_tool_nav
 
@@ -114,7 +117,17 @@ RANKINGS_CSS = """
   /* Tighten the dropdown so it reads as a compact tool switcher. */
   div[data-testid="stSelectbox"] { max-width: 260px; }
   .block-container { padding-top: 1.2rem; padding-bottom: 2rem; max-width: 100%; }
-  body, .stApp, .stApp p, .stApp span, .stApp div { font-family: 'IBM Plex Sans', system-ui, sans-serif; }
+  /* :not([data-testid="stIconMaterial"]) on the span rule (2026-08-27, found
+     while diagnosing the new "Adjust a player" popover's glitchy overlapping
+     label): this used to apply to EVERY span including Streamlit's own
+     Material Symbols icon glyphs (expand_more, keyboard_double_arrow_right,
+     etc.) -- IBM Plex Sans has no glyph for those ligature names, so the
+     browser fell back to rendering the literal text "expand_more" instead
+     of the chevron icon, wrapping awkwardly inside a button sized for a
+     single glyph. Pre-existing app-wide (the sidebar's collapse arrow had
+     the same issue), just more visible on the new popover's small button. */
+  body, .stApp, .stApp p, .stApp div,
+  .stApp span:not([data-testid="stIconMaterial"]) { font-family: 'IBM Plex Sans', system-ui, sans-serif; }
 
   /* ---- Header bar ---- */
   .gp-header {
@@ -260,6 +273,11 @@ RANKINGS_CSS = """
     display: inline-block; font: 700 10px 'IBM Plex Mono', monospace; letter-spacing: .05em;
     padding: 2px 8px; border-radius: 6px; margin-top: 6px; background: rgba(168,198,134,.12);
   }
+  .gp-breakout-pill {
+    display: inline-block; font: 700 10px 'IBM Plex Mono', monospace; letter-spacing: .05em;
+    padding: 2px 8px; border-radius: 6px; margin-top: 6px; margin-left: 6px;
+    background: rgba(224,180,94,.16); color: #e0b45e;
+  }
   .gp-card-score { text-align: right; }
   .gp-card-score-num { font: 800 32px Archivo, sans-serif; color: #a8c686; line-height: 1; letter-spacing: -.02em; }
   .gp-card-score-lbl { font: 600 9px 'IBM Plex Mono', monospace; color: #6f776f; text-transform: uppercase; letter-spacing: .1em; margin-top: 3px; }
@@ -387,6 +405,45 @@ def _risk_value(row):
     if scaled is not None and pd.notna(scaled):
         return scaled
     return row.get("risk_index")
+
+
+def _breakout_pill_html(row):
+    """WR breakout_score_v1 tag (research/MODEL_REGISTRY.md -- RESEARCH_ONLY,
+    backtested and stress-tested but not yet season-proven; see
+    score_current_wr_pool_v1.py). Display-only, same as the tier pill next
+    to it -- never touches final_score or rank. Title attribute states the
+    caveat inline rather than only in a popover, since this pill is visible
+    without any hover."""
+    if not row.get("is_breakout_v1"):
+        return ""
+    prob = row.get("breakout_probability_v1")
+    prob_str = f"{float(prob) * 100:.0f}%" if pd.notna(prob) else ""
+    title = (
+        "Backtested breakout-probability model (WR only, research-stage -- "
+        f"not yet checked against a real season). Est. {prob_str} chance of beating own ADP by 12+."
+        if prob_str else "Backtested breakout-probability model (WR only, research-stage)."
+    )
+    return f'<span class="gp-breakout-pill" title="{html.escape(title)}">🚀 BREAKOUT{f" {prob_str}" if prob_str else ""}</span>'
+
+
+def _sleeper_value_badge(sleeper_value_gap):
+    """sleeper_value_gap = consensus Average ADP - Sleeper Half ADP (from
+    apply_sleeper_adp_overlay.py). Positive = Sleeper drafts him EARLIER
+    than the wider market -- a Sleeper-specific reach. Negative = Sleeper
+    drafts him LATER -- a Sleeper-specific bargain. Distinct from
+    _market_badge above: that one compares the model's own signal (sportsbook
+    projection) against ADP; this compares one platform's ADP against a
+    cross-platform consensus. Threshold matches _market_badge's +/-3 for
+    the same reason (roughly the size of a real, noticeable gap in this
+    data, not a formal cutoff)."""
+    if sleeper_value_gap is None or pd.isna(sleeper_value_gap):
+        return ""
+    v = float(sleeper_value_gap)
+    if v >= 3:
+        return '<span class="sc-badge sc-badge-avoid">Sleeper: Reach vs. consensus</span>'
+    if v <= -3:
+        return '<span class="sc-badge sc-badge-value">Sleeper: Value vs. consensus</span>'
+    return ""
 
 
 def _market_badge(value_signal_market):
@@ -1095,6 +1152,7 @@ def _risk_profile_section_html(row):
     note = _risk_note_text(row)
     badges = (
         _market_badge(row.get("value_signal_market"))
+        + _sleeper_value_badge(row.get("sleeper_value_gap"))
         + _chronic_injury_badge(row.get("games_missed_by_season"))
         + _manual_override_badge(row.get("injury_override_note"))
         + _manual_override_badge(row.get("role_usage_td_override_note"))
@@ -1265,6 +1323,7 @@ def _render_player_card_html(row, scoreScaled, grade):
         f'<div class="gp-card-name">{html.escape(str(name))}</div>'
         f'<div class="gp-card-postteam">{html.escape(position)} · {html.escape(str(team))}</div>'
         + (f'<span class="gp-tier-pill" style="color:{tier_color};">TIER {tier_id}</span>' if tier_id else "")
+        + (_breakout_pill_html(row))
         + '</div></div>'
         '<div class="gp-card-score">'
         f'<div class="gp-card-score-num">{scoreScaled:.1f}</div>'
@@ -1983,6 +2042,67 @@ for _col, (_key, _label) in zip(_risk_cols, RISK_TABS):
             st.session_state["risk_filter"] = _key
             st.rerun()
 risk_filter = st.session_state["risk_filter"]
+
+# Manual projection adjustment (2026-08-27) -- a single control rather than
+# one per row: the table below is one big HTML string rendered through
+# st.markdown(unsafe_allow_html=True) (see this file's own architecture
+# note at the top), so a real Streamlit widget can't live inside any one
+# card without either breaking the table's grid layout or rendering 250+
+# separate elements. This reuses the exact same functions the News Queue
+# page's Apply button uses (draftkit/news_queue.py), so a change made here
+# is identical in effect to one applied there -- same audit log, same
+# "which data layer actually wins" resolution, same live rank preview.
+with st.popover("🎚️ Adjust a player"):
+    st.caption(
+        "Same mechanism as the News Queue -- shows where this lands before you commit. "
+        "Logged to research/applied_news_overrides_log.md either way."
+    )
+    _all_names = sorted(rankings_df["player_name"].dropna().unique().tolist())
+    _adj_player = st.selectbox(
+        "Player", _all_names, index=None, placeholder="Type a name...", key="adjust_player_select",
+    )
+    if _adj_player:
+        _board_row = rankings_df[rankings_df["player_name"] == _adj_player]
+        _current_board_pts = _safe_float(_board_row.iloc[0].get("projection_points")) if not _board_row.empty else None
+        try:
+            _raw_pts, _, _layer = resolve_projection_base(_adj_player)
+        except ValueError as _exc:
+            st.error(str(_exc))
+        else:
+            st.caption(f"Current: {_current_board_pts:.1f} pts (source: {_layer})")
+            _pct_from_current = st.number_input(
+                "Change from current (%)", value=0.0, step=0.5, key="adjust_player_pct",
+                help="Relative to the CURRENT board value, not the raw model output -- "
+                     "positive raises it, negative lowers it.",
+            )
+            _target_pts = round(_current_board_pts * (1 + _pct_from_current / 100), 1)
+            _equiv_pct_vs_raw = round((_target_pts / _raw_pts - 1) * 100, 1) if _raw_pts else 0.0
+            _fake_entry = {
+                "player": _adj_player,
+                "reason": f"Manual adjustment via Rankings page ({_pct_from_current:+.1f}% from current), "
+                          f"applied {date.today().isoformat()}.",
+            }
+            _preview = preview_projection_rank(_fake_entry, _equiv_pct_vs_raw, rankings_df)
+            if _preview:
+                _pos, _cur, _new, _tot = (
+                    _preview["position"], _preview["current_rank"], _preview["new_rank"], _preview["total"],
+                )
+                if _new < _cur:
+                    _arrow, _color = "↑", "#7fc98a"
+                elif _new > _cur:
+                    _arrow, _color = "↓", "#e08a7f"
+                else:
+                    _arrow, _color = "→", "#8c948f"
+                st.markdown(
+                    f'<div style="font:600 13px \'IBM Plex Mono\',monospace;color:{_color};margin:4px 0 8px">'
+                    f'{_pos} #{_cur} {_arrow} {_pos} #{_new} <span style="color:#6f776f;font-weight:400">'
+                    f'(of {_tot} · {_current_board_pts:.1f} → {_target_pts:.1f} pts)</span></div>',
+                    unsafe_allow_html=True,
+                )
+            if st.button("Apply", key="adjust_player_apply", type="primary"):
+                _before, _after, _applied_layer = apply_projection_override(_fake_entry, pct=_equiv_pct_vs_raw)
+                st.success(f"Applied via {_applied_layer}. {_before} → {_after} pts.")
+                st.rerun()
 
 board = rankings_df.copy()
 

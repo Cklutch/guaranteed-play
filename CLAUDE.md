@@ -35,6 +35,13 @@ python -m venv .venv
   - `qb_archetypes.py`, `rb_archetypes.py`, `wr_archetypes.py`, `te_archetypes.py`
     — per-position usage archetype classification
   - `rookie_projection.py`, `injury_history.py`
+  - `live_draft.py` — in-draft pick engine (`recommend_picks()`, one player
+    at a time); `draft_center.py` — all Draft Command Center HTML rendering
+  - `survival.py` — "will he still be there?" model, shared by the pick
+    engine and the turn optimizer. See Gotchas.
+  - `turn_optimizer.py` — best two-player COMBINATION for back-to-back picks
+    (slots 1/12, plus near-turn 2/3 and 10/11). Pure logic; rendered by
+    `draft_center.render_turn_planner()`. See Gotchas on survival.
   - `scripts/` — data pipeline build scripts (props pulls, combine measurables,
     draft capital calibration, backtests)
   - `tests/` — pytest coverage for archetypes, risk, rookie projections
@@ -80,7 +87,38 @@ bug that produced 19+ fragmented tiers before this redesign).
 - **Streamlit caching**: after editing `draft_analysis.py` or the projection
   correction data, a stale cache can serve old scores. If values don't
   update after a code change, restart the Streamlit process rather than
-  just reloading the page.
+  just reloading the page. This applies to `turn_optimizer.py` too — it is
+  imported *inside* `render_turn_planner()` (to avoid a cycle with
+  `draft_center`), so Streamlit's file watcher never reloads it and edits
+  need a full restart.
+- **Only ever run the app from this checkout.** There is a second, stale
+  clone at `C:\Users\19054\guaranteed-play` (frozen at 2026-08-24) with the
+  same git remote. A server started from there serves old projections while
+  every edit lands here, which reads exactly like a caching bug and is not
+  one. If numbers won't update, check the serving process's working
+  directory before anything else — and check for more than one server, since
+  Streamlit silently takes the next free port when 8501 is busy.
+- **`draftkit/survival.py` owns the survival model — three views of ONE
+  curve, and they must never diverge.** (1) `raw_survival(adp, pick)` is
+  UNCONDITIONAL — right for the board's survival gauge only. (2)
+  `survival_between(adp, from_pick, opponent_picks)` is CONDITIONAL on the
+  player being available now and counts only OPPONENT picks; between your own
+  picks 12 and 13 nobody else selects, so it returns exactly 1.0 where the
+  unconditional curve wrongly reports ~8%. (3) `survival_with_needs(...)`
+  scales each intervening pick by whether the team on the clock still needs
+  that position. (3) reduces to (2) exactly when there's no roster info, and
+  (2) is the telescoping product of (3)'s per-pick hazards — both pinned by
+  `test_survival.py`. If you add a fourth, prove it reduces to these.
+- **Opponent-need survival needs Sleeper.** `drafted_by` ({player_name:
+  slot}) only exists in Sleeper mode; Manual mode tracks *that* a player was
+  drafted, not *by whom*, so the model degrades to plain ADP rather than
+  guessing. `context["needs_aware"]` / the absence of a multiplier tells you
+  which regime you're in.
+- **Two players on the same NFL team is worse than their scores suggest** —
+  shared bye, shared offense, and a RB/WR pair splits the same touches. The
+  per-player pass cannot see it (neither is on your roster yet), so
+  `turn_optimizer.SAME_TEAM_PENALTY` handles it at the pair level. QB +
+  pass-catcher is exempt: that stack is correlated the way you want.
 - **Secrets are not in git.** `.github_token` (optional, raises the nflverse
   GitHub API rate limit via `NFLVERSE_GITHUB_TOKEN`/`GITHUB_TOKEN`) and
   `.odds_api.token` (required for `draftkit/scripts/pull_sportsbook_props.py`,

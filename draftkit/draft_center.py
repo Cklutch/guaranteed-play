@@ -20,8 +20,8 @@ import math
 import pandas as pd
 
 from draftkit.live_draft import (
-    recommend_picks, diverse_slate, elite_available_for,
-    ROSTER_CAPS, ELITE_HOLD_ROUND, NO_ELITE_HOLD_ROUND, POSITION_VALUE_MARGIN,
+    recommend_picks, diverse_slate,
+    ROSTER_CAPS,
 )
 
 # --- palette (from the design handoff) ----------------------------------
@@ -205,6 +205,30 @@ def _model_notes(row, avail, needs, mine_df):
         notes.append((f"Fills your biggest need: {pos}", "FIT", "#7fc98a"))
     notes.append((f"#{pos_rank} {pos} left on the board", f"{pos}{pos_rank}", _MUTED))
 
+    # Why a scarce-looking player still isn't the pick. The survival gauge
+    # answers "will HE be here?", but the engine ranks on "will someone AT
+    # LEAST AS GOOD be here?" (see the replaceability block in live_draft).
+    # Without this note the two read as a contradiction -- which is exactly
+    # how the Herbert/Lawrence confusion surfaced: Herbert showed "5% —
+    # likely gone" and still sat far down the board, with nothing on the card
+    # explaining that a better QB was ~92% to be sitting there next pick.
+    better = same_pos[same_pos["our_score"] > row["our_score"]]
+    if not better.empty:
+        none_as_good = 1.0
+        for surv in better["survival"]:
+            none_as_good *= (1.0 - float(surv) / 100.0)
+        p_better_waits = 1.0 - none_as_good
+        if p_better_waits >= 0.60:
+            # The probability is across EVERY better player at the position,
+            # so only attach a name when there is exactly one -- otherwise it
+            # reads as a claim about that one player rather than the field.
+            if len(better) == 1:
+                last = str(better.iloc[0]["player_name"]).split()[-1]
+                label = f"{last} is better and {p_better_waits * 100:.0f}% to still be here next pick"
+            else:
+                label = f"A better {pos} is {p_better_waits * 100:.0f}% to still be here next pick"
+            notes.append((label, "WAIT", "#e0b45e"))
+
     top_tier = avail["tier"].min() if not avail.empty else None
     if top_tier is not None and row["tier"] == top_tier:
         left_in_tier = avail[(avail["tier"] == top_tier) & (avail["position"].astype(str).str.upper() == pos)]
@@ -248,6 +272,131 @@ def _model_notes(row, avail, needs, mine_df):
 # --- rendering ----------------------------------------------------------
 def _e(v):
     return html.escape(str(v))
+
+
+def _turn_player_chip(name, pos, adp, pick_no, land_pct=None, guaranteed=False):
+    """One half of a turn pair: the pick number it uses, the player, and --
+    for a near-turn only -- the odds he actually lasts that long."""
+    pc = _pos_color(pos)
+    if guaranteed:
+        odds = ('<span style="font:700 9px \'IBM Plex Mono\',monospace;color:#7fc98a">LOCKED</span>')
+    else:
+        odds = (f'<span style="font:700 9px \'IBM Plex Mono\',monospace;'
+                f'color:{_surv_color(land_pct)}">{land_pct}% there</span>')
+    adp_txt = "" if adp is None or pd.isna(adp) else f"ADP {float(adp):.0f}"
+    return (
+        '<div style="flex:1;min-width:0;background:#141718;border:1px solid #23282b;'
+        'border-radius:10px;padding:9px 11px">'
+        '<div style="display:flex;align-items:center;gap:7px;margin-bottom:4px">'
+        f'<span style="font:700 9px \'IBM Plex Mono\',monospace;color:#0d0f10;background:{pc};'
+        f'padding:2px 6px;border-radius:4px">{_e(pos)}</span>'
+        f'<span style="font:400 9px \'IBM Plex Mono\',monospace;color:#5f676a">#{pick_no}</span>'
+        f'<span style="margin-left:auto">{odds}</span></div>'
+        f'<div style="font:600 13px Archivo,sans-serif;color:#eef1ec;overflow:hidden;'
+        f'text-overflow:ellipsis;white-space:nowrap">{_e(name)}</div>'
+        f'<div style="font:400 9.5px \'IBM Plex Mono\',monospace;color:#5f676a;margin-top:2px">{adp_txt}</div>'
+        '</div>'
+    )
+
+
+def render_turn_planner(pool, drafted, my_team, teams, slot, current_pick,
+                        scoring_mode="standard", max_plans=5, drafted_by=None):
+    """The turn planner panel -- best two-player COMBINATIONS for a
+    back-to-back (or near-back-to-back) pair of picks.
+
+    Returns "" when the seat has no pair worth planning, so the caller can
+    drop it into the page unconditionally and it simply disappears for
+    mid-round slots.
+
+    turn_optimizer is imported here rather than at module scope because it
+    imports my_pick_numbers() from THIS module -- a module-level import would
+    be a cycle.
+    """
+    from draftkit.turn_optimizer import optimize_turn
+
+    plans, ctx = optimize_turn(
+        pool, drafted_players=drafted, my_team=my_team, teams=teams, slot=slot,
+        current_pick=current_pick, scoring_mode=scoring_mode, max_plans=max_plans,
+        drafted_by=drafted_by,
+    )
+    cluster = ctx.get("cluster")
+    if plans.empty or not cluster:
+        return ""
+
+    is_true_turn = cluster["gap"] == 0
+    first_pick, second_pick = cluster["first_pick"], cluster["second_pick"]
+    following = cluster["following_pick"]
+
+    if is_true_turn:
+        headline = f"At the turn · picks {first_pick} + {second_pick}"
+        sub = ("Back-to-back — nobody picks in between, so both players are yours. "
+               "Pick the best PAIR, not the best two singles.")
+        accent = "#a8c686"
+    else:
+        headline = f"Near the turn · picks {first_pick} + {second_pick}"
+        sub = (f"{cluster['gap']} opponent pick{'s' if cluster['gap'] != 1 else ''} in between — "
+               f"the second name is a gamble. Take the one who won't last first.")
+        accent = "#dcc06a"
+
+    best_score = float(plans.iloc[0]["combo_score"])
+    cards = ""
+    for _, p in plans.iterrows():
+        gap_txt = ""
+        if int(p["rank"]) > 1:
+            gap_txt = (f'<span style="font:400 9.5px \'IBM Plex Mono\',monospace;color:#5f676a">'
+                       f'{float(p["combo_score"]) - best_score:+.1f}</span>')
+
+        outlook = p.get("next_turn_by_pos") or {}
+        if following and outlook:
+            top = sorted(outlook.items(), key=lambda kv: kv[1], reverse=True)[:3]
+            chips = "".join(
+                f'<span style="font:600 9.5px \'IBM Plex Mono\',monospace;color:{_pos_color(pos)};'
+                f'background:rgba(255,255,255,.04);padding:2px 7px;border-radius:5px">'
+                f'{_e(pos)} ≈{val:.0f}</span>'
+                for pos, val in top if val > 0
+            )
+            outlook_row = (
+                '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:8px">'
+                f'<span style="font:400 9.5px \'IBM Plex Mono\',monospace;color:#5f676a">'
+                f'leaves you at #{following}:</span>{chips}</div>'
+            )
+        else:
+            outlook_row = ""
+
+        border = accent if int(p["rank"]) == 1 else "#23282b"
+        bg = "rgba(168,198,134,.05)" if int(p["rank"]) == 1 and is_true_turn else "#101314"
+        cards += (
+            f'<div style="background:{bg};border:1px solid {border};border-radius:12px;padding:11px 12px">'
+            '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'
+            f'<span style="font:800 11px Archivo,sans-serif;color:{accent}">#{int(p["rank"])}</span>'
+            f'<span style="font:700 9.5px \'IBM Plex Mono\',monospace;color:#8c948f;'
+            f'letter-spacing:.06em">{_e(p["shape"])}</span>'
+            f'<span style="margin-left:auto;display:flex;align-items:center;gap:7px">{gap_txt}'
+            f'<span style="font:800 13px \'IBM Plex Mono\',monospace;color:#eef1ec">'
+            f'{float(p["combo_score"]):.1f}</span></span></div>'
+            '<div style="display:flex;gap:8px;align-items:stretch">'
+            + _turn_player_chip(p["first"], p["first_pos"], p["first_adp"], first_pick,
+                                land_pct=int(p["first_land_pct"]),
+                                guaranteed=int(p["first_land_pct"]) >= 100)
+            + '<span style="align-self:center;font:700 12px Archivo,sans-serif;color:#5f676a">+</span>'
+            + _turn_player_chip(p["second"], p["second_pos"], p["second_adp"], second_pick,
+                                land_pct=int(p["land_pct"]),
+                                guaranteed=is_true_turn and int(p["first_land_pct"]) >= 100)
+            + '</div>'
+            + outlook_row
+            + '</div>'
+        )
+
+    return (
+        '<div style="background:#0d0f10;border:1px solid #23282b;border-radius:14px;'
+        'padding:15px;margin-bottom:16px">'
+        '<div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">'
+        f'<span style="font:800 13px Archivo,sans-serif;color:{accent}">{_e(headline)}</span>'
+        f'<span style="font:400 10.5px \'IBM Plex Sans\',sans-serif;color:#8c948f">{_e(sub)}</span>'
+        '</div>'
+        f'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));'
+        f'gap:10px;margin-top:12px">{cards}</div></div>'
+    )
 
 
 def _rec_card_html(row, surv_pick, mode="rec", model_rank=None):
@@ -509,6 +658,16 @@ def render_command_center(pool, drafted, my_team, drafted_by, num_picks,
     my_picks = my_pick_numbers(teams, slot) if slot else []
     my_pick_now = next((p for p in my_picks if p >= current_pick), None)
     my_next = next((p for p in my_picks if p > current_pick), None)
+    scoring_mode = "dads" if "Dad" in str(scoring_label) else "standard"
+
+    # Turn planner: only renders for a seat whose next two picks are close
+    # enough to lock in as a pair (slots 1/12, and 2/3 & 10/11 with real
+    # landing odds). Returns "" for every other seat, so it simply isn't
+    # there mid-round rather than showing a degenerate "pair".
+    turn_html = "" if complete else render_turn_planner(
+        pool, drafted, my_team, teams, slot, current_pick, scoring_mode=scoring_mode,
+        drafted_by=drafted_by,
+    )
 
     mine_df = pool[pool["player_name"].isin(my_team)].copy()
     needs = _needs(mine_df)
@@ -630,13 +789,15 @@ def render_command_center(pool, drafted, my_team, drafted_by, num_picks,
         surv_pick = my_next if i_am_on_clock else my_pick_now
         rec_label = ("You're on the clock · best picks" if i_am_on_clock
                      else f"Best available · your pick #{my_pick_now or '—'}")
-        scoring_mode = "dads" if "Dad" in str(scoring_label) else "standard"
 
+        # drafted_by/teams/slot make the opportunity-cost term opponent-aware
+        # (who picks between now and surv_pick, and what do they still need).
         if compare_player:
             full_scored = recommend_picks(
                 pool, drafted_players=drafted, my_team=my_team, top_n=250,
                 current_round=rnd, current_pick=current_pick, my_next_pick=surv_pick,
                 scoring_mode=scoring_mode, diverse=False,
+                drafted_by=drafted_by, teams=teams, my_slot=slot,
             )
             ranked = diverse_slate(full_scored, 4)
         else:
@@ -644,6 +805,7 @@ def render_command_center(pool, drafted, my_team, drafted_by, num_picks,
                 pool, drafted_players=drafted, my_team=my_team, top_n=4,
                 current_round=rnd, current_pick=current_pick, my_next_pick=surv_pick,
                 scoring_mode=scoring_mode, diverse=True,
+                drafted_by=drafted_by, teams=teams, my_slot=slot,
             )
             full_scored = None
 
@@ -664,20 +826,11 @@ def render_command_center(pool, drafted, my_team, drafted_by, num_picks,
                 if cmp_status == "filtered":
                     cp = str(prep_row["position"]).upper()
                     mine_pos = mine_df["position"].astype(str).str.upper().value_counts().to_dict() if not mine_df.empty else {}
+                    # The QB/TE hold explainer that used to live here went out
+                    # with the hold itself (2026-08-28). The position cap is
+                    # now the only reason a player gets filtered.
                     if cp in ROSTER_CAPS and mine_pos.get(cp, 0) >= ROSTER_CAPS[cp]:
                         filter_reason = f"You already have a {cp} — position cap reached."
-                    elif cp in ("QB", "TE") and scoring_mode != "dads" and rnd:
-                        elite_left = elite_available_for(pool, avail, cp)
-                        hold_round = ELITE_HOLD_ROUND if elite_left else NO_ELITE_HOLD_ROUND
-                        if rnd < hold_round:
-                            filter_reason = (
-                                (f"{cp} hold active until round {hold_round} (standard scoring) — "
-                                 f"an elite {cp} is still on the board, only at value (fallen to/past his ADP).")
-                                if elite_left else
-                                (f"No elite {cp} left on the board — hold active until round {hold_round} "
-                                 f"(standard scoring). Only a {cp} fallen {POSITION_VALUE_MARGIN}+ picks "
-                                 f"past ADP breaks through.")
-                            )
                 best_scored = full_scored.iloc[0] if full_scored is not None and not full_scored.empty else None
                 compare_html = _compare_section_html(
                     prep_row, scored_row, best_scored, surv_pick, avail, needs, mine_df,
@@ -822,4 +975,8 @@ def render_command_center(pool, drafted, my_team, drafted_by, num_picks,
             f'align-items:start">{left}{center}{right}</div>')
 
     # Tiered board spans the full width below the 3-column grid.
-    return f'<div class="dcc-scroll" style="color:#eef1ec">{topbar}{grid}<div style="margin-top:16px">{board_html}</div></div>'
+    # Turn planner sits directly under the top bar: it's the highest-value
+    # thing on the page when it's there at all, and it needs the pick-number
+    # context the top bar establishes.
+    return (f'<div class="dcc-scroll" style="color:#eef1ec">{topbar}{turn_html}{grid}'
+            f'<div style="margin-top:16px">{board_html}</div></div>')

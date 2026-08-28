@@ -32,6 +32,11 @@ import numpy as np
 import pandas as pd
 
 from draftkit.draft_analysis import build_recommendation_rankings_df
+from draftkit.survival import (
+    SURVIVAL_K,
+    make_need_multiplier,
+    survival_with_needs,
+)
 
 RISK_VARIABLES_PATH = "data/processed/risk_variables.csv"
 MASTER_PLAYERS_PATH = "data/processed/master_players.csv"
@@ -69,11 +74,14 @@ ROSTER_CAPS = {"QB": 1, "TE": 1}
 # nudge -- it cancels out and the board is pure best-player-available. The
 # lean only emerges as you actually fill positions and imbalances appear.
 NEED_BONUS = 6.0           # any position with an open starter slot
-# QB/TE need bonuses are lower (2026-08-27): matches the elite/no-elite
-# QB/TE hold discipline above -- a QB- or TE-shaped roster hole shouldn't
-# pull as hard as an RB/WR one, since the whole strategy is to actively
-# avoid filling either early. RB/WR keep the flat NEED_BONUS.
-NEED_BONUS_OVERRIDES = {"TE": 3.0, "QB": 4.0}
+# Was {"TE": 3.0, "QB": 4.0} -- deliberately lower than RB/WR's 6.0 because,
+# in the words of the comment that lived here, "the whole strategy is to
+# actively avoid filling either early." That strategy (the elite-gated
+# QB/TE hold) was removed 2026-08-28 at the user's direction, so the reason
+# for the discount went with it: an unfilled QB or TE starter slot is now
+# worth exactly what an unfilled RB or WR slot is. Kept as an empty dict
+# rather than deleted so per-position tuning stays a one-line change.
+NEED_BONUS_OVERRIDES = {}
 SATURATION_PENALTY = 6.0   # per extra body once the starter slots are full
 
 # Positional scarcity bonus: NEED_BONUS is deliberately flat, so "barely the
@@ -86,19 +94,10 @@ SATURATION_PENALTY = 6.0   # per extra body once the starter slots are full
 SCARCITY_BONUS_PER_POINT = 0.3   # x (our_score gap to the #2 player at the position)
 SCARCITY_BONUS_MAX = 10.0        # cap so a huge gap can't swamp value/risk
 
-# Charlie's (standard-scoring) QB/TE discipline, unified across both
-# positions (2026-08-27): never draft a QB or TE at his ADP -- only at
-# value, and the round you're allowed to start doing that depends on
-# whether an ELITE option is still on the board. An elite guy (top-N at
-# the position by our_score) can be taken at value any round before
-# ELITE_HOLD_ROUND; if no elite option remains, the position is fully
-# suppressed until NO_ELITE_HOLD_ROUND, and even then only at a real
-# discount, not a marginal one. Dad's league needs a good QB, so it's
-# exempt (scoring_mode="dads") -- same exemption both positions always had.
-ELITE_POSITION_RANK = 3     # a top-N positional QB/TE counts as "elite"
-ELITE_HOLD_ROUND = 7        # elite-at-value allowed any round before this
-NO_ELITE_HOLD_ROUND = 9     # no elite left -> fully suppressed until this round
-POSITION_VALUE_MARGIN = 15  # picks past ADP required once no elite remains ("a great deal")
+# (The elite-gated QB/TE hold constants -- ELITE_POSITION_RANK,
+# ELITE_HOLD_ROUND, NO_ELITE_HOLD_ROUND, POSITION_VALUE_MARGIN -- lived here
+# along with elite_available_for() and _apply_elite_position_discipline().
+# All removed 2026-08-28, user-directed. See CHANGELOG.)
 
 # Recommendation-slate diversity: never let one position monopolize the
 # cards -- fixes "all four suggestions are WRs".
@@ -121,7 +120,8 @@ RISK_MULT_SCALE = 60.0     # roster avg-risk points per +1.0 of multiplier
 # recommendation (verified: an 8-weight penalty on a 99.8%-survival player
 # netted to -2 against the need bonus alone).
 SURVIVAL_WEIGHT = 18.0
-SURVIVAL_K = 0.30          # logistic steepness, matches the survival gauge
+# SURVIVAL_K and the survival model itself now live in draftkit/survival.py so
+# the turn optimizer can share them without an import cycle. Imported above.
 
 
 def build_candidate_pool(score_col="final_score", pool_size=300):
@@ -252,64 +252,6 @@ def _roster_bye_counts(pool, my_team):
     return counts
 
 
-def elite_available_for(pool, avail, position):
-    """Whether an elite player (top ELITE_POSITION_RANK at `position` by
-    our_score, per the full `pool`) is still undrafted (present in `avail`)
-    -- exposed for draft_center.py's "why was this filtered" explainer, so
-    it stays in sync with _apply_elite_position_discipline()'s own elite
-    lookup rather than a second, possibly-drifting copy of the same logic."""
-    position = position.upper()
-    still_on_board = pool[pool["position"].astype(str).str.upper() == position]
-    elite_names = set(
-        still_on_board.sort_values("our_score", ascending=False)["player_name"].head(ELITE_POSITION_RANK)
-    )
-    avail_names = set(avail.loc[avail["position"].astype(str).str.upper() == position, "player_name"])
-    return bool(elite_names & avail_names)
-
-
-def _apply_elite_position_discipline(avail, pool, position, current_round, current_pick):
-    """Charlie's QB/TE discipline, unified (2026-08-27): never draft this
-    position at his ADP, only at value -- and the round that becomes
-    permissible depends on whether an ELITE option is still on the board.
-
-      * An elite player (top ELITE_POSITION_RANK at the position by
-        our_score) can be taken any round before ELITE_HOLD_ROUND, but
-        only at value (fallen to/past his own ADP -- not a reach above it).
-      * If no elite option remains, the WHOLE position is suppressed until
-        NO_ELITE_HOLD_ROUND, and even then only at a real discount
-        (POSITION_VALUE_MARGIN picks past ADP), not a marginal one.
-      * From NO_ELITE_HOLD_ROUND on with no elite left, or past
-        ELITE_HOLD_ROUND generally, the position is unrestricted.
-
-    `pool` (not `avail`) supplies the elite lookup so a drafted elite player
-    still counts as "no longer available" rather than reappearing via
-    `avail`'s own filtering order."""
-    if current_round is None:
-        return avail
-    is_pos = avail["position"].astype(str).str.upper() == position
-    if not is_pos.any():
-        return avail
-
-    still_on_board = pool[pool["position"].astype(str).str.upper() == position]
-    elite_names = set(
-        still_on_board.sort_values("our_score", ascending=False)["player_name"].head(ELITE_POSITION_RANK)
-    )
-    elite_available = bool(elite_names & set(avail.loc[is_pos, "player_name"]))
-
-    hold_round = ELITE_HOLD_ROUND if elite_available else NO_ELITE_HOLD_ROUND
-    if current_round >= hold_round:
-        return avail
-
-    adp = pd.to_numeric(avail.get("adp"), errors="coerce")
-    pick = current_pick if current_pick else 0
-    if elite_available:
-        at_value = adp.notna() & (adp <= pick)
-        keep = avail["player_name"].isin(elite_names) & (at_value if current_pick else True)
-    else:
-        keep = adp.notna() & ((pick - adp) >= POSITION_VALUE_MARGIN)
-    return avail[(~is_pos) | keep].copy()
-
-
 def diverse_slate(ordered, n, max_per_pos=MAX_RECS_PER_POSITION):
     """Take the top-n by draft_score, but never more than `max_per_pos` of
     one position -- so the cards can't all be the same position. It does NOT
@@ -342,15 +284,26 @@ def diverse_slate(ordered, n, max_per_pos=MAX_RECS_PER_POSITION):
 
 def recommend_picks(pool, drafted_players=None, my_team=None, weights=None, top_n=15,
                     current_round=None, current_pick=None, my_next_pick=None,
-                    scoring_mode="standard", diverse=False):
+                    scoring_mode="standard", diverse=False,
+                    drafted_by=None, teams=None, my_slot=None):
     """Rank the still-available players by draft_score.
 
     drafted_players / my_team are lists of player names (drafted by anyone /
     by me); both are removed from the pool, and my_team drives roster need,
-    the TE/QB cap, and the bye penalty. `current_round`/`current_pick` +
-    `scoring_mode` enforce Charlie's QB and TE discipline (standard only). With
-    `diverse=True` the top_n is a position-diverse slate. Returns a frame
-    sorted best-first with each factor's signed contribution.
+    the TE/QB cap, and the bye penalty. With `diverse=True` the top_n is a
+    position-diverse slate. Returns a frame sorted best-first with each
+    factor's signed contribution.
+
+    `scoring_mode` is currently INERT here: its only job was exempting Dad's
+    League from the QB/TE hold, and that hold was removed 2026-08-28. Kept on
+    the signature because every caller already computes and passes it, and a
+    future position rule would want it back. `current_round` is likewise now
+    unused by the scoring itself.
+
+    `drafted_by` ({player_name: draft_slot}, from Sleeper) plus `teams` and
+    `my_slot` make the opportunity-cost term opponent-aware -- see the
+    survival block below. All three are optional; without them that term
+    falls back to plain ADP.
     """
     if pool is None or pool.empty:
         return pd.DataFrame()
@@ -373,11 +326,12 @@ def recommend_picks(pool, drafted_players=None, my_team=None, weights=None, top_
     over_cap = _pos.map(lambda p: p in ROSTER_CAPS and have.get(p, 0) >= ROSTER_CAPS[p])
     avail = avail[~over_cap.values].copy()
 
-    # Charlie's QB/TE discipline (standard scoring only, Dad's exempt) --
-    # unified elite-gated hold, see _apply_elite_position_discipline().
-    if scoring_mode != "dads":
-        avail = _apply_elite_position_discipline(avail, pool, "QB", current_round, current_pick)
-        avail = _apply_elite_position_discipline(avail, pool, "TE", current_round, current_pick)
+    # QB/TE draft discipline was REMOVED 2026-08-28 (user-directed). It used
+    # to filter both positions out of the candidate pool entirely before
+    # round 7 (or 9 with no elite left) unless the player had fallen to or
+    # past his ADP. QB and TE are now ranked on the same terms as RB/WR --
+    # value, risk, need, scarcity, and opportunity cost -- with no positional
+    # gate. See CHANGELOG for what was taken out and how to restore it.
 
     if avail.empty:
         return avail
@@ -404,10 +358,31 @@ def recommend_picks(pool, drafted_players=None, my_team=None, weights=None, top_
     risk_mult = float(np.clip(RISK_MULT_MIN + my_avg_risk / RISK_MULT_SCALE, RISK_MULT_MIN, RISK_MULT_MAX))
 
     # Opportunity cost: how likely each player is to return at my next pick.
-    if my_next_pick:
-        _adp = pd.to_numeric(avail.get("adp"), errors="coerce")
-        survival = 1.0 - 1.0 / (1.0 + np.exp(-SURVIVAL_K * (my_next_pick - _adp)))
-        survival = pd.Series(survival, index=avail.index).clip(0.01, 0.99).fillna(0.5)
+    #
+    # Two upgrades over the original inline formula (2026-08-28), both prompted
+    # by a real in-draft case the old model could not represent -- Davante
+    # Adams was not the best player on the board, but the very next team had
+    # three RBs, a QB, and no WR, so leaving him meant losing him:
+    #   * CONDITIONAL on him being available right now, rather than the
+    #     unconditional "how often is he there at pick N across all drafts."
+    #     For anyone already past his ADP the unconditional number is stale.
+    #   * NEED-AWARE where the draft feed attributes picks to teams (Sleeper):
+    #     each intervening pick is scaled by whether that team still needs the
+    #     position. Without attribution (manual mode) it falls back to plain
+    #     ADP, so nothing is invented from missing data.
+    if my_next_pick and current_pick and my_next_pick > current_pick:
+        opponents_between = my_next_pick - current_pick - 1
+        position_of = dict(zip(pool["player_name"], pool["position"]))
+        mult_for = make_need_multiplier(
+            drafted_by, position_of, teams, my_slot, STARTER_TARGETS, ROSTER_CAPS,
+        )
+        survival = pd.Series(
+            [
+                survival_with_needs(adp, pos, current_pick, opponents_between, mult_for)
+                for adp, pos in zip(avail["adp"], avail["position"])
+            ],
+            index=avail.index,
+        ).clip(0.01, 0.99).fillna(0.5)
     else:
         survival = pd.Series(0.0, index=avail.index)
 
@@ -421,7 +396,66 @@ def recommend_picks(pool, drafted_players=None, my_team=None, weights=None, top_
     avail["overall_risk_pts"] = (-w["overall_risk"] * risk_mult * overall).round(2)
     avail["bye_conflict_pts"] = (-w["bye_conflict"] * conflicts).round(2)
     avail["need_pts"] = _pos.map(need_pts).round(2)
-    avail["survival_pts"] = (-SURVIVAL_WEIGHT * survival).round(2)
+    # Opportunity cost is about REPLACEABILITY, not about this one player.
+    #
+    # Real flaw found live 2026-08-28: the board offered Justin Herbert (our
+    # score 35.8, 5% to return) over Trevor Lawrence (40.4, the #1 QB left,
+    # 89% to return) -- "take the worse player because he's scarcer." That is
+    # wrong whenever the two are SUBSTITUTES. You roster one QB; if a better
+    # QB is 89% to be sitting there at your next pick, Herbert's scarcity buys
+    # you nothing, because the thing you'd be missing out on is a player you
+    # were never going to roster.
+    #
+    # The fix turns on whether the players at a position are SUBSTITUTES or
+    # COMPLEMENTS, because the right question is different in each case:
+    #
+    #   * ONE slot left (QB, TE, or an RB/WR whose starters are nearly full)
+    #     -- they are substitutes. You will roster exactly one more, so the
+    #     question is "will someone AT LEAST AS GOOD be here next time?":
+    #
+    #         replaceable(p) = 1 - PROD (1 - survival(q))   over q at p's
+    #                          position with our_score >= p's
+    #
+    #     p is in his own set, so this can only exceed his own survival.
+    #     Herbert inherits Lawrence's ~92% and can never again outrank the
+    #     better QB on scarcity alone. This is the reported bug.
+    #
+    #   * SEVERAL slots left (RB/WR early) -- they are complements, not
+    #     substitutes. You want three WRs, so a better WR surviving does NOT
+    #     make a scarce one pointless: take the scarce one now and the
+    #     survivor later and you get BOTH. Here the original per-player
+    #     survival is the correct signal and is kept unchanged.
+    #
+    # Getting this split wrong is not theoretical. An earlier attempt applied
+    # replaceability everywhere via a "k better players survive" tail, which
+    # zeroed the penalty on Jordan Addison -- 97% certain to return -- and
+    # ranked him 2nd, while penalising DK Metcalf (7% to return, same value)
+    # by -17.3. Exactly inverted, and exactly what the survival term exists
+    # to prevent. The floor that a player is always replaceable BY HIMSELF is
+    # what that formulation lost.
+    #
+    # As a position fills, its remaining need falls to 1 and it switches to
+    # substitute logic on its own -- which is right: once you need only one
+    # more WR, a better WR being there really does make a scarcer lesser one
+    # a wasted pick.
+    if survival.abs().sum() > 0:
+        replaceable = survival.copy()
+        for pos in _pos.unique():
+            if max(0, STARTER_TARGETS.get(pos, 1) - have.get(pos, 0)) > 1:
+                continue   # complements -- per-player scarcity still rules
+            at_pos = _pos[_pos == pos].index
+            # Best-first, so the running product is exactly "everyone at
+            # least as good as me, myself included."
+            ordered_idx = avail.loc[at_pos, "our_score"].sort_values(ascending=False).index
+            none_as_good = 1.0
+            for idx in ordered_idx:
+                none_as_good *= (1.0 - float(survival.loc[idx]))
+                replaceable.loc[idx] = 1.0 - none_as_good
+    else:
+        replaceable = survival
+
+    avail["replaceable"] = replaceable.round(3)
+    avail["survival_pts"] = (-SURVIVAL_WEIGHT * replaceable).round(2)
     avail["bye_conflicts"] = conflicts
 
     # Scarcity bonus: only the #1-by-our_score player at each position gets

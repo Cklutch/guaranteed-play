@@ -2063,13 +2063,33 @@ with st.popover("🎚️ Adjust a player"):
     )
     if _adj_player:
         _board_row = rankings_df[rankings_df["player_name"] == _adj_player]
-        _current_board_pts = _safe_float(_board_row.iloc[0].get("projection_points")) if not _board_row.empty else None
+        _board_pts = _safe_float(_board_row.iloc[0].get("projection_points")) if not _board_row.empty else None
         try:
-            _raw_pts, _, _layer = resolve_projection_base(_adj_player)
+            # Take BOTH the raw base and the current value from the same
+            # fresh read. This used to read `current` off the cached
+            # rankings_df and only `raw` from here, so the two could
+            # disagree whenever the board cache lagged a write -- and then
+            # "-2% from current" was computed against a stale current,
+            # producing an equivalent-vs-raw pct identical to the one
+            # already on file and writing a silent no-op (real bug, seen
+            # live 2026-08-28: CeeDee Lamb logged "points 221.9 -> 221.9"
+            # re-applying the same +12.7%, and MarShawn Lloyd the same way
+            # at 90.2). resolve_projection_base() already returned this
+            # value; it was being discarded.
+            _raw_pts, _current_board_pts, _layer = resolve_projection_base(_adj_player)
         except ValueError as _exc:
             st.error(str(_exc))
         else:
             st.caption(f"Current: {_current_board_pts:.1f} pts (source: {_layer})")
+            # A visible board value that disagrees with the file means the
+            # cached board is behind -- surface it rather than silently
+            # computing against one of the two numbers.
+            if _board_pts is not None and abs(_board_pts - _current_board_pts) >= 0.05:
+                st.warning(
+                    f"Board is showing {_board_pts:.1f} but the data file says "
+                    f"{_current_board_pts:.1f} -- the table below is stale. The math here "
+                    f"uses {_current_board_pts:.1f} (the file). Restart the app to refresh the table."
+                )
             _pct_from_current = st.number_input(
                 "Change from current (%)", value=0.0, step=0.5, key="adjust_player_pct",
                 help="Relative to the CURRENT board value, not the raw model output -- "

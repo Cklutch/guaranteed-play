@@ -131,14 +131,31 @@ def resolve_projection_base(player_name):
         i = idx[0]
         pct = model_df.at[i, "model_adjustment_pct"] if "model_adjustment_pct" in model_df.columns else None
         if pd.notna(pct):
-            raw = float(model_df.at[i, "model_projection_points"])
-            current = float(model_df.at[i, "model_projection_points_adjusted"])
+            raw = model_df.at[i, "model_projection_points"]
+            current = model_df.at[i, "model_projection_points_adjusted"]
+            # A fallback-tier player who has already been adjusted ONCE lands
+            # here, not in the fallback branch below: the first edit wrote
+            # model_adjustment_pct + model_projection_points_adjusted, but
+            # model_projection_points stays NaN forever, because that column
+            # is empty precisely because no real model output ever existed
+            # for him (status insufficient_history / book_anchored -- the
+            # whole reason he had a fallback). The pct was computed against
+            # the FALLBACK, so that stays the raw base to keep multiplying
+            # against. Reading model_projection_points unconditionally here
+            # made every SECOND edit of such a player raise -- real bug,
+            # found live 2026-08-28 on Jeremiyah Love (fallback 225.6, first
+            # edit -1.5% -> 222.2, second edit errored). Only genuinely
+            # inconsistent rows -- no raw AND no fallback to fall back on --
+            # still raise.
+            if pd.isna(raw) and "model_projection_points_fallback" in model_df.columns:
+                raw = model_df.at[i, "model_projection_points_fallback"]
             if pd.isna(raw) or pd.isna(current):
                 raise ValueError(
-                    f"{player_name}: model_adjustment_pct is set but the points columns are NaN "
+                    f"{player_name}: model_adjustment_pct is set but there is no usable base "
+                    f"(model_projection_points and model_projection_points_fallback are both NaN) "
                     f"in model_projections_v1.csv -- inconsistent row, needs a data fix."
                 )
-            return raw, current, "model_projections_v1.csv"
+            return float(raw), float(current), "model_projections_v1.csv"
 
         fallback = model_df.at[i, "model_projection_points_fallback"] if "model_projection_points_fallback" in model_df.columns else None
         fallback_note = model_df.at[i, "model_projection_fallback_note"] if "model_projection_fallback_note" in model_df.columns else None

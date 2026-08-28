@@ -367,9 +367,14 @@ INJURY_MANUAL_OVERRIDES = {
     # as a practice-field injury with a diagnosis in hand.
     "Josh Jacobs": {
         "score": 3.5,
-        "reason": "Existing groin injury (return eyed for late Aug) + a real, pending NFL "
-                  "suspension review following a May arrest -- no discipline decided yet",
+        "reason": "Existing groin injury (return eyed for late Aug) + formalized legal risk: "
+                  "formally charged 2026-08-27 with two misdemeanors (battery, criminal damage to "
+                  "property; reduced from initial felony). Court date Nov 11. NFL suspension details "
+                  "still undecided -- kept at 3.5 despite charge formalization because charges were "
+                  "reduced (argues against harsh suspension) and timeline remains genuinely unconfirmed.",
         "date": "2026-08-26",
+        "updated": "2026-08-28",
+        "applied_by": "nfl-camp-news-watch auto-accept, 2026-08-28",
     },
     # Luther Burden (added 2026-08-26, human-reviewed via research/pending_
     # news_adjustments.md): real groin injury at Bears practice (Aug 8),

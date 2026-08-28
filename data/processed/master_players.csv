@@ -213,7 +213,7 @@ player_id,player_name,position,team,bye_week,age,injury_status,projection_points
 11292.0,Tommy DeVito,QB,NE,,28.0,Active,10.6,53.0,,,,,216.0,315.0,,real,unclassified,0.0,30.0,,,,70.0,STEADY,
 12501.0,Matthew Golden,WR,GB,11.0,23.0,Active,128.4,54.0,55.0,10.0,,,123.0,126.0,141.0,real,deep_threat_wr,0.21,30.0,,,,70.0,STEADY,-20.3
 12521.0,Elijah Arroyo,TE,SEA,11.0,23.0,Active,38.7,54.0,46.0,15.0,,,215.9,275.0,367.0,real,unclassified,0.0,30.0,,,,70.0,STEADY,
-6828.0,AJ Dillon,RB,CAR,,28.0,Active,86.5,54.0,,,,,216.0,315.0,,real,unclassified,0.0,30.0,,,,70.0,STEADY,
+6828.0,AJ Dillon,RB,CAR,,28.0,Active,17.3,54.0,,,,,216.0,315.0,,real,unclassified,0.0,30.0,,,,70.0,STEADY,
 7083.0,Tyler Huntley,QB,BAL,,28.0,Active,10.6,54.0,,,,,216.0,315.0,,real,unclassified,0.0,30.0,,,,70.0,STEADY,
 4981.0,Calvin Ridley,WR,TEN,9.0,31.0,Active,128.4,55.0,74.0,11.0,,,188.3,188.0,196.0,real,deep_threat_wr,0.293,30.0,,,,70.0,STEADY,
 6039.0,Ty Johnson,RB,BUF,7.0,28.0,Active,83.8,55.0,75.0,13.0,,,215.6,253.0,263.0,real,unclassified,0.0,30.0,,,,70.0,STEADY,
@@ -226,7 +226,7 @@ player_id,player_name,position,team,bye_week,age,injury_status,projection_points
 11576.0,Braelon Allen,RB,NYJ,13.0,22.0,Active,79.5,57.0,53.0,10.0,,,171.0,169.0,154.0,real,unclassified,0.0,30.0,,,,70.0,STEADY,7.699999999999989
 10214.0,Davis Allen,TE,LAR,,25.0,Questionable,35.4,57.0,,,,,216.0,315.0,,real,unclassified,0.0,65.0,,,,35.0,UNKNOWN,
 9230.0,Tanner McKee,QB,PHI,,26.0,Active,10.3,57.0,,,,,216.0,315.0,,real,unclassified,0.0,30.0,,,,70.0,STEADY,
-12860.0,Theo Wease,WR,MIA,,25.0,Active,121.4,57.0,,,,,216.0,315.0,,real,unclassified,0.0,30.0,,,,70.0,STEADY,
+12860.0,Theo Wease,WR,MIA,,25.0,Active,24.3,57.0,,,,,216.0,315.0,,real,unclassified,0.0,30.0,,,,70.0,STEADY,
 10213.0,Tre Tucker,WR,LV,13.0,25.0,Active,116.9,58.0,70.0,11.0,,,172.0,170.0,182.0,real,possession_wr,0.258,30.0,,,,70.0,STEADY,-4.300000000000011
 11199.0,Emari Demercado,RB,KC,5.0,27.0,Active,74.4,58.0,89.0,13.0,,,215.8,264.0,295.0,real,unclassified,0.0,30.0,,,,70.0,STEADY,
 11082.0,Ben Sims,TE,MIA,,26.0,Active,35.2,58.0,,,,,216.0,315.0,,real,unclassified,0.0,30.0,,,,70.0,STEADY,

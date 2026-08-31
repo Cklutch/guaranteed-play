@@ -50,6 +50,16 @@ import re
 import pandas as pd
 
 WINWITHODDS_PATH = "data/raw/winwithodds_season_projections.csv"
+# JuiceBoxOne's 2026 ADP, blended across FantasyPros/ESPN/Sleeper/Yahoo --
+# the STANDARD-scoring cut specifically (2026-08-30, user-supplied). Dad's
+# league has no PPR (see module docstring), so this is the correct market
+# read for it: a half-PPR ADP source systematically over-ranks high-target
+# possession receivers relative to how a no-PPR room actually drafts them.
+# There is a SEPARATE half-PPR cut of the same source
+# (juicebox_2026_adp_sources.csv) already feeding the main board's own
+# `adp` column -- the two must stay separate, not merged, or the main
+# board's market signal silently drifts toward a scoring format it isn't.
+DADS_ADP_PATH = "data/raw/juicebox_2026_adp_sources_standard.csv"
 
 GAMES_PER_SEASON = 17
 
@@ -67,9 +77,51 @@ FUMBLE_LOST_RATE = 0.5
 # distributions: rushing TDs skew short (many goal-line, no bonus until
 # 6+ yds), receiving/passing TDs average ~12 yds. Small relative to the
 # flat TD points above. Set to 0.0 to disable length bonuses entirely.
+#
+# These are FLAT position-wide constants -- every RB gets the same 0.6,
+# whether he's a 60-yard-breakaway back or a 1-yard-plunge specialist. The
+# per-player multiplier below (2026-08-30, user-directed: "players that
+# consistently score... high numbers of long yardage touchdowns are
+# premium") tilts each player's bonus around these baselines using a real,
+# data-grounded proxy for TD length, rather than replacing them outright.
 PASS_TD_LEN_BONUS_EV = 0.9
 RUSH_TD_LEN_BONUS_EV = 0.6
 REC_TD_LEN_BONUS_EV = 1.5
+
+# Per-player TD-length tilt. We don't have real per-play TD-distance data
+# locally (no nflverse play-by-play pull exists in this repo yet -- see
+# module docstring), so this uses an honest PROXY instead of a measurement:
+# projected yards-per-touchdown in a category. A player who needs fewer
+# total yards per score, on average, is scoring more of his TDs short/
+# goal-line; a player who needs more yards per score is getting more of his
+# production from longer plays. Checked against 2026 winwithodds
+# projections: real, ~2x spread within a position (RB rush 88-183 yds/TD,
+# WR rec 82-222, TE rec 77-184, QB pass and QB rush also checked) -- not
+# noise, and not just a volume artifact once the shrinkage below controls
+# for sample size.
+#
+# Below TD_LENGTH_MIN_SAMPLE projected TDs in a category, a player's own
+# ratio is pure noise (one 60-yard TD on an otherwise 1-TD season is not
+# "explosive," it's a small sample) -- multiplier is 1.0, identical to the
+# old flat-EV behavior. From there up to TD_LENGTH_FULL_CREDIT_TDS, the
+# ratio is shrunk toward the position average by linear interpolation; at
+# or above it, the player's own ratio is used at full weight. MULT_MIN/MAX
+# bound the result so this stays a tilt, not a new dominant term -- same
+# "small relative to the flat TD points" design intent as the EVs above.
+TD_LENGTH_MIN_SAMPLE = 3
+TD_LENGTH_FULL_CREDIT_TDS = 6
+TD_LENGTH_MULT_MIN = 0.55
+TD_LENGTH_MULT_MAX = 1.70
+
+# (position, td_type) combos with enough real players at TD_LENGTH_MIN_SAMPLE+
+# projected TDs to trust a position-average baseline (checked against 2026
+# projections -- RB/WR/TE receiving-by-RB and other combos came back with too
+# few qualifying players and are deliberately left out, falling back to the
+# flat EV untouched rather than averaging over a handful of players).
+TD_LENGTH_COMBOS = [("RB", "rush"), ("WR", "rec"), ("TE", "rec"), ("QB", "pass"), ("QB", "rush")]
+# Minimum number of qualifying PLAYERS (not TDs) before a position/type
+# combo's average is trusted as a baseline at all.
+TD_LENGTH_MIN_PLAYERS = 5
 
 # Per-game yardage tiers as half-open bands (lower, upper, points) for a
 # single game's COMBINED pass+rush+rec yards. Continuous form of dad's
@@ -225,23 +277,67 @@ def _expected_season_yardage_points(position, total_yds):
     return round(_band_points_at(bands, mean_pg) * GAMES_PER_SEASON, 4)
 
 
+def _td_length_baselines(raw, col):
+    """{(position, td_type): avg yards-per-TD} for TD_LENGTH_COMBOS -- a
+    population statistic, computed ONCE per build_dads_projections_df() call
+    (not per player). Combos without TD_LENGTH_MIN_PLAYERS qualifying players
+    are simply absent from the returned dict, and _td_length_multiplier()
+    treats a missing baseline as "no adjustment" (multiplier 1.0)."""
+    yard_col = {"pass": col["pass_yds"], "rush": col["rush_yds"], "rec": col["rec_yds"]}
+    td_col = {"pass": col["pass_td"], "rush": col["rush_td"], "rec": col["rec_td"]}
+    baselines = {}
+    for pos, kind in TD_LENGTH_COMBOS:
+        sub = raw[raw[col["pos"]] == pos]
+        tds = pd.to_numeric(sub[td_col[kind]], errors="coerce").fillna(0)
+        yds = pd.to_numeric(sub[yard_col[kind]], errors="coerce").fillna(0)
+        qualifies = tds >= TD_LENGTH_MIN_SAMPLE
+        if qualifies.sum() < TD_LENGTH_MIN_PLAYERS:
+            continue
+        baselines[(pos, kind)] = float((yds[qualifies] / tds[qualifies]).mean())
+    return baselines
+
+
+def _td_length_multiplier(player_yds, player_td, baseline_ratio):
+    """Shrinkage-adjusted length-bonus multiplier for one TD type. See the
+    TD_LENGTH_* constants' comments for the reasoning; this is just the
+    linear-interpolation implementation of it."""
+    if baseline_ratio is None or baseline_ratio <= 0 or player_td < TD_LENGTH_MIN_SAMPLE:
+        return 1.0
+    weight = min(1.0, player_td / TD_LENGTH_FULL_CREDIT_TDS)
+    effective_ratio = weight * (player_yds / player_td) + (1 - weight) * baseline_ratio
+    mult = effective_ratio / baseline_ratio
+    return max(TD_LENGTH_MULT_MIN, min(TD_LENGTH_MULT_MAX, mult))
+
+
 def dads_points_from_stats(position, pass_yds=0, rush_yds=0, rec_yds=0,
-                           pass_td=0, rush_td=0, rec_td=0, ints=0, fumbles=0):
+                           pass_td=0, rush_td=0, rec_td=0, ints=0, fumbles=0,
+                           length_baselines=None):
     """Full-season dad's-league fantasy points from season stat totals.
 
     See module docstring for the per-game / per-play approximations.
+    `length_baselines` (from _td_length_baselines(), or None) makes the TD-
+    length bonus per-player instead of a flat position constant -- omitting
+    it reproduces the exact old flat-EV behavior, so any other caller of
+    this function is unaffected.
     """
+    pass_yds, rush_yds, rec_yds = _f(pass_yds), _f(rush_yds), _f(rec_yds)
     pass_td, rush_td, rec_td = _f(pass_td), _f(rush_td), _f(rec_td)
+
+    pos = str(position).upper()
+    lb = length_baselines or {}
+    pass_mult = _td_length_multiplier(pass_yds, pass_td, lb.get((pos, "pass")))
+    rush_mult = _td_length_multiplier(rush_yds, rush_td, lb.get((pos, "rush")))
+    rec_mult = _td_length_multiplier(rec_yds, rec_td, lb.get((pos, "rec")))
 
     td_pts = pass_td * PASS_TD_PTS + rush_td * RUSH_TD_PTS + rec_td * REC_TD_PTS
     td_len_bonus = (
-        pass_td * PASS_TD_LEN_BONUS_EV
-        + rush_td * RUSH_TD_LEN_BONUS_EV
-        + rec_td * REC_TD_LEN_BONUS_EV
+        pass_td * PASS_TD_LEN_BONUS_EV * pass_mult
+        + rush_td * RUSH_TD_LEN_BONUS_EV * rush_mult
+        + rec_td * REC_TD_LEN_BONUS_EV * rec_mult
     )
     turnover_pts = _f(ints) * INT_PTS + _f(fumbles) * FUMBLE_LOST_RATE * FUMBLE_LOST_PTS
 
-    total_yds = _f(pass_yds) + _f(rush_yds) + _f(rec_yds)
+    total_yds = pass_yds + rush_yds + rec_yds
     yard_pts = _expected_season_yardage_points(position, total_yds)
 
     return round(td_pts + td_len_bonus + turnover_pts + yard_pts, 2)
@@ -264,6 +360,10 @@ def build_dads_projections_df(path=WINWITHODDS_PATH):
     if not {col["name"], col["pos"]}.issubset(raw.columns):
         return pd.DataFrame(columns=["norm_name", "dads_projection_points"])
 
+    # Population statistic (yards-per-TD by position), computed ONCE against
+    # the full projection set -- not per player. See TD_LENGTH_* comments.
+    length_baselines = _td_length_baselines(raw, col)
+
     raw["dads_projection_points"] = raw.apply(
         lambda r: dads_points_from_stats(
             r.get(col["pos"]),
@@ -271,6 +371,7 @@ def build_dads_projections_df(path=WINWITHODDS_PATH):
             rec_yds=r.get(col["rec_yds"]), pass_td=r.get(col["pass_td"]),
             rush_td=r.get(col["rush_td"]), rec_td=r.get(col["rec_td"]),
             ints=r.get(col["ints"]), fumbles=r.get(col["fumbles"]),
+            length_baselines=length_baselines,
         ),
         axis=1,
     )
@@ -285,20 +386,55 @@ def build_dads_projections_df(path=WINWITHODDS_PATH):
     return out
 
 
+def load_dads_adp(path=DADS_ADP_PATH):
+    """[norm_name, dads_adp, dads_adp_avg] from the Standard-scoring
+    JuiceBoxOne source -- see DADS_ADP_PATH. `dads_adp` is that sheet's own
+    blended ADP number (its "ADP" column); `dads_adp_avg` is the average of
+    the four individual-site Standard ranks it also carries (its "Average"
+    column) -- a useful cross-check when the two disagree by a lot on a
+    specific player. Returns an empty frame if the source is unavailable."""
+    try:
+        raw = pd.read_csv(path)
+    except (FileNotFoundError, OSError):
+        return pd.DataFrame(columns=["norm_name", "dads_adp", "dads_adp_avg"])
+    if not {"Name", "ADP"}.issubset(raw.columns):
+        return pd.DataFrame(columns=["norm_name", "dads_adp", "dads_adp_avg"])
+
+    out = pd.DataFrame({
+        "norm_name": raw["Name"].map(_norm),
+        "dads_adp": pd.to_numeric(raw["ADP"], errors="coerce"),
+        "dads_adp_avg": pd.to_numeric(raw.get("Average"), errors="coerce"),
+    })
+    return out.sort_values("dads_adp").drop_duplicates("norm_name", keep="first").reset_index(drop=True)
+
+
 def add_dads_scores(board_df):
     """Attach dad's-league columns to a board frame that already carries
     player_name, position, adp, injury_risk, and value_over_replacement_
     points (i.e. the output of build_recommendation_rankings_df).
 
-    Adds three columns, all NaN for players with no stat projection:
+    Adds:
       * dads_projection_points   -- dad's-scoring season fantasy points
-      * dads_vor                 -- dad's value over replacement
+                                    (NaN for players with no stat projection)
+      * dads_vor                 -- dad's value over replacement (NaN likewise)
       * dads_final_score         -- the reworked model score (same engine
-                                    formula as final_score, market/risk
-                                    terms unchanged)
+                                    formula as final_score, now market- AND
+                                    risk-aware for dad's actual format --
+                                    see dads_adp below; risk_penalty still
+                                    comes from the board's own injury_risk,
+                                    which isn't scoring-format-dependent)
+      * dads_adp                 -- Standard-scoring ADP (DADS_ADP_PATH),
+                                    falling back to the board's half-PPR adp
+                                    for anyone missing from that sheet.
+                                    Populated even for players with no dad's
+                                    projection, so "what's he going in a
+                                    standard room" stays answerable either way.
+      * dads_adp_avg              -- that sheet's average of 4 individual-site
+                                    Standard ranks, a cross-check against
+                                    dads_adp when they disagree a lot.
 
-    The board's own final_score is left untouched; Home.py swaps these in
-    only when the user selects the Dad's League scoring model.
+    The board's own final_score/adp are left untouched; Home.py swaps these
+    in only when the user selects the Dad's League scoring model.
     """
     # Local import avoids a circular dependency at module import time
     # (draft_analysis is a heavy module; dads_scoring is imported from it
@@ -318,6 +454,17 @@ def add_dads_scores(board_df):
     df["norm_name"] = df["norm_name"].replace(_NAME_ALIASES)
     df = df.merge(projections, on="norm_name", how="left")
 
+    # Standard-scoring ADP (see DADS_ADP_PATH) -- the market signal dad's
+    # scoring should actually use, not the board's own half-PPR `adp`. Falls
+    # back to the half-PPR number for anyone missing from the Standard sheet
+    # (deep bench names, etc.) rather than leaving the market term blank.
+    dads_adp = load_dads_adp()
+    if not dads_adp.empty:
+        df = df.merge(dads_adp, on="norm_name", how="left")
+        df["dads_adp"] = df["dads_adp"].fillna(pd.to_numeric(df.get("adp"), errors="coerce"))
+    else:
+        df["dads_adp"] = pd.to_numeric(df.get("adp"), errors="coerce")
+
     # Dad's replacement baselines / VOR -- keyed on DAD'S roster (see
     # _dads_replacement_baselines), so positional scarcity reflects his
     # 1QB/2RB/2WR/1TE no-flex league rather than the user's Half-PPR roster.
@@ -328,15 +475,16 @@ def add_dads_scores(board_df):
         pd.to_numeric(df["dads_projection_points"], errors="coerce") - baseline_series
     ).round(3)
 
-    # Rework the model score by feeding dad's projection + VOR through the
-    # exact engine function. market/risk fall out of adp/injury_risk, which
-    # are unchanged, so only the projection-driven terms move.
+    # Rework the model score by feeding dad's projection + VOR + Standard-
+    # scoring ADP through the exact engine function. Only risk falls out of
+    # the board unchanged (injury_risk isn't scoring-format-dependent); the
+    # projection AND the market term now both reflect dad's actual format.
     scoring_input = pd.DataFrame(
         {
             "position": df["position"],
             "projection_points": pd.to_numeric(df["dads_projection_points"], errors="coerce"),
             "value_over_replacement_points": df["dads_vor"],
-            "adp": pd.to_numeric(df.get("adp"), errors="coerce"),
+            "adp": df["dads_adp"],
             "injury_risk": pd.to_numeric(df.get("injury_risk"), errors="coerce"),
         }
     )

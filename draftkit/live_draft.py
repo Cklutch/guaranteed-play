@@ -149,6 +149,17 @@ def build_candidate_pool(score_col="final_score", pool_size=300):
     if board.empty or score_col not in board.columns:
         return pd.DataFrame()
 
+    # Under Dad's League scoring, swap the market column to the STANDARD-
+    # scoring ADP the dad's model is actually built against (dads_scoring.
+    # DADS_ADP_PATH) -- dad's league has no PPR. This is not cosmetic: `adp`
+    # is what the whole survival model runs on (draftkit/survival.py), so a
+    # half-PPR ADP here would have the engine predicting WHEN players come
+    # off the board using the wrong format's draft behaviour -- wrong
+    # opportunity cost, wrong landing odds, wrong turn-planner pairs.
+    if score_col == "dads_final_score" and "dads_adp" in board.columns:
+        board = board.copy()
+        board["adp"] = pd.to_numeric(board["dads_adp"], errors="coerce")
+
     # Draftable only: someone the market prices (ADP) or a service projects.
     has_adp = pd.to_numeric(board.get("adp"), errors="coerce").notna()
     real_proj = board.get("projection_source", pd.Series(index=board.index, dtype=object)) == "real"

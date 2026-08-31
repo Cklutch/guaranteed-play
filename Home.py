@@ -1503,6 +1503,15 @@ def _scoring_version():
         Path("data/processed/qb_archetypes.csv"),
         Path("data/processed/te_archetypes.csv"),
         Path("data/processed/rookie_projections.csv"),
+        # Dad's League scoring inputs (2026-08-30). add_dads_scores() runs
+        # inside _rankings(), so its code and BOTH its data sources have to be
+        # part of the cache key -- otherwise editing the dad's scoring rules
+        # or dropping in a new ADP sheet leaves the board serving stale dad's
+        # scores until a full process restart, which reads exactly like the
+        # caching bug this function exists to prevent.
+        Path("draftkit/dads_scoring.py"),
+        Path("data/raw/winwithodds_season_projections.csv"),
+        Path("data/raw/juicebox_2026_adp_sources_standard.csv"),
     ]
     mtimes = tuple(p.stat().st_mtime if p.exists() else 0 for p in watched)
 
@@ -2146,6 +2155,14 @@ if score_mode == "dads" and "dads_final_score" in board.columns:
     board["projection_points"] = board["dads_projection_points"]
     if "dads_vor" in board.columns:
         board["value_over_replacement_points"] = board["dads_vor"]
+    # Market column too (2026-08-30). dads_final_score is already computed
+    # against STANDARD-scoring ADP (dad's league has no PPR -- see
+    # dads_scoring.DADS_ADP_PATH), so leaving the displayed ADP and the
+    # "Engine vs ADP" delta on the half-PPR number would compare the score
+    # to a market it wasn't built against. Every ADP read downstream
+    # (_adp_rank, the cards, the export) goes through board["adp"].
+    if "dads_adp" in board.columns:
+        board["adp"] = pd.to_numeric(board["dads_adp"], errors="coerce")
     board = board.sort_values(
         "final_score", ascending=False, na_position="last", kind="stable"
     ).reset_index(drop=True)

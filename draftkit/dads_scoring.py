@@ -393,7 +393,84 @@ MANUAL_DADS_CORRECTIONS = {
             "Mirrors the standard board's correction (model_projections_v1.csv)."
         ),
     },
+    "quentin johnston": {
+        "pct": 30.4,
+        "note": (
+            "winwithodds projects 5.0 rec TDs for 2026 despite a proven, "
+            "consistent real track record: 8 rec TDs in 2024 (55/711/8) AND 8 "
+            "again in 2025 (51/735/8 across 14 games) -- led the team in TDs "
+            "both years, per PFR/StatMuse/FantasyData. SI reports he's 'poised "
+            "for a larger role' after Mike Williams' retirement, which argues "
+            "against a downgrade, not for one. Real, verified undercount, not a "
+            "judgment call: recomputed his dads points at his real 8.0 TD rate "
+            "(yards/receptions held from the existing projection) -- 39.1 -> "
+            "51.0 = +30.4%. UNVERIFIED whether the standard board's real-source "
+            "projection (model_projections_v1.csv, 151.8 raw) shares this same "
+            "TD undercount -- that source only carries an aggregate points "
+            "total, not a stat-level breakdown, so this could not be checked "
+            "the same way. Flag for review if auditing the standard board too."
+        ),
+    },
+    "garrett wilson": {
+        "pct": 18.6,
+        "note": (
+            "winwithodds projects 4.5 rec TDs for 2026. Real 2024 (his last full "
+            "healthy season): 7 rec TDs in 17 games. Real, sourced tailwind for "
+            "2026: Jets moved to Frank Reich's offense, reported (SI/Yardbarker, "
+            "2026-08-27) as an explicit shift toward 'more efficient usage in "
+            "the red zone' and a 'more vertical and explosive' role, replacing "
+            "the 'manufactured short plays' of prior Jets offenses. A real "
+            "positive catalyst pointing the same direction as the TD-rate gap, "
+            "not just noisy history. Recomputed at his real 2024 pace (7.0 TD, "
+            "yards/receptions held): 58.1 -> 69.0 = +18.6%. Same "
+            "standard-board-unverified caveat as Quentin Johnston above."
+        ),
+    },
 }
+
+# Real candidates found in a systematic scan (2026-08-31, user-directed --
+# "apply to the whole board, maybe the same cases are going on elsewhere")
+# that were checked and NOT applied, kept here so the reasoning isn't lost
+# if someone re-runs the scan and wonders why these didn't make the cut:
+#
+#   * Josh Jacobs -- real TD-rate undercount too (proj 8.0 rush TD vs 14-15
+#     real pace both 2024/2025), but he ALREADY has a separate, dominant
+#     missed-games correction above (Commissioner Exempt List). Composing a
+#     second independent pct on top would risk double-counting; the right
+#     fix is revising that correction's underlying healthy-rate assumption,
+#     not stacking a second one. Not done -- would need to be deliberate.
+#   * George Kittle -- proj 5.5 vs real pace 9.1-10.8, but he's 8 months out
+#     from a January 2026 Achilles tear (rehabbing, "high confidence" for
+#     Week 1 per beat reporters as of 2026-08-31). Real, current injury risk
+#     legitimately justifies some caution beyond pure historical TD rate --
+#     not a clean modeling error like Wilson/Johnston.
+#   * Zach Charbonnet -- proj 3.0 vs real pace 8.0-12.8. Mixed signal: Kenneth
+#     Walker left for KC (real opportunity increase), but Charbonnet himself
+#     opened 2026 on PUP recovering from his OWN torn ACL, missing at least
+#     the first 4 games. Needs a Jacobs-style missed-games treatment, not a
+#     pure TD-rate fix.
+#   * Cam Skattebo -- proj 6.5 vs real pace 10.6, but that pace is from only
+#     8 rookie games in a still-developing role before a season-ending ankle/
+#     tibia injury. Confirmed healthy and reported as the presumptive
+#     Giants RB1 for 2026 (SNY, 2026-08-31) -- a real positive signal, but
+#     the underlying sample is thin enough that confidence here is lower
+#     than Wilson/Johnston. Flagged, not applied.
+#   * Jacoby Brissett -- proj 15.0 pass TD vs real 2025 pace 27.9 (23 TD/14
+#     games) as a confirmed-starter replacement. Real find, but it's a
+#     single, injury-vacancy season for a QB with a long backup/game-manager
+#     history -- lower confidence than the two applied above.
+#   * Najee Harris, Tank Dell, Jalen McMillan -- all checked and are FALSE
+#     POSITIVES: each has a real, current, serious injury (Achilles tear +
+#     new team, multi-ligament knee reconstruction starting the season on
+#     IR, and a severe 2025 neck injury plus a fresh 2026 camp knee injury,
+#     respectively) that legitimately justifies a conservative projection.
+#     The scan's mechanical "recent TD pace vs projection" gap looked
+#     identical to Johnston's case for all three; only checking each one's
+#     real current situation told them apart.
+#   * Jauan Jennings, Calvin Ridley, Jacory Croskey-Merritt, RJ Harvey,
+#     Ollie Gordon -- surfaced by the same scan, NOT individually verified
+#     (time/priority tradeoff -- checked the highest-relevance names first).
+#     Unverified, not confirmed either way.
 
 
 def _apply_manual_dads_corrections(df, proj_col="dads_projection_points"):

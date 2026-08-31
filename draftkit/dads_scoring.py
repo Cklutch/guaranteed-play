@@ -343,6 +343,76 @@ def dads_points_from_stats(position, pass_yds=0, rush_yds=0, rec_yds=0,
     return round(td_pts + td_len_bonus + turnover_pts + yard_pts, 2)
 
 
+# Manual news-driven corrections for Dad's League specifically (2026-08-30).
+#
+# Real gap found live: the standard board has a whole correction pipeline
+# (model_projections_v1.csv, MODEL_PROJECTION_CORRECTIONS, the News Queue,
+# the Rankings-page popover) -- winwithodds_season_projections.csv, which
+# THIS module reads, has none of that. A player's news-driven correction on
+# the standard board has zero effect here; Dad's League silently kept
+# serving his full, un-adjusted raw projection. First two real instances:
+# Josh Jacobs' Commissioner Exempt List placement and Jakobi Meyers' camp-
+# depth-chart role compression were both live on the standard board and
+# invisible here until this dict existed.
+#
+# Deliberately a SEPARATE dict from the standard board's, not a shared one:
+# the two boards' raw baselines differ (dads uses winwithodds season
+# totals; standard uses model_projections_v1.csv / master_players.csv), so
+# a single shared pct would apply to two different bases and silently drift.
+# Percent always applies to the RAW stat-derived projection (post TD-length
+# tilt), matching the standard board's own "never stacks on the current
+# adjusted number" rule. Keys are normalized names (see _norm()).
+MANUAL_DADS_CORRECTIONS = {
+    "josh jacobs": {
+        "pct": -58.8,
+        "note": (
+            "Formally charged 2026-08-27 with two misdemeanors (battery, criminal "
+            "damage to property), May 2026 domestic dispute. Placed on NFL "
+            "Commissioner Exempt List 2026-08-30 -- barred from ALL team activity, "
+            "practice and games, while paid (CBS Sports / NBC Sports / WTMJ). Will "
+            "miss the start of the season (GB opens 9/13 at MIN). Initial court "
+            "appearance not until 2026-11-17; exempt-list duration is at the "
+            "Commissioner's discretion, not automatically tied to the case timeline "
+            "-- no official return date exists to source from. Disclosed judgment "
+            "call: assume 7 of 17 games played at his healthy per-game rate "
+            "(missing through roughly his court date, real risk of missing more). "
+            "Mirrors the standard board's correction (model_projections_v1.csv)."
+        ),
+    },
+    "jakobi meyers": {
+        "pct": -30.0,
+        "note": (
+            "Jaguars 2026 camp depth chart has Parker Washington at WR1, Meyers "
+            "WR2 behind him in a room with Brian Thomas Jr. and rookie Travis "
+            "Hunter; PFN's outlook reports Meyers is expected to 'come off the "
+            "field for Brian Thomas Jr. and Travis Hunter far more often than "
+            "Washington does,' despite his new 3yr/$60M extension -- real target-"
+            "competition compression the raw stat line (extrapolated from his "
+            "2025 post-trade pace, 42/483/3 over 9 games) doesn't capture. "
+            "Disclosed judgment call, not season-ending, just a smaller role. "
+            "Mirrors the standard board's correction (model_projections_v1.csv)."
+        ),
+    },
+}
+
+
+def _apply_manual_dads_corrections(df, proj_col="dads_projection_points"):
+    """Apply MANUAL_DADS_CORRECTIONS on top of the raw stat-derived
+    projection, in place of df[proj_col]. A player id appearing twice in
+    the dict silently lets the later entry win (same footgun as the
+    standard board's MODEL_PROJECTION_CORRECTIONS -- sequencing matters)."""
+    for norm_name, correction in MANUAL_DADS_CORRECTIONS.items():
+        idx = df.index[df["norm_name"] == norm_name]
+        if len(idx) == 0:
+            continue
+        i = idx[0]
+        raw_pts = df.at[i, proj_col]
+        if pd.isna(raw_pts):
+            continue
+        df.at[i, proj_col] = round(float(raw_pts) * (1 + correction["pct"] / 100), 2)
+    return df
+
+
 def build_dads_projections_df(path=WINWITHODDS_PATH):
     """Load the stat-level season projections and return a frame of
     [norm_name, dads_projection_points] -- one row per projected player.
@@ -383,6 +453,10 @@ def build_dads_projections_df(path=WINWITHODDS_PATH):
         .drop_duplicates("norm_name", keep="first")
         .reset_index(drop=True)
     )
+    # Applied AFTER the dup guard (one row per player at this point) so a
+    # correction can never land on the wrong duplicate row or get
+    # double-applied to two rows for the same normalized name.
+    out = _apply_manual_dads_corrections(out)
     return out
 
 

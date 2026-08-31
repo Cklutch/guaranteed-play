@@ -17,10 +17,12 @@ sys.path.insert(0, str(REPO_ROOT))
 import pandas as pd  # noqa: E402
 
 from draftkit.dads_scoring import (  # noqa: E402
+    MANUAL_DADS_CORRECTIONS,
     TD_LENGTH_FULL_CREDIT_TDS,
     TD_LENGTH_MIN_SAMPLE,
     TD_LENGTH_MULT_MAX,
     TD_LENGTH_MULT_MIN,
+    _apply_manual_dads_corrections,
     _td_length_baselines,
     _td_length_multiplier,
     dads_points_from_stats,
@@ -138,6 +140,45 @@ def test_dads_adp_loads_from_standard_sheet():
     row = adp[adp["norm_name"] == "jahmyr gibbs"]
     assert not row.empty
     assert row.iloc[0]["dads_adp"] <= 3
+
+
+def test_manual_correction_applies_correct_pct_to_dads_base():
+    """The correction must apply to the DADS-FORMULA projection, not to
+    whatever the raw source file's own 'Projections' column says (a real
+    confusion caught live: winwithodds' own column is a different scoring
+    system on the same stat line, not the base dads_points_from_stats()
+    computes -- comparing a pct derived one way against the other base
+    would silently misprice every corrected player)."""
+    df = pd.DataFrame({
+        "norm_name": ["josh jacobs", "someone else"],
+        "dads_projection_points": [87.96, 50.0],
+    })
+    out = _apply_manual_dads_corrections(df.copy())
+    pct = MANUAL_DADS_CORRECTIONS["josh jacobs"]["pct"]
+    expected = round(87.96 * (1 + pct / 100), 2)
+    assert out.loc[out["norm_name"] == "josh jacobs", "dads_projection_points"].iloc[0] == expected
+    # Uncorrected player untouched.
+    assert out.loc[out["norm_name"] == "someone else", "dads_projection_points"].iloc[0] == 50.0
+
+
+def test_manual_correction_unmatched_name_is_a_noop():
+    df = pd.DataFrame({"norm_name": ["nobody here"], "dads_projection_points": [42.0]})
+    out = _apply_manual_dads_corrections(df.copy())
+    assert out["dads_projection_points"].iloc[0] == 42.0
+
+
+def test_manual_correction_skips_nan_base_without_erroring():
+    df = pd.DataFrame({"norm_name": ["josh jacobs"], "dads_projection_points": [float("nan")]})
+    out = _apply_manual_dads_corrections(df.copy())
+    assert pd.isna(out["dads_projection_points"].iloc[0])
+
+
+def test_manual_corrections_are_well_formed():
+    for name, correction in MANUAL_DADS_CORRECTIONS.items():
+        assert name == name.strip().lower(), f"{name} should already be normalized"
+        assert isinstance(correction["pct"], (int, float))
+        assert -100 < correction["pct"] < 200, f"{name}: implausible pct {correction['pct']}"
+        assert len(correction["note"]) > 40, f"{name}: note too thin to be sourced"
 
 
 def _run():

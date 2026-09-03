@@ -1,0 +1,623 @@
+<title>Draft engine schematic</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Serif:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#eef1f5; --surface:#ffffff; --surface-2:#f5f7fa; --border:#d7dee6; --border-strong:#b9c3d0;
+  --text:#131a24; --text-2:#54606f; --text-3:#8895a3;
+  --accent:#4338ca; --accent-text:#3730a3; --accent-bg:#e8e6fb;
+  --data:#3b6ea8; --data-bg:#e2ecf7;
+  --research:#7c5cbf; --research-bg:#efe9fb;
+  --core:#a8660a; --core-bg:#f8ecd9;
+  --ui:#4338ca; --ui-bg:#e8e6fb;
+  --asst:#0e8a7a; --asst-bg:#dcf3ef;
+  --shadow: 0 12px 32px rgba(20,26,40,0.14);
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Consolas, monospace;
+  --font-serif: 'IBM Plex Serif', Georgia, 'Times New Roman', serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0b0e13; --surface:#12161d; --surface-2:#171c25; --border:#262c37; --border-strong:#333c4c;
+    --text:#e7ebf0; --text-2:#95a1b1; --text-3:#5c6779;
+    --accent:#8b83f5; --accent-text:#a6a0f8; --accent-bg:#221f3d;
+    --data:#6fa1d6; --data-bg:#182635;
+    --research:#a98ee0; --research-bg:#241e35;
+    --core:#dba24a; --core-bg:#2b2113;
+    --ui:#8b83f5; --ui-bg:#221f3d;
+    --asst:#4fd0bc; --asst-bg:#0f2a26;
+    --shadow: 0 12px 32px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0b0e13; --surface:#12161d; --surface-2:#171c25; --border:#262c37; --border-strong:#333c4c;
+  --text:#e7ebf0; --text-2:#95a1b1; --text-3:#5c6779;
+  --accent:#8b83f5; --accent-text:#a6a0f8; --accent-bg:#221f3d;
+  --data:#6fa1d6; --data-bg:#182635;
+  --research:#a98ee0; --research-bg:#241e35;
+  --core:#dba24a; --core-bg:#2b2113;
+  --ui:#8b83f5; --ui-bg:#221f3d;
+  --asst:#4fd0bc; --asst-bg:#0f2a26;
+  --shadow: 0 12px 32px rgba(0,0,0,0.5);
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-serif);}
+::selection{background:var(--accent-bg);color:var(--accent-text);}
+.wrap{max-width:1320px;margin:0 auto;padding:2.5rem 1.5rem 4rem;}
+.eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:0.12em;color:var(--text-3);text-transform:uppercase;margin:0 0 0.6rem;}
+h1{font-family:var(--font-mono);font-weight:600;font-size:clamp(28px,4vw,40px);line-height:1.15;margin:0 0 0.9rem;text-wrap:balance;letter-spacing:-0.01em;}
+.lede{font-size:17px;line-height:1.65;color:var(--text-2);max-width:66ch;margin:0 0 1.6rem;}
+.lede code{font-family:var(--font-mono);font-size:0.88em;background:var(--surface-2);border:0.5px solid var(--border);padding:0.1em 0.4em;border-radius:4px;color:var(--text);}
+.stats{display:flex;gap:0.9rem;flex-wrap:wrap;margin:0 0 2.2rem;}
+.stat{background:var(--surface);border:0.5px solid var(--border);border-radius:10px;padding:0.75rem 1.1rem;min-width:130px;}
+.stat b{display:block;font-family:var(--font-mono);font-variant-numeric:tabular-nums;font-size:22px;font-weight:600;color:var(--accent-text);}
+.stat span{display:block;font-size:12.5px;color:var(--text-2);margin-top:0.15rem;}
+.hint{font-family:var(--font-mono);font-size:12px;color:var(--text-3);margin:0 0 0.55rem;}
+.legend{font-family:var(--font-mono);font-size:11.5px;color:var(--text-3);margin:0 0 1.4rem;display:flex;gap:1.4rem;align-items:center;flex-wrap:wrap;}
+.legend span{display:inline-flex;align-items:center;gap:0.4rem;}
+.legend i{display:inline-block;width:18px;height:0;border-top:2px solid var(--accent);}
+.legend i.in{border-top:2px dashed var(--text-3);}
+.legend button{all:unset;cursor:pointer;color:var(--accent-text);border-bottom:1px dotted var(--accent-text);}
+.board-wrap{position:relative;}
+.board{display:flex;align-items:flex-start;gap:0;overflow-x:auto;padding-bottom:1rem;position:relative;}
+.edges-svg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:visible;}
+.edge{fill:none;stroke-width:1.75px;}
+.edge-out{stroke:var(--accent);}
+.edge-in{stroke:var(--text-3);stroke-dasharray:4 4;}
+.lane{flex:0 0 210px;display:flex;flex-direction:column;gap:0.55rem;}
+.lane-head{font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em;font-weight:600;color:var(--lane-c);text-transform:uppercase;padding:0 0.2rem 0.35rem;border-bottom:2px solid var(--lane-c);margin-bottom:0.3rem;}
+.card{all:unset;cursor:pointer;background:var(--surface);border:0.5px solid var(--border);border-left:3px solid var(--lane-c);border-radius:8px;padding:0.65rem 0.8rem 0.7rem;box-shadow:0 1px 2px rgba(20,26,40,0.05);transition:transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease, opacity 0.15s ease;}
+.card:hover{transform:translateY(-1px);box-shadow:var(--shadow);border-left-color:var(--lane-c);}
+.card:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.card.is-dim{opacity:0.3;}
+.card.is-selected{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-bg);}
+.card.is-related{border-color:var(--border-strong);}
+.card h3{font-family:var(--font-mono);font-size:12.5px;font-weight:600;margin:0 0 0.28rem;line-height:1.3;color:var(--text);}
+.card p{font-family:var(--font-serif);font-size:12px;line-height:1.42;color:var(--text-2);margin:0;}
+.connector{flex:0 0 38px;display:flex;align-items:center;justify-content:center;align-self:stretch;color:var(--border-strong);font-size:20px;}
+@media (max-width:880px){
+  .board{flex-direction:column;align-items:stretch;}
+  .lane{flex:1 1 auto;}
+  .connector{display:none;}
+  .edges-svg{display:none;}
+}
+.chips{display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.3rem;}
+.chip{all:unset;cursor:pointer;font-family:var(--font-mono);font-size:11.5px;background:var(--surface-2);border:0.5px solid var(--border);border-radius:6px;padding:0.28rem 0.55rem;color:var(--text);transition:border-color 0.12s ease, color 0.12s ease;}
+.chip:hover{border-color:var(--accent);color:var(--accent-text);}
+.chip:focus-visible{outline:2px solid var(--accent);outline-offset:1px;}
+.chip-empty{font-family:var(--font-serif);font-size:13px;color:var(--text-3);font-style:italic;}
+.backdrop{position:fixed;inset:0;background:rgba(10,13,18,0.4);opacity:0;pointer-events:none;transition:opacity 0.18s ease;z-index:40;}
+.backdrop.open{opacity:1;pointer-events:auto;}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(500px,100vw);background:var(--surface);border-left:0.5px solid var(--border);box-shadow:-16px 0 40px rgba(10,13,18,0.18);transform:translateX(100%);transition:transform 0.22s cubic-bezier(.2,.8,.2,1);z-index:50;display:flex;flex-direction:column;}
+.drawer.open{transform:translateX(0);}
+@media (prefers-reduced-motion: reduce){.drawer{transition:none;}.backdrop{transition:none;}.card{transition:none;}}
+.drawer-head{padding:1.4rem 1.4rem 1rem;border-bottom:0.5px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;}
+.drawer-tag{display:inline-block;font-family:var(--font-mono);font-size:10.5px;letter-spacing:0.08em;text-transform:uppercase;font-weight:600;padding:0.22em 0.6em;border-radius:5px;margin-bottom:0.55rem;}
+.drawer-head h2{font-family:var(--font-mono);font-size:18px;font-weight:600;margin:0;line-height:1.28;letter-spacing:-0.01em;}
+.drawer-close{all:unset;cursor:pointer;color:var(--text-2);font-family:var(--font-mono);font-size:20px;line-height:1;padding:0.3rem;border-radius:6px;}
+.drawer-close:hover{background:var(--surface-2);color:var(--text);}
+.drawer-close:focus-visible{outline:2px solid var(--accent);}
+.drawer-body{padding:1.3rem 1.4rem 1.6rem;overflow-y:auto;font-size:14.5px;line-height:1.66;}
+.drawer-body p{margin:0 0 0.9rem;color:var(--text);}
+.drawer-body h4{font-family:var(--font-mono);font-size:11.5px;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-3);margin:1.3rem 0 0.5rem;font-weight:600;}
+.drawer-body h4:first-child{margin-top:0;}
+.drawer-body ul{margin:0 0 0.9rem;padding-left:1.15rem;}
+.drawer-body li{margin-bottom:0.4rem;color:var(--text);}
+.drawer-body code{font-family:var(--font-mono);font-size:0.85em;background:var(--surface-2);border:0.5px solid var(--border);padding:0.08em 0.35em;border-radius:4px;color:var(--accent-text);}
+.drawer-body .callout{background:var(--surface-2);border:0.5px solid var(--border);border-radius:8px;padding:0.8rem 0.95rem;margin:0.9rem 0;font-size:13.5px;color:var(--text-2);}
+.drawer-body .callout b{color:var(--text);}
+.drawer-body .callout.warn{border-color:#b8660a55;}
+.rel-block{border-top:0.5px solid var(--border);margin-top:1.3rem;padding-top:1rem;}
+.rel-title{font-family:var(--font-mono);font-size:11px;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-3);margin:0 0 0.5rem;font-weight:600;}
+footer{margin-top:2.6rem;padding-top:1.4rem;border-top:0.5px solid var(--border);font-family:var(--font-mono);font-size:12px;color:var(--text-3);}
+</style>
+
+<div class="wrap">
+  <p class="eyebrow">Guaranteed Play &mdash; internals</p>
+  <h1>Draft engine schematic</h1>
+  <p class="lede">Every stage of the pipeline, traced from the actual repository: source data, the research pipeline that validated each signal, the models that score and recommend players, and the interfaces built on top. Click any card to open its writeup <em>and</em> light up exactly what feeds it and what it feeds &mdash; the fastest way to understand how this thing actually holds together.</p>
+  <div class="stats">
+    <div class="stat"><b>32</b><span>modules mapped</span></div>
+    <div class="stat"><b>4</b><span>score components</span></div>
+    <div class="stat"><b>2</b><span>scoring modes (Standard / Dad&rsquo;s)</span></div>
+    <div class="stat"><b>4</b><span>assistant modules, new this cycle</span></div>
+  </div>
+  <p class="hint">&larr; scroll horizontally on narrow screens</p>
+  <p class="legend">
+    <span><i></i> feeds forward from this card</span>
+    <span><i class="in"></i> feeds into this card</span>
+    <span><button id="clear-btn" type="button">clear selection</button></span>
+  </p>
+
+  <div class="board-wrap" id="board-wrap">
+    <svg class="edges-svg" id="edges"><defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs></svg>
+    <div class="board" id="board"></div>
+  </div>
+
+  <footer>Rebuilt against a fresh pull &mdash; 20 commits, 70 files. Every &ldquo;consumer&rdquo; and &ldquo;output&rdquo; claim reflects a confirmed import or file read, not an assumption. <code>research/MODEL_REGISTRY.md</code> is the project&rsquo;s own source of truth for research-stage models; this schematic defers to it.</footer>
+</div>
+
+<div class="backdrop" id="backdrop"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title" aria-hidden="true">
+  <div class="drawer-head">
+    <div>
+      <span class="drawer-tag" id="drawer-tag"></span>
+      <h2 id="drawer-title"></h2>
+    </div>
+    <button class="drawer-close" id="drawer-close" aria-label="Close detail panel">&times;</button>
+  </div>
+  <div class="drawer-body" id="drawer-body"></div>
+</aside>
+
+<script>
+var LANES = [
+  {id:"data", label:"Data", color:"var(--data)", nodes:[
+    {id:"combine-stats", title:"Combine &amp; season stats", summary:"Athletic testing plus box-score history for RB / WR / QB."},
+    {id:"college-offense", title:"College offense context", summary:"Prior-team scoring environment, for rookie evaluation."},
+    {id:"market-data", title:"Sportsbook props &amp; ADP", summary:"DK / FD / Pinnacle / WinWithOdds / Underdog."},
+    {id:"juicebox-adp", title:"Juicebox ADP sheet", summary:"Real Sleeper ADP, Half-PPR and Standard variants."},
+    {id:"archetype-outputs", title:"Archetype outputs", summary:"Classified usage tiers, re-consumed downstream."},
+    {id:"risk-schedule-data", title:"Risk &amp; schedule variables", summary:"Injury, offense environment, schedule, draft capital."},
+    {id:"rookie-market-data", title:"Rookie &amp; market signal", summary:"Rookie projections, sportsbook-vs-ADP comparison."}
+  ]},
+  {id:"research", label:"Research pipeline", color:"var(--research)", nodes:[
+    {id:"nflverse-extraction", title:"nflverse feature extraction", summary:"Snap share, red zone, route participation, injury, capital."},
+    {id:"dataset-assembly", title:"Dataset assembly &amp; validation", summary:"8-source merge hub; a real ID-collision bug found and disclosed."},
+    {id:"baseline-projection-model", title:"Baseline projection model", summary:"Per-position Ridge regression, recency-weighted."},
+    {id:"trend-layer-model", title:"Trend layer", summary:"Snap-share trend &mdash; tested, helps WR / TE only."},
+    {id:"live-projections", title:"Live projections &amp; corrections", summary:"The terminus &mdash; ~2,000 lines of disclosed manual edits."},
+    {id:"tier-curve-vor", title:"VOR tier-curve calibration", summary:"Replaced a broken hardcoded replacement-rank table."},
+    {id:"breakout-score-v1", title:"Breakout Score v1", summary:"WR model with a real finding &mdash; frozen, deliberately unshipped."},
+    {id:"research-only-findings", title:"Other research-only findings", summary:"7 more validated signals, never promoted."}
+  ]},
+  {id:"core", label:"Core models", color:"var(--core)", nodes:[
+    {id:"vor-base-value", title:"VOR / Base Value engine", summary:"4-component score &mdash; the heart of every ranking."},
+    {id:"tier-system", title:"Tier assignment system", summary:"Self-calibrating tiers from the largest real score gaps."},
+    {id:"risk-model", title:"Risk scoring model", summary:"0&ndash;100 index across four weighted risk categories."},
+    {id:"rookie-model", title:"Rookie projection model", summary:"6-component pre-season model, blended toward reality."},
+    {id:"archetype-models", title:"Position archetypes", summary:"QB / RB / WR / TE usage classification."},
+    {id:"signal-trust", title:"Signal trust &amp; disagreement", summary:"Data-quality guardrail &mdash; fixed a circularity bug."},
+    {id:"news-override-pipeline", title:"News override pipeline", summary:"Real-world news &rarr; live projection, with an audit trail."},
+    {id:"dads-league-scoring", title:"Dad&rsquo;s League scoring", summary:"A second complete scoring model &mdash; no PPR, TD-length bonus."},
+    {id:"championship-equity", title:"Championship equity", summary:"Two live models; one honestly validated at coin-flip."}
+  ]},
+  {id:"ui", label:"Interface", color:"var(--ui)", nodes:[
+    {id:"rankings-lab-redesign", title:"Rankings Lab redesign", summary:"The shipped rewrite &mdash; tokens, badges, expandable cards."},
+    {id:"sleeper-integration", title:"Sleeper integration", summary:"Real headshots, live draft sync, value badges &mdash; now actually wired in."},
+    {id:"perf-optimizations", title:"Load-time optimization", summary:"Cut a cold board build by roughly half."},
+    {id:"onboarding-docs", title:"Docs &amp; machine handoff", summary:"CLAUDE.md, README, CHANGELOG, this map."}
+  ]},
+  {id:"assistant", label:"Draft assistant", color:"var(--asst)", nodes:[
+    {id:"pick-engine", title:"Pick recommendation engine", summary:"recommend_picks() &mdash; fixed a real substitutes-vs-complements bug."},
+    {id:"survival-model", title:"Survival model", summary:"Three views of one curve &mdash; unconditional, conditional, needs-aware."},
+    {id:"turn-optimizer", title:"Turn optimizer", summary:"Best two-player combo for back-to-back picks."},
+    {id:"draft-command-center", title:"Draft Command Center", summary:"The live in-draft page, entirely server-rendered."}
+  ]}
+];
+
+var EDGES = [
+  ["combine-stats","archetype-models"], ["combine-stats","rookie-model"], ["combine-stats","baseline-projection-model"],
+  ["college-offense","rookie-model"],
+  ["market-data","vor-base-value"], ["market-data","signal-trust"],
+  ["juicebox-adp","sleeper-integration"], ["juicebox-adp","dads-league-scoring"], ["juicebox-adp","breakout-score-v1"],
+  ["archetype-outputs","rookie-model"], ["archetype-outputs","risk-schedule-data"],
+  ["risk-schedule-data","risk-model"],
+  ["rookie-market-data","vor-base-value"],
+  ["nflverse-extraction","dataset-assembly"], ["nflverse-extraction","archetype-models"], ["nflverse-extraction","risk-schedule-data"], ["nflverse-extraction","breakout-score-v1"],
+  ["dataset-assembly","baseline-projection-model"], ["dataset-assembly","tier-curve-vor"], ["dataset-assembly","research-only-findings"], ["dataset-assembly","breakout-score-v1"],
+  ["baseline-projection-model","trend-layer-model"], ["baseline-projection-model","live-projections"], ["baseline-projection-model","research-only-findings"],
+  ["trend-layer-model","live-projections"],
+  ["tier-curve-vor","vor-base-value"],
+  ["live-projections","vor-base-value"], ["live-projections","news-override-pipeline"],
+  ["breakout-score-v1","rankings-lab-redesign"],
+  ["archetype-models","archetype-outputs"],
+  ["rookie-model","rookie-market-data"],
+  ["risk-model","vor-base-value"], ["risk-model","pick-engine"],
+  ["signal-trust","vor-base-value"],
+  ["news-override-pipeline","vor-base-value"], ["news-override-pipeline","risk-model"], ["news-override-pipeline","rankings-lab-redesign"],
+  ["dads-league-scoring","vor-base-value"], ["dads-league-scoring","pick-engine"],
+  ["vor-base-value","tier-system"], ["vor-base-value","rankings-lab-redesign"], ["vor-base-value","pick-engine"], ["vor-base-value","perf-optimizations"],
+  ["sleeper-integration","draft-command-center"], ["sleeper-integration","pick-engine"],
+  ["pick-engine","draft-command-center"], ["pick-engine","survival-model"], ["pick-engine","turn-optimizer"],
+  ["survival-model","turn-optimizer"],
+  ["turn-optimizer","draft-command-center"],
+  ["perf-optimizations","rankings-lab-redesign"]
+];
+
+var CONTENT = {
+"combine-stats": {tag:"Data", color:"data", html:
+  "<h4>What it is</h4><p>Combine measurables (RB, WR, 2023&ndash;2025) and season-level box scores (RB, WR, QB, plus the 2026 QB season file) &mdash; the raw athletic and production record for every player the models touch.</p>"+
+  "<h4>Where it goes</h4><ul><li>Feeds <code>rookie_projection.py</code>&rsquo;s <code>athletic_score_rb()</code> component directly.</li><li>Feeds the confirmed-player archetype classifiers as their raw usage inputs.</li><li>Feeds the research baseline projection model&rsquo;s recency-weighted feature set.</li></ul>"
+},
+"college-offense": {tag:"Data", color:"data", html:
+  "<h4>What it is</h4><p>Total offense output for every draft prospect&rsquo;s college team, one file per year.</p>"+
+  "<h4>Why it exists</h4><p>Feeds <code>team_context_quality()</code> inside the rookie projection model. Source of a real bug: the original model spec had this score&rsquo;s sign backwards, crediting prospects for playing in <em>weaker</em> systems &mdash; caught and corrected during implementation.</p>"
+},
+"market-data": {tag:"Data", color:"data", html:
+  "<h4>What it is</h4><p>Player prop lines from DraftKings, FanDuel, and Pinnacle, plus WinWithOdds season-long projections and Underdog ADP.</p>"+
+  "<h4>Where it goes</h4><ul><li><code>projection_engine.py</code> converts prop lines directly into fantasy-point projections.</li><li>Feeds the Market component of Base Value scoring.</li><li>Feeds <code>signal_trust.py</code>, which scores whether a gap is a real edge or a red flag.</li></ul>"
+},
+"juicebox-adp": {tag:"Data", color:"data", html:
+  "<h4>What it is</h4><p>A user-supplied, multi-platform ADP sheet (&ldquo;Juicebox&rdquo;) in two variants &mdash; Half-PPR and Standard &mdash; that carries real Sleeper ADP alongside FantasyPros, ESPN, and Yahoo.</p>"+
+  "<h4>Where it goes</h4><ul><li><code>draftkit/scripts/apply_sleeper_adp_overlay.py</code> overlays real Sleeper Half-PPR ADP onto <code>master_players.csv</code> for the ~200 players it covers &mdash; an overlay, not a replacement, unmatched players keep Underdog ADP. Also computes <code>sleeper_value_gap</code> (Average ADP minus Sleeper ADP), the source of the board&rsquo;s Sleeper-value badge.</li><li>The Standard variant feeds Dad&rsquo;s League scoring, since a half-PPR ADP source over-ranks possession receivers relative to how a no-PPR room actually drafts &mdash; 24 of the top 32 players get a different ADP between the two sheets.</li><li>The research copy of the Half-PPR sheet feeds Breakout Score v1&rsquo;s current-pool scoring.</li></ul>"
+},
+"archetype-outputs": {tag:"Data", color:"data", html:
+  "<h4>What it is</h4><p>The output CSVs of the four position-specific archetype classifiers &mdash; one row per confirmed player, one usage-tier label per position.</p>"+
+  "<h4>Where it goes</h4><p>Re-consumed by the rookie projection blender and by the risk-variable builder as a role-stability signal. See <code>Position archetypes</code> in the Core models lane for how each label is derived.</p>"
+},
+"risk-schedule-data": {tag:"Data", color:"data", html:
+  "<h4>What it is</h4><p>The assembled input table the risk model scores &mdash; built by <code>build_risk_variables.py</code>, the single largest script in the repository.</p>"+
+  "<h4>What feeds it</h4><ul><li>Injury durability, offense environment, team schedule risk, draft capital &mdash; four separate research outputs.</li><li><code>INJURY_MANUAL_OVERRIDES</code>: a hand-maintained dict of news-driven injury adjustments (Ashton Jeanty, Josh Jacobs, Luther Burden, Puka Nacua, Jayden Higgins, TreVeyon Henderson), each individually commented with sourcing and reasoning under the two-lane news policy &mdash; see <code>News override pipeline</code>.</li></ul>"
+},
+"rookie-market-data": {tag:"Data", color:"data", html:
+  "<h4>What it is</h4><p><code>rookie_projections.csv</code> (final blended rookie tiers) and <code>sportsbook_vs_adp_comparison.csv</code> (where the market and ADP disagree), plus <code>backfill_candidates.csv</code>, scoping which historical players still need combine or college data to calibrate the rookie model further.</p>"
+},
+"nflverse-extraction": {tag:"Research", color:"research", html:
+  "<h4>What it is</h4><p>Eleven scripts, each pulling one signal from nflverse&rsquo;s play-by-play, roster, and snap-count releases, caching it and shifting it forward one season so nothing peeks at same-season outcomes.</p>"+
+  "<h4>What was actually found</h4><ul>"+
+  "<li><b>Route participation</b> &mdash; year-over-year persistence of r&asymp;+0.511, the strongest-persisting feature tested anywhere in this project.</li>"+
+  "<li><b>Snap share</b> &mdash; a real 13.8% name-collision rate on abbreviated names was found and fixed with a PFR&rarr;GSIS crosswalk.</li>"+
+  "<li><b>Injury durability</b> &mdash; an all-cause composite, recency-weighted 3/2/1 across three prior seasons.</li>"+
+  "<li><b>Offense environment</b> &mdash; framed as mean-reversion, motivated by a measured team year-over-year persistence of only r&asymp;0.40.</li>"+
+  "<li><b>Age rate curves</b> &mdash; elite-finish rate by age, correcting a pool-size artifact in raw count curves.</li>"+
+  "<li><b>Garbage-time-adjusted production</b> &mdash; garbage time itself was tested as a predictor and rejected (r=+0.166), kept only as a measurement correction.</li>"+
+  "</ul>"
+},
+"dataset-assembly": {tag:"Research", color:"research", html:
+  "<h4>What it is</h4><p>The chain that turns raw nflverse extracts into one modeling-ready table, through a central 8-source merge hub joining each on its own correct key.</p>"+
+  "<h4>Bugs found and disclosed</h4><ul><li>588 rows discovered sharing a <code>(season, player_id)</code> key with a genuinely different player &mdash; masked by dedup logic, not fixed, and the code says so.</li><li><code>preseason_projection</code> was dropped after being found genuinely always empty.</li></ul>"
+},
+"baseline-projection-model": {tag:"Research", color:"research", html:
+  "<h4>What it is</h4><p>Per-position Ridge regression predicting fantasy points per game from a recency-weighted historical baseline, prior efficiency, and prior team context.</p>"+
+  "<h4>Why it matters structurally</h4><p>Defines <code>run_position(df, position, test_season, extra_features=None)</code>, the shared fit/score hook that five later scripts reuse &mdash; the trend layer, floor/ceiling, market mispricing, the weighting sweep, and the live production model.</p>"
+},
+"trend-layer-model": {tag:"Research", color:"research", html:
+  "<h4>What it is</h4><p>Adds a snap-share trend layer as an extra feature on top of the baseline model.</p>"+
+  "<h4>What was found</h4><p>Only helps WR and TE. RB was retested after a missing-data bug was fixed, and still showed no benefit &mdash; treated in code as a real finding, not a data artifact.</p>"
+},
+"live-projections": {tag:"Research", color:"research", html:
+  "<h4>What it is</h4><p>The terminus of the research pipeline. Projects RB, WR, TE (QB deliberately excluded &mdash; a validated downgrade versus ADP) using the production-fit model.</p>"+
+  "<h4>The correction table, and its new sibling</h4><p>~2,000 lines of <code>MODEL_PROJECTION_CORRECTIONS</code> &mdash; individually dated, individually sourced manual edits. This is still tier-3 of the priority chain, but tier-1 is now <code>model_adjustment_pct</code> written by the in-app <code>News override pipeline</code>, which can override any of these entries live without a code edit.</p>"+
+  "<div class='callout'>Recent edits landed here: Bateman &minus;57.5% (arrest, redistributed to Lane/Sarratt), Montgomery to Book+15%, Pollard &minus;16.3% (Spears co-bellcow), Kenneth Walker +28%, a blanket &minus;10% TE trim except Loveland/Warren/Bowers/McBride, plus Josh Jacobs and Jakobi Meyers corrections applied via the news pipeline rather than a direct edit.</div>"
+},
+"tier-curve-vor": {tag:"Research", color:"research", html:
+  "<h4>What it is</h4><p>Fits the realized value-over-replacement curve as a rank-4-through-80 grid, per position, matching this league&rsquo;s actual roster format.</p>"+
+  "<h4>What it replaced</h4><p>A hardcoded <code>REPLACEMENT_RANK = &#123;QB: 12, RB: 29, WR: 29, TE: 14&#125;</code>. Real ranks here are QB 12, RB 34, WR 46, TE 17 &mdash; getting TE wrong didn&rsquo;t just shift its curve, it flipped its sign.</p>"
+},
+"breakout-score-v1": {tag:"Research", color:"research", html:
+  "<h4>What it is</h4><p>A WR-only logistic model testing whether prior-season usage adds real predictive value beyond ADP for beating draft position by 12+ spots. This is documented in the project&rsquo;s own <code>research/MODEL_REGISTRY.md</code> as the source of truth &mdash; this card mirrors it.</p>"+
+  "<h4>What was actually found</h4><p>Across WR and RB, most combinations showed weak or negative signal &mdash; three of six position&times;spec tests were significantly <em>negative</em>. One result survived: WR usage features (snap share, targets per route run, route participation, durability, garbage-time share, age) beat ADP-only in the <em>top decile</em> by +14.3 percentage points (CI [+7.1%, +21.4%], after trimming one weak feature), confirmed by a 5,000-draw permutation test (p=0.0042) and stable under leave-one-season-out testing.</p>"+
+  "<div class='callout warn'><b>Explicit production decision:</b> frozen as a scorer, run against the real 2026 WR pool (output: <code>data/processed/breakout_tags_2026.csv</code>), and displayed on the board purely as a badge. <code>MODEL_REGISTRY.md</code> states outright: &ldquo;Do not use in any live UI, ranking, or recommendation path&rdquo; beyond that badge &mdash; it does not touch <code>final_score</code>, tier, or rank. Reopen criterion: compare the 2026 predictions against real outcomes once the season is final, not another backtest.</div>"
+},
+"research-only-findings": {tag:"Research", color:"research", html:
+  "<h4>What it is</h4><p>Seven more research scripts that ran a full validation pass, produced a real finding, and were deliberately never wired into the live app.</p>"+
+  "<h4>The findings</h4><ul>"+
+  "<li><b>Floor / ceiling ranges</b> &mdash; a 25th&ndash;75th percentile range from out-of-sample residuals. Built, validated, never shipped.</li>"+
+  "<li><b>Market mispricing signal</b> &mdash; validated per (position, direction) pair. QB has no usable signal either way.</li>"+
+  "<li><b>Age-curve edge score, late-season role growth, market disagreement score</b> &mdash; all self-reported as too narrow to promote.</li>"+
+  "<li><b>Sportsbook-derived volume features</b> &mdash; the script&rsquo;s own report states: &ldquo;Did anything become App-Ready? No.&rdquo;</li>"+
+  "</ul>"
+},
+"vor-base-value": {tag:"Core model", color:"core", html:
+  "<h4>The four components</h4><ul>"+
+  "<li><b>Value over replacement</b> (weight 1.0) &mdash; computed from this league&rsquo;s real roster format.</li>"+
+  "<li><b>Projection component</b> (max bonus 20.0) &mdash; a <em>within-position</em> percentile rank, not raw points, so QBs don&rsquo;t dominate the board on scoring scale alone.</li>"+
+  "<li><b>Market component</b> (max 12.0) &mdash; distance from sportsbook lines and ADP.</li>"+
+  "<li><b>Risk penalty</b> (max 15.0, subtracted).</li>"+
+  "</ul>"+
+  "<h4>Architecture note</h4><p>A 2026-08-21 rewrite made this the sole determinant of the sorted <code>final_score</code>. A regression suite, <code>test_base_value_weights.py</code>, now pins these four weights against the original sensitivity-tested baseline AND re-runs the perturbation grid against today&rsquo;s live pool on every check.</p>"+
+  "<div class='callout'><b>Sensitivity tested:</b> a 730-player baseline snapshot held stable at Spearman &rho; &gt; 0.999 across every realistic weight value. Only deliberate stress-test extremes moved anything, and only in the QB and replacement-level tiers.</div>"
+},
+"tier-system": {tag:"Core model", color:"core", html:
+  "<h4>The bug, and the fix</h4><p>Tier labels were once reading a stale column instead of the live <code>final_score</code>. The fix replaced a fixed 2.5-point gap threshold (which produced 19+ fragmented tiers) with an algorithm that finds the nine largest real score gaps anywhere on the board and places breaks there &mdash; guaranteeing exactly 10 tiers, self-calibrating to whatever the score distribution looks like on any given day.</p>"+
+  "<h4>Now duplicated, on purpose, for the draft board</h4><p><code>draft_center.py</code>&rsquo;s <code>_assign_global_tiers()</code> reuses the same largest-gap logic but adds a size cap (<code>MAX_TIER_SIZE=18</code>), so the long flat replacement-level tail gets chopped into several even tiers instead of one 200-player dump on the tiered board.</p>"
+},
+"risk-model": {tag:"Core model", color:"core", html:
+  "<h4>What it is</h4><p>A 0&ndash;100 <code>risk_index</code> per player from four weighted categories &mdash; injury, role/usage/TD-dependence, offense environment, schedule/weather/venue &mdash; with position-specific weights.</p>"+
+  "<h4>The portfolio layer</h4><p><code>risk_constraints.py</code> treats risk as a roster-construction problem: it flags correlated risk-stacking at a position and tightens tolerance as a roster fills with skewed risk.</p>"+
+  "<h4>What&rsquo;s deliberately excluded</h4><p>Market volatility &mdash; documented as a downstream <em>symptom</em> of risk, not a driver, so folding it in would double-count.</p>"
+},
+"rookie-model": {tag:"Core model", color:"core", html:
+  "<h4>What it is</h4><p>A six-component pre-season model &mdash; draft capital, dominator rating, breakout age, athletic score, competition for touches, team context quality &mdash; blended toward the player&rsquo;s real confirmed archetype as NFL sample accumulates.</p>"+
+  "<h4>Two corrections to the source spec</h4><ul><li>Team-context score was backwards-signed in the original spec &mdash; found and fixed.</li><li>Missing-input neutral defaults were added rather than letting a gap silently zero out a score.</li></ul>"+
+  "<p><code>roster_competition_tier</code> is explicitly flagged as not automatable in v1 &mdash; every rookie gets the spec&rsquo;s own manual default.</p>"
+},
+"archetype-models": {tag:"Core model", color:"core", html:
+  "<h4>Four separate taxonomies</h4><ul>"+
+  "<li><b>QB</b> &mdash; Pocket Passer / Balanced / Dual-Threat on rushing-fantasy-point share.</li>"+
+  "<li><b>RB</b> &mdash; Bellcow / Committee / Handcuff / Unconfirmed, plus independent lean tags. The bellcow floor was deliberately lowered from the spec&rsquo;s literal value after a confirmed post-build data check.</li>"+
+  "<li><b>WR</b> &mdash; Alpha / Possession / Complementary plus a boom-trait lean. Two genuinely ambiguous spec calls are disclosed directly in code.</li>"+
+  "<li><b>TE</b> &mdash; single-axis target-share banding, after an earlier two-axis design was abandoned over a lagged-feature bug.</li>"+
+  "</ul>"+
+  "<div class='callout'>None of these feed Base Value scoring directly &mdash; tested as model features and found not to beat ADP, so they stay as context, not scoring input.</div>"
+},
+"signal-trust": {tag:"Core model", color:"core", html:
+  "<h4>What it is</h4><p>Scores how trustworthy each player&rsquo;s ADP, projection, market, and sportsbook signal is &mdash; kept separate from whether the model <em>disagrees</em> with the market.</p>"+
+  "<h4>The bug that was fixed</h4><p>Model-vs-ADP disagreement was lowering the trust score, which then damped the very disagreement the model exists to surface &mdash; a self-suppressing loop, fixed in code.</p>"
+},
+"news-override-pipeline": {tag:"Core model", color:"core", html:
+  "<h4>What it is</h4><p>The mechanism that turns real-world news into a live projection or risk change, without a code edit. A scheduled sweep drops findings into <code>research/pending_news_adjustments.json</code>, sorted into two lanes by mechanism, not confidence:</p>"+
+  "<ul><li><b>Lane A, auto-accept</b> &mdash; a risk-only finding that clears the confidence bar applies immediately. A wrong injury bump is cheap to be wrong about.</li>"+
+  "<li><b>Lane B, human review</b> &mdash; any projection-points cut, regardless of confidence, always waits for a human, because that lever moves rank and tier directly.</li></ul>"+
+  "<h4>Two entry points, one engine</h4><p><code>pages/2_News_Queue.py</code> renders each Lane-B finding as a card with an editable value and a live positional-rank preview (&ldquo;RB #50 &rarr; RB #48&rdquo;) computed with the exact math Apply will use. The Rankings board&rsquo;s own &ldquo;Adjust a player&rdquo; popover calls the identical <code>resolve_projection_base()</code> / <code>apply_projection_override()</code> functions &mdash; same audit log, same preview, same semantics, just a single-player UI instead of a queue.</p>"+
+  "<h4>The base-value resolution order</h4><p>1) a real <code>model_adjustment_pct</code> in the projections file, 2) a rookie/book-anchored fallback value, 3) raw master-table projection. A percent edit always multiplies the raw base, never stacks on an already-adjusted value.</p>"+
+  "<div class='callout warn'><b>A real bug, and its fix:</b> the resolver originally didn&rsquo;t know about the fallback tier. For a fallback player it returned <code>NaN</code>, which is truthy in a naive guard &mdash; so a NaN percent got written and silently kept serving the old value. Six real edits repro&rsquo;d exactly this before the fix.</div>"
+},
+"dads-league-scoring": {tag:"Core model", color:"core", html:
+  "<h4>What it is</h4><p>A second, complete scoring model &mdash; not a separate app, a &ldquo;Scoring model&rdquo; dropdown on the Rankings board that reworks the same engine with different rules: no PPR, tiered per-game yardage buckets instead of per-yard points, a shallower 12-team QB1/RB2/WR2/TE1 roster with no FLEX, and its own replacement-baseline / VOR calculation.</p>"+
+  "<h4>The TD-length bonus</h4><p>With no real per-play distance data locally, projected yards-per-touchdown stands in as an honest proxy for how explosive a player&rsquo;s scores tend to be &mdash; verified as a real ~2&times; spread within position, not volume noise. A player who needs more yards per score gets a bigger bonus multiplier, shrunk toward the position average at low sample size and reverting exactly to the old flat formula below a minimum-TD floor.</p>"+
+  "<h4>Three integration bugs, found and fixed</h4><ul><li>The cache key didn&rsquo;t watch this file or the Standard ADP sheet &mdash; edits went stale until a restart.</li><li>The board swapped score/projection/VOR into Dad&rsquo;s mode but not ADP, so the market-delta column compared a Standard-derived score to the Half-PPR market.</li><li>The Draft Command Center&rsquo;s candidate pool never carried Dad&rsquo;s ADP at all &mdash; consequential because ADP drives the whole survival model, so Dad&rsquo;s mode was silently reasoning from half-PPR draft behavior.</li></ul>"
+},
+"championship-equity": {tag:"Core model", color:"core", html:
+  "<h4>Two live models, not one</h4><p><b>V1</b> is a simple weighted blend (breakout probability, ADP outperformance, ceiling, age curve, sportsbook advantage). <b>V2</b> is a separate full Monte Carlo outcome-distribution simulator. Both remain live, separate code paths &mdash; V1 was never actually removed when V2 was built.</p>"+
+  "<h4>A real, severe bug found in V1</h4><p>A default-value mismatch meant a missing ceiling input silently became a real <code>0.0</code> instead of triggering the intended fallback. Ceiling was 25% of the total weight, and the input was 0% populated &mdash; so the entire ~3,900-player pool got a flat ceiling score of zero. Confirmed live: the top overall pick scored identical to a replacement player on that component.</p>"+
+  "<h4>Rewired to real data</h4><p>Ceiling and sportsbook-advantage now pull from the same risk data and market comparison the board itself uses, each with its own follow-up fix (an un-damped ceiling score inverted the whole ranking; a raw edge-percent formula blew past its clip ceiling for low-baseline bench players, fixed with an ADP-tier-normalized percentile rank).</p>"+
+  "<div class='callout warn'><b>Honestly validated, and the result isn&rsquo;t good:</b> backtested against 14,771 real player-seasons, the full blend scores AUC 0.538 &mdash; essentially a coin flip. Its own <code>breakout_probability</code> sub-component alone hits AUC 0.73&ndash;0.82 on several targets &mdash; meaning the blend&rsquo;s weighting is diluting the one genuinely real signal inside it, not improving on it. Documented plainly rather than smoothed over.</div>"
+},
+"rankings-lab-redesign": {tag:"Interface", color:"ui", html:
+  "<h4>What shipped</h4><p>A ground-up rewrite of the rankings page &mdash; a real dark design-token system, position/risk/grade colors, a 6-color tier-band palette, freshness stamps showing how old each data file is, position and view-mode chips (Median / Ceiling / Risk-adjusted, each its own display re-sort), four risk-band filters, and search &mdash; all backed by session state rather than the old query-param sort links.</p>"+
+  "<h4>Expandable player cards</h4><p>Each row expands into a scoring breakdown chart, a risk-profile section with mini bars, a model-details section, a draft-profile/archetype section, and rank-delta market callouts &mdash; plus a badge system: breakout pill, Sleeper-value badge, market badge, chronic-injury badge, manual-override badge, each tooltip-annotated with its own provenance.</p>"+
+  "<h4>In-app editing, not just display</h4><p>The &ldquo;Adjust a player&rdquo; popover is wired directly into the <code>News override pipeline</code>&rsquo;s functions, with the same live rank-preview and a stale-cache warning if the cached board disagrees with the underlying file by 0.05+ points &mdash; a real bug class caught live where an edit silently no-op&rsquo;d against a stale cached frame.</p>"+
+  "<h4>A cleanup pass, on the way</h4><p>Player Compare, Live Rankings, Tier Desperation, Player Cards, and Draft Lab pages, plus <code>utils.py</code> and two orphaned recommendation modules, were removed outright to get to this leaner shape.</p>"
+},
+"sleeper-integration": {tag:"Interface", color:"ui", html:
+  "<h4>Status change: now actually live</h4><p>Earlier documentation flagged <code>draftkit/sleeper.py</code> as unused. That was accurate then and is not accurate now &mdash; it's a confirmed live dependency of the Draft Command Center: reads a real (or mock) Sleeper draft through Sleeper&rsquo;s public read-only API, maps picks onto the candidate pool by player id first and normalized name as fallback, so the pick engine can react to a real draft as it happens.</p>"+
+  "<h4>What it adds to the board</h4><ul><li>Real circular player headshots from Sleeper&rsquo;s CDN, with initials as a fallback.</li><li>A Sleeper-value badge (reach vs. consensus / value vs. consensus) sourced from the ADP overlay&rsquo;s <code>sleeper_value_gap</code> &mdash; distinct from the existing sportsbook-vs-projection market badge.</li></ul>"
+},
+"perf-optimizations": {tag:"Interface", color:"ui", html:
+  "<h4>What was slow</h4><p>Pandas 3.0 defaults to pyarrow-backed string columns, which is fine for vectorized work but the scoring pipeline does several full-pool row-by-row passes &mdash; per-row scalar access on a pyarrow column routes through pyarrow&rsquo;s compute machinery, profiled as the largest remaining cost of a cold board build.</p>"+
+  "<h4>The fixes</h4><ul><li>String columns are cast back to plain object dtype once, inside the cached loader.</li><li>Tier-bonus lookups gained a single-slot id-keyed cache so a per-player function called 3,900+ times a build stops re-filtering the same tiers table from scratch every call &mdash; previously 38% of a 40-second cold build on its own.</li><li>The tier summary can now accept a pre-built frame instead of being computed twice per build.</li></ul>"+
+  "<p>Net result: roughly half the cold board-build time.</p>"
+},
+"onboarding-docs": {tag:"Interface", color:"ui", html:
+  "<h4>What this covers</h4><ul><li><code>CLAUDE.md</code> &mdash; auto-loads into every future Claude Code session: architecture, the scoring formula, and a growing gotchas list (survival&rsquo;s three-view contract, the turn-optimizer hot-reload trap, a warning about a second stale clone on this machine that can silently serve old data).</li>"+
+  "<li><code>CHANGELOG.md</code> &mdash; a hand-written, dated log of structural changes not obvious from a diff alone.</li>"+
+  "<li><code>research/MODEL_REGISTRY.md</code> &mdash; the project&rsquo;s own research-model inventory, with explicit production decisions and reopen criteria.</li>"+
+  "<li><code>research/news_override_policy.md</code> &mdash; the two-lane auto-accept / human-review policy behind the News Queue.</li></ul>"+
+  "<p>This schematic is a visual index on top of all of it, not a replacement for any of it.</p>"
+},
+"pick-engine": {tag:"Draft assistant", color:"asst", html:
+  "<h4>What it is</h4><p><code>recommend_picks()</code> &mdash; a pure function over the candidate pool that scores every available player as a signed sum of value, injury, overall risk, bye-conflict, roster-need, scarcity, and opportunity-cost point contributions, then ranks and optionally diversifies the result.</p>"+
+  "<h4>The bug it fixed &mdash; substitutes vs. complements</h4><p>The board once ranked a worse quarterback above a clearly better one, because the worse player&rsquo;s own low survival odds scored him a smaller opportunity-cost penalty &mdash; scarcity working backwards for a position where you&rsquo;ll only ever roster one. The fix: for single-slot positions, a player&rsquo;s replaceability is now computed from the combined survival of everyone at least as good as him at that position, so a strictly worse option can never again beat a better one purely on his own scarcity. Positions with real remaining need keep the original per-player logic, since there you genuinely want both the scarce one now and the survivor later.</p>"+
+  "<p>Two opposing regression tests pin this exactly: one proving the worse player can no longer win, one proving a very-likely-to-return player&rsquo;s penalty doesn&rsquo;t get floored to zero by an overcorrection.</p>"
+},
+"survival-model": {tag:"Draft assistant", color:"asst", html:
+  "<h4>Three views of one curve, proven to never diverge</h4><ul>"+
+  "<li><b>Unconditional</b> &mdash; a logistic curve answering &ldquo;across many drafts, how often is he there at pick N,&rdquo; with no knowledge of this draft&rsquo;s actual state. Right only for the board&rsquo;s simple survival gauge.</li>"+
+  "<li><b>Conditional</b> &mdash; measured in <em>opponent</em> picks, not raw pick numbers. Between your own back-to-back picks, opponent picks = 0, so this correctly returns 100% survival where the unconditional curve would wrongly dock several points for picks that aren&rsquo;t actually anyone else&rsquo;s turn.</li>"+
+  "<li><b>Needs-aware</b> &mdash; scales each intervening pick&rsquo;s hazard by whether the team currently on the clock still needs that position, using real per-team roster construction from Sleeper draft data.</li>"+
+  "</ul>"+
+  "<p>The needs-aware view is proven in tests to reduce exactly to the conditional view when no roster data exists, and the conditional view is proven to be the exact telescoping product of the needs-aware view&rsquo;s per-pick hazards &mdash; not an approximation, a tested algebraic identity. A real motivating miss: a player wasn&rsquo;t the best score on the board, but the next-picking team had three RBs and a QB and zero WRs &mdash; ADP said he might last, roster logic said he was certain to go.</p>"+
+  "<div class='callout'>In Manual mode (no per-team draft attribution available), the model degrades cleanly to plain conditional ADP rather than guessing at need.</div>"
+},
+"turn-optimizer": {tag:"Draft assistant", color:"asst", html:
+  "<h4>What it is</h4><p>Finds the best <em>pair</em> for back-to-back or near-back-to-back picks (the true turn at slots 1/12, plus near-turns at 2/3 and 10/11), because scoring each pick independently double-counts positional need and misapplies an opportunity cost that doesn&rsquo;t really exist between your own two picks.</p>"+
+  "<h4>The same-team penalty</h4><p>Drafting two players from the same NFL team is worse than their individual scores suggest &mdash; a shared bye week, a shared offense, and (for a RB/WR pair) touches split from the same limited pool. A real miss made this concrete: the planner&rsquo;s top pair once paired a running back and receiver from the same team, missing the shared bye and shared-offense risk entirely under a bye-only penalty. Fixed with an explicit penalty on any same-team pair &mdash; except QB paired with one of his own pass-catchers, which is exempted because that correlation is exactly what a stacking strategy wants.</p>"+
+  "<h4>A deliberate scope limit</h4><p>Refuses to name a specific pair more than 6 opponent picks out &mdash; observed live that at that distance, the top four candidate plans landed within 0.3 points of each other while recommending players who were only 8% likely to still be there. Naming a pair that far out is theater, not a plan.</p>"+
+  "<h4>The hot-reload trap</h4><p>Imported inside its caller&rsquo;s function body, not at module scope, specifically to avoid a circular import. The side effect: Streamlit&rsquo;s file watcher never picks up edits to this file, so changes here need a full process restart, not just a page reload &mdash; documented explicitly in <code>CLAUDE.md</code> so it doesn&rsquo;t get mistaken for a caching bug.</p>"
+},
+"draft-command-center": {tag:"Draft assistant", color:"asst", html:
+  "<h4>What it is</h4><p>The entire live in-draft page, rendered exactly like the Rankings board &mdash; one HTML string built server-side in Python, no client JavaScript.</p>"+
+  "<h4>Layout</h4><p>A turn-planner panel when a turn is in view, sitting above everything else because &ldquo;it&rsquo;s the highest-value thing on the page when it&rsquo;s there at all.&rdquo; Below that, a top bar (sync status, round/pick/on-clock/need), then three columns &mdash; my team and next move, the highest-tier-available strip plus ranked recommendation cards with up to five explanatory chips each (injury flag, need fit, position rank, a plain-English replaceability note, tier-last warning, ADP value, risk band, same-team stack, bye clash), and a round-by-round adaptive plan with roster-need chips. Below the grid, a full-width tiered board, every player visible, no players hidden behind a &ldquo;+N more.&rdquo;</p>"+
+  "<h4>What triggers a recommendation</h4><p>Any change that reruns the page&rsquo;s render fragment &mdash; a manual draft-log edit, or, in Sleeper mode, a 5-second poll picking up a new real pick. Every rerun recomputes the recommendation fresh; there&rsquo;s no incremental or cached recommendation state to go stale.</p>"
+}
+};
+
+(function(){
+  var board = document.getElementById("board");
+  var cardEls = {};
+  var OUT = {}, IN = {};
+  EDGES.forEach(function(e){
+    var from = e[0], to = e[1];
+    (OUT[from] = OUT[from] || []).push(to);
+    (IN[to] = IN[to] || []).push(from);
+  });
+
+  LANES.forEach(function(lane, li){
+    var col = document.createElement("div");
+    col.className = "lane";
+    col.style.setProperty("--lane-c", lane.color);
+    var head = document.createElement("div");
+    head.className = "lane-head";
+    head.textContent = lane.label;
+    col.appendChild(head);
+    lane.nodes.forEach(function(node){
+      var btn = document.createElement("button");
+      btn.className = "card";
+      btn.setAttribute("data-id", node.id);
+      var h3 = document.createElement("h3");
+      h3.innerHTML = node.title;
+      var p = document.createElement("p");
+      p.innerHTML = node.summary;
+      btn.appendChild(h3);
+      btn.appendChild(p);
+      btn.addEventListener("click", function(){ selectNode(node.id); });
+      col.appendChild(btn);
+      cardEls[node.id] = btn;
+    });
+    board.appendChild(col);
+    if(li < LANES.length - 1){
+      var conn = document.createElement("div");
+      conn.className = "connector";
+      conn.setAttribute("aria-hidden", "true");
+      conn.textContent = "→";
+      board.appendChild(conn);
+    }
+  });
+
+  var drawer = document.getElementById("drawer");
+  var backdrop = document.getElementById("backdrop");
+  var tagEl = document.getElementById("drawer-tag");
+  var titleEl = document.getElementById("drawer-title");
+  var bodyEl = document.getElementById("drawer-body");
+  var closeBtn = document.getElementById("drawer-close");
+  var clearBtn = document.getElementById("clear-btn");
+  var svg = document.getElementById("edges");
+  var boardWrap = document.getElementById("board-wrap");
+  var lastFocused = null;
+  var currentId = null;
+
+  function findNode(id){
+    for(var i=0;i<LANES.length;i++){
+      for(var j=0;j<LANES[i].nodes.length;j++){
+        if(LANES[i].nodes[j].id === id) return LANES[i].nodes[j];
+      }
+    }
+    return null;
+  }
+
+  function laneOf(id){
+    for(var i=0;i<LANES.length;i++){
+      for(var j=0;j<LANES[i].nodes.length;j++){
+        if(LANES[i].nodes[j].id === id) return LANES[i].id;
+      }
+    }
+    return null;
+  }
+
+  function label(id){
+    var n = findNode(id);
+    return n ? n.title.replace(/&amp;/g,"&").replace(/&rsquo;/g,"’").replace(/&mdash;/g,"—") : id;
+  }
+
+  function drawPath(fromId, toId, dir){
+    var a = cardEls[fromId], b = cardEls[toId];
+    if(!a || !b) return;
+    var wrap = boardWrap.getBoundingClientRect();
+    var ar = a.getBoundingClientRect(), br = b.getBoundingClientRect();
+    var sameLane = laneOf(fromId) === laneOf(toId);
+    var x1, y1, x2, y2, d;
+    if(sameLane){
+      x1 = ar.right - wrap.left; y1 = ar.top - wrap.top + ar.height/2;
+      x2 = br.right - wrap.left; y2 = br.top - wrap.top + br.height/2;
+      var bulge = 44;
+      d = "M "+x1+","+y1+" C "+(x1+bulge)+","+y1+" "+(x2+bulge)+","+y2+" "+x2+","+y2;
+    } else {
+      x1 = ar.right - wrap.left; y1 = ar.top - wrap.top + ar.height/2;
+      x2 = br.left - wrap.left; y2 = br.top - wrap.top + br.height/2;
+      var midX = (x1+x2)/2;
+      d = "M "+x1+","+y1+" C "+midX+","+y1+" "+midX+","+y2+" "+x2+","+y2;
+    }
+    var path = document.createElementNS("http://www.w3.org/2000/svg","path");
+    path.setAttribute("d", d);
+    path.setAttribute("class","edge edge-"+dir);
+    path.setAttribute("marker-end","url(#arrow)");
+    svg.appendChild(path);
+  }
+
+  function clearEdgePaths(){
+    var paths = svg.querySelectorAll("path.edge");
+    paths.forEach(function(p){ p.remove(); });
+  }
+
+  function applyHighlight(id){
+    var outs = (id && OUT[id]) || [];
+    var ins = (id && IN[id]) || [];
+    var related = {};
+    outs.forEach(function(t){ related[t] = true; });
+    ins.forEach(function(s){ related[s] = true; });
+    Object.keys(cardEls).forEach(function(cid){
+      var el = cardEls[cid];
+      el.classList.remove("is-dim","is-selected","is-related");
+      if(!id) return;
+      if(cid === id){ el.classList.add("is-selected"); }
+      else if(related[cid]){ el.classList.add("is-related"); }
+      else{ el.classList.add("is-dim"); }
+    });
+  }
+
+  function drawEdges(id){
+    clearEdgePaths();
+    if(!id) return;
+    var wrap = boardWrap.getBoundingClientRect();
+    svg.setAttribute("width", wrap.width);
+    svg.setAttribute("height", wrap.height);
+    (OUT[id]||[]).forEach(function(t){ drawPath(id, t, "out"); });
+    (IN[id]||[]).forEach(function(s){ drawPath(s, id, "in"); });
+  }
+
+  function buildChips(ids, kind){
+    var wrapDiv = document.createElement("div");
+    wrapDiv.className = "chips";
+    if(!ids || !ids.length){
+      var em = document.createElement("span");
+      em.className = "chip-empty";
+      em.textContent = kind === "out" ? "Nothing downstream — a terminal card." : "Nothing upstream — an entry point.";
+      wrapDiv.appendChild(em);
+      return wrapDiv;
+    }
+    ids.forEach(function(cid){
+      var chip = document.createElement("button");
+      chip.className = "chip";
+      chip.type = "button";
+      chip.textContent = label(cid);
+      chip.addEventListener("click", function(){ selectNode(cid); openDrawer(cid); });
+      wrapDiv.appendChild(chip);
+    });
+    return wrapDiv;
+  }
+
+  function openDrawer(id){
+    var node = findNode(id);
+    var content = CONTENT[id];
+    if(!node || !content) return;
+    if(!drawer.classList.contains("open")) lastFocused = document.activeElement;
+    tagEl.textContent = content.tag;
+    tagEl.style.color = "var(--"+content.color+")";
+    tagEl.style.background = "var(--"+content.color+"-bg)";
+    titleEl.innerHTML = node.title;
+    bodyEl.innerHTML = content.html;
+
+    var relBlockOut = document.createElement("div");
+    relBlockOut.className = "rel-block";
+    var t1 = document.createElement("p");
+    t1.className = "rel-title";
+    t1.textContent = "Feeds into →";
+    relBlockOut.appendChild(t1);
+    relBlockOut.appendChild(buildChips(OUT[id], "out"));
+    bodyEl.appendChild(relBlockOut);
+
+    var relBlockIn = document.createElement("div");
+    relBlockIn.className = "rel-block";
+    var t2 = document.createElement("p");
+    t2.className = "rel-title";
+    t2.textContent = "← Fed by";
+    relBlockIn.appendChild(t2);
+    relBlockIn.appendChild(buildChips(IN[id], "in"));
+    bodyEl.appendChild(relBlockIn);
+
+    drawer.classList.add("open");
+    backdrop.classList.add("open");
+    drawer.setAttribute("aria-hidden", "false");
+    closeBtn.focus();
+  }
+
+  function selectNode(id){
+    currentId = id;
+    applyHighlight(id);
+    drawEdges(id);
+    openDrawer(id);
+  }
+
+  function closeDrawer(){
+    drawer.classList.remove("open");
+    backdrop.classList.remove("open");
+    drawer.setAttribute("aria-hidden", "true");
+    currentId = null;
+    applyHighlight(null);
+    clearEdgePaths();
+    if(lastFocused) lastFocused.focus();
+  }
+
+  closeBtn.addEventListener("click", closeDrawer);
+  backdrop.addEventListener("click", closeDrawer);
+  clearBtn.addEventListener("click", closeDrawer);
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape" && drawer.classList.contains("open")) closeDrawer();
+  });
+
+  var resizeTimer = null;
+  window.addEventListener("resize", function(){
+    if(resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function(){ if(currentId) drawEdges(currentId); }, 120);
+  });
+})();
+</script>

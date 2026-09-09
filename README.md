@@ -6,6 +6,8 @@ assistant that reasons about pick-survival odds and roster construction in
 real time. Built to replace "trust the expert rankings" with a scoring
 model I could actually audit, test, and improve.
 
+**[Live demo →](https://guaranteedplay.streamlit.app/)**
+
 <!--
 TODO: drop a real screenshot or short GIF here before sharing this repo.
 Run `.venv/Scripts/streamlit.exe run Home.py --server.headless true`,

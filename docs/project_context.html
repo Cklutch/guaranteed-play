@@ -1,0 +1,276 @@
+<title>Guaranteed Play</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Spline+Sans+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#0d0f10; --surface:#14171a; --surface-2:#191d20; --border:#262b2e; --border-strong:#343b3e;
+  --text:#eef1ec; --text-2:#a4aea6; --text-3:#6d7671;
+  --accent:#a8c686; --accent-text:#c3dba3; --accent-bg:#1e2818;
+  --warm:#d98a4a; --warm-text:#e7a86e; --warm-bg:#2a2015;
+  --font-display:'Newsreader', Georgia, 'Times New Roman', serif;
+  --font-body:'Newsreader', Georgia, 'Times New Roman', serif;
+  --font-mono:'Spline Sans Mono', ui-monospace, 'SF Mono', Consolas, monospace;
+  --shadow: 0 20px 50px rgba(0,0,0,0.35);
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#f4f3ee; --surface:#ffffff; --surface-2:#ececE5; --border:#dddad0; --border-strong:#c7c3b6;
+    --text:#1c1f1a; --text-2:#565f54; --text-3:#87907f;
+    --accent:#4c6b34; --accent-text:#3a5326; --accent-bg:#e4ecd9;
+    --warm:#a8592a; --warm-text:#8a481f; --warm-bg:#f3e3d3;
+    --shadow: 0 20px 50px rgba(30,30,20,0.12);
+  }
+}
+:root[data-theme="light"]{
+  --bg:#f4f3ee; --surface:#ffffff; --surface-2:#ececE5; --border:#dddad0; --border-strong:#c7c3b6;
+  --text:#1c1f1a; --text-2:#565f54; --text-3:#87907f;
+  --accent:#4c6b34; --accent-text:#3a5326; --accent-bg:#e4ecd9;
+  --warm:#a8592a; --warm-text:#8a481f; --warm-bg:#f3e3d3;
+  --shadow: 0 20px 50px rgba(30,30,20,0.12);
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-body);}
+::selection{background:var(--accent-bg);color:var(--accent-text);}
+.page{max-width:1180px;margin:0 auto;padding:3rem 1.75rem 5rem;display:grid;grid-template-columns:200px minmax(0,1fr);gap:3.5rem;}
+@media (max-width:860px){.page{grid-template-columns:1fr;gap:2rem;}.side{display:none;}}
+.side{position:sticky;top:2.5rem;align-self:start;font-family:var(--font-mono);font-size:12px;}
+.side .eyebrow{color:var(--text-3);letter-spacing:0.08em;text-transform:uppercase;margin:0 0 1rem;}
+.side nav{display:flex;flex-direction:column;gap:0.6rem;}
+.side nav a{color:var(--text-2);text-decoration:none;border-left:2px solid var(--border);padding-left:0.7rem;transition:color 0.15s ease, border-color 0.15s ease;}
+.side nav a:hover, .side nav a:focus-visible{color:var(--accent-text);border-left-color:var(--accent);}
+main{min-width:0;}
+header.hero{margin-bottom:3rem;}
+.eyebrow-row{font-family:var(--font-mono);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-3);margin:0 0 1rem;}
+h1{font-family:var(--font-display);font-weight:500;font-style:italic;font-size:clamp(38px,6vw,58px);line-height:1.05;margin:0 0 0.7rem;text-wrap:balance;color:var(--text);}
+.subhead{font-size:19px;line-height:1.6;color:var(--text-2);max-width:58ch;margin:0 0 1.7rem;}
+.linkrow{display:flex;gap:1.3rem;flex-wrap:wrap;font-family:var(--font-mono);font-size:13px;margin:0 0 2rem;}
+.linkrow a{color:var(--accent-text);text-decoration:none;border-bottom:1px solid var(--accent);padding-bottom:1px;}
+.linkrow a:hover{color:var(--text);border-color:var(--text-3);}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.stat{background:var(--surface);padding:1.1rem 1.2rem;}
+.stat b{display:block;font-family:var(--font-mono);font-variant-numeric:tabular-nums;font-size:24px;font-weight:600;color:var(--accent-text);}
+.stat span{display:block;font-size:12.5px;color:var(--text-2);margin-top:0.3rem;line-height:1.4;}
+section{margin:0 0 3.4rem;padding-top:0.2rem;}
+section h2{font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 0.3rem;color:var(--text);text-wrap:balance;}
+.section-kicker{font-family:var(--font-mono);font-size:11.5px;letter-spacing:0.09em;text-transform:uppercase;color:var(--warm-text);margin:0 0 0.5rem;}
+section p{font-size:17px;line-height:1.75;color:var(--text-2);max-width:66ch;margin:0 0 1.1rem;}
+section p strong{color:var(--text);font-weight:600;}
+section code{font-family:var(--font-mono);font-size:0.82em;background:var(--surface-2);border:1px solid var(--border);padding:0.1em 0.4em;border-radius:4px;color:var(--accent-text);}
+.callout{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;padding:1.1rem 1.4rem;margin:1.4rem 0;max-width:68ch;}
+.callout p{margin:0;color:var(--text);font-size:15.5px;}
+.callout p + p{margin-top:0.6rem;}
+.pullquote{border-left:3px solid var(--warm);margin:1.8rem 0;padding:0.2rem 0 0.2rem 1.4rem;max-width:60ch;}
+.pullquote p{font-family:var(--font-display);font-style:italic;font-size:21px;line-height:1.5;color:var(--text);margin:0;}
+.pullquote cite{display:block;font-family:var(--font-mono);font-style:normal;font-size:12px;color:var(--text-3);margin-top:0.5rem;}
+.model-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:1.6rem 0;}
+.model-card{background:var(--surface);padding:1.3rem 1.4rem;}
+.model-card h3{font-family:var(--font-mono);font-size:13px;letter-spacing:0.03em;text-transform:uppercase;color:var(--accent-text);margin:0 0 0.6rem;font-weight:600;}
+.model-card p{font-size:14.5px;line-height:1.55;color:var(--text-2);margin:0;max-width:none;}
+.findings{list-style:none;margin:1.4rem 0;padding:0;display:flex;flex-direction:column;gap:0.9rem;}
+.findings li{display:grid;grid-template-columns:90px minmax(0,1fr);gap:1rem;align-items:baseline;font-size:15px;line-height:1.55;}
+.findings .tag{font-family:var(--font-mono);font-size:11px;letter-spacing:0.05em;text-transform:uppercase;padding:0.25em 0.55em;border-radius:5px;text-align:center;}
+.tag.shipped{background:var(--accent-bg);color:var(--accent-text);}
+.tag.parked{background:var(--warm-bg);color:var(--warm-text);}
+.tag.planned{background:var(--surface-2);color:var(--text-2);border:1px dashed var(--border-strong);}
+.findings span.desc{color:var(--text-2);}
+.findings span.desc strong{color:var(--text);}
+.datalake{margin:1.8rem 0 2.2rem;max-width:840px;}
+.dl-layer{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.3rem 1.3rem;}
+.dl-layer h4{font-family:var(--font-mono);font-size:12px;letter-spacing:0.05em;text-transform:uppercase;color:var(--text);margin:0 0 0.2rem;font-weight:600;}
+.dl-layer .dl-sub{font-size:12.5px;color:var(--text-3);margin:0 0 0.8rem;font-family:var(--font-mono);}
+.dl-group{margin:0 0 0.7rem;}
+.dl-group:last-child{margin-bottom:0;}
+.dl-group .dl-group-label{font-size:11.5px;color:var(--text-2);margin:0 0 0.4rem;font-family:var(--font-mono);}
+.dl-chips{display:flex;flex-wrap:wrap;gap:0.4rem;}
+.dl-chip{font-family:var(--font-mono);font-size:12px;background:var(--surface-2);border:1px solid var(--border);color:var(--text-2);padding:0.28rem 0.6rem;border-radius:20px;white-space:nowrap;}
+.dl-layer.production .dl-chip{color:var(--accent-text);border-color:var(--border-strong);}
+.dl-layer.research .dl-chip{color:var(--warm-text);}
+.dl-arrow{display:flex;align-items:center;gap:0.9rem;padding:0.7rem 0 0.7rem 1.4rem;}
+.dl-arrow .glyph{font-family:var(--font-mono);color:var(--text-3);font-size:16px;}
+.dl-arrow .caption{font-family:var(--font-mono);font-size:12px;color:var(--text-3);}
+hr.div{border:none;border-top:1px solid var(--border);margin:0 0 3.4rem;}
+footer{font-family:var(--font-mono);font-size:12.5px;color:var(--text-3);border-top:1px solid var(--border);padding-top:1.6rem;line-height:1.7;}
+footer a{color:var(--accent-text);}
+</style>
+
+<div class="page">
+  <aside class="side">
+    <p class="eyebrow">On this page</p>
+    <nav>
+      <a href="#origin">Why it exists</a>
+      <a href="#engine">The valuation engine</a>
+      <a href="#models">The model suite</a>
+      <a href="#draft-day">The draft-day assistant</a>
+      <a href="#discipline">Research discipline</a>
+      <a href="#engineering">Engineering &amp; data</a>
+      <a href="#product">Product &amp; deployment</a>
+      <a href="#roadmap">What's next</a>
+    </nav>
+  </aside>
+
+  <main>
+    <header class="hero">
+      <p class="eyebrow-row">Project context</p>
+      <h1>Guaranteed Play</h1>
+      <p class="subhead">A fantasy football draft platform built to replace &ldquo;trust the expert rankings&rdquo; with a scoring system I could audit, test, and defend &mdash; from a validated research pipeline through a live, deployed product.</p>
+      <p class="linkrow">
+        <a href="https://guaranteedplay.streamlit.app/">Live demo</a>
+        <a href="https://github.com/Cklutch/guaranteed-play">Source</a>
+        <a href="https://claude.ai/code/artifact/114fd273-eb1d-49cc-875e-ab91c71a7c36">Interactive architecture map</a>
+      </p>
+      <div class="stats">
+        <div class="stat"><b>4</b><span>weighted components in the core score</span></div>
+        <div class="stat"><b>14,000+</b><span>historical player-seasons backtested</span></div>
+        <div class="stat"><b>30+</b><span>interconnected modules</span></div>
+        <div class="stat"><b>&rho; &gt; 0.999</b><span>rank stability under weight stress-testing</span></div>
+      </div>
+    </header>
+
+    <section id="origin">
+      <p class="section-kicker">Why it exists</p>
+      <h2>Rankings you can't see inside are rankings you can't trust</h2>
+      <p>Consensus fantasy rankings are a black box: you get a number, not a reason. Every year the same question came up mid-draft &mdash; <em>why</em> is this player ranked here, and is that reasoning something I'd actually agree with if I could see it? Guaranteed Play started as an answer to that question: a valuation engine built from real, inspectable components, plus a live assistant that reasons about the draft as it happens rather than handing over a static list and walking away.</p>
+      <p>What it turned into was a full research-to-production pipeline &mdash; historical NFL data in one end, a validated scoring model and a live in-draft assistant out the other, with an explicit, written line between what's been proven to work and what's still a hypothesis.</p>
+    </section>
+
+    <section id="engine">
+      <p class="section-kicker">The valuation engine</p>
+      <h2>One score, four accountable parts</h2>
+      <p>Every player's ranking comes from a single <code>final_score</code>, and that score is never a mystery &mdash; it's the weighted sum of four named components, each answering a different question:</p>
+      <div class="model-grid">
+        <div class="model-card"><h3>Scarcity</h3><p>Value over replacement, computed from this league's actual roster format &mdash; not a generic assumption. A merely-good quarterback can rank below a merely-good running back, because quarterbacks are simply deeper.</p></div>
+        <div class="model-card"><h3>Talent</h3><p>A within-position percentile on raw projection, not raw points &mdash; deliberately avoiding a scale bias where quarterbacks (who score more under standard rules) would otherwise dominate the board.</p></div>
+        <div class="model-card"><h3>Market signal</h3><p>How far the model's own number sits from sportsbook prop lines and consensus draft position &mdash; a second opinion, built in.</p></div>
+        <div class="model-card"><h3>Risk</h3><p>A composite penalty spanning injury durability, role stability, offense environment, and schedule difficulty, subtracted from the total.</p></div>
+      </div>
+      <p>None of the four weights were chosen by feel. They were stress-tested across a full sensitivity grid, and the board held stable at Spearman &rho; &gt; 0.999 across every realistic value &mdash; the top 30 players never changed, no matter which reasonable weighting was tried. A regression test now re-runs that same perturbation grid against the live player pool automatically, so a future change can't quietly destabilize the board without being caught.</p>
+      <p>Tiers work the same way: instead of drawing lines at a fixed point gap &mdash; which once fragmented the board into 19 nearly-meaningless micro-tiers &mdash; the system finds the nine largest real gaps anywhere in the score distribution and breaks there. Ten tiers, every time, self-calibrating to whatever the data looks like this week.</p>
+    </section>
+
+    <section id="models">
+      <p class="section-kicker">The model suite</p>
+      <h2>Three specialized models feed the one score</h2>
+      <p>The risk and talent components above aren't single formulas &mdash; each draws on a dedicated model built to answer one specific, hard question.</p>
+      <div class="model-grid">
+        <div class="model-card"><h3>Risk</h3><p>A 0&ndash;100 composite across four weighted categories &mdash; injury durability, role/usage stability, offense environment, schedule difficulty &mdash; with position-specific weighting. A second layer treats risk as a <em>portfolio</em> problem: it flags when a roster is stacking correlated risk at one position and tightens tolerance as the roster fills.</p></div>
+        <div class="model-card"><h3>Rookie projection</h3><p>Six inputs &mdash; draft capital, college production (dominator rating, breakout age), athletic testing, competition for touches, and team-context quality &mdash; blended into a pre-season estimate that then shifts toward the player's real, confirmed NFL role as actual sample size accumulates.</p></div>
+        <div class="model-card"><h3>Usage archetypes</h3><p>Four independent taxonomies, one per position &mdash; a quarterback classified on rushing share, a running back on usage-distance matching into Bellcow/Committee/Handcuff, receivers on target share into Alpha/Possession/Complementary. Tested directly as a scoring input and found <em>not</em> to beat market ADP &mdash; so it stays as context, not score.</p></div>
+      </div>
+      <p>That last point matters as much as any of the models themselves: a result that doesn't hold up doesn't get shipped as if it did, even when it would have been an easy thing to fudge.</p>
+    </section>
+
+    <section id="draft-day">
+      <p class="section-kicker">The draft-day assistant</p>
+      <h2>Recommendations that reason about the draft, not just the player</h2>
+      <p>A player's value on draft day isn't just their score &mdash; it's their score <em>relative to what's about to happen</em>. The in-draft assistant layers three things on top of the base engine to make that real:</p>
+      <p><strong>A pick engine</strong> that scores every available player as a sum of value, risk, roster need, and opportunity cost &mdash; how likely a player is to still be there if you wait. Building that opportunity-cost term surfaced a real bug worth telling: the engine once ranked a clearly worse quarterback above a clearly better one, because the scarcity math scored the worse player's own low survival odds as a bigger reason to grab him &mdash; backwards, for a position where a team will only ever roster one. The fix distinguishes <em>substitute</em> decisions (evaluate the whole group together) from <em>complementary</em> ones (evaluate each player on their own merit), and two opposing regression tests now guard that the fix can't quietly break in either direction again.</p>
+      <p><strong>A survival model</strong> answering &ldquo;will he still be there?&rdquo; three different ways &mdash; an unconditional historical odds, a conditional odds counting only opponent picks between now and your next turn, and a needs-aware version that adjusts for what other teams still have to fill. All three are proven, not just assumed, to reduce correctly into one another under matching conditions &mdash; a test suite checks the math holds to a one-in-a-billion tolerance.</p>
+      <p><strong>A turn optimizer</strong> that scores the best <em>pair</em> of picks for a team's next two turns rather than each pick in isolation &mdash; catching a real, embarrassing failure mode where the top recommended pair once shared a bye week and an offensive backfield, splitting the same touches, because nothing was penalizing same-team overlap directly.</p>
+    </section>
+
+    <section id="discipline">
+      <p class="section-kicker">Research discipline</p>
+      <h2>The most useful finding is sometimes &ldquo;this doesn't work&rdquo;</h2>
+      <p>Every new signal gets backtested against real historical outcomes before it's allowed near the live board &mdash; and the results get written down whether or not they're flattering. A rewritten model estimating a player's contribution to actually winning a championship was backtested against 14,771 real player-seasons and came back at an AUC of 0.538 &mdash; close to a coin flip.</p>
+      <div class="pullquote">
+        <p>The model's own breakout-probability sub-component alone reached an AUC of 0.73&ndash;0.82 on several targets &mdash; meaning the blended score was diluting its one genuinely useful signal, not improving on it.</p>
+        <cite>From the project's own validation report &mdash; published as-is, not smoothed over</cite>
+      </div>
+      <p>That discipline is written down as policy, not just practiced quietly: a maintained model registry states, in plain language, exactly which research findings are approved for production and which are explicitly not, along with the criteria that would need to change before a parked model gets reopened.</p>
+      <ul class="findings">
+        <li><span class="tag shipped">Shipped</span><span class="desc"><strong>Positional VOR calibration</strong> &mdash; replaced a hardcoded replacement-rank table that was proven wrong for this league's actual roster format; getting it wrong hadn't just shifted the curve, it had flipped its sign for one position entirely.</span></li>
+        <li><span class="tag parked">Parked</span><span class="desc"><strong>A WR breakout-probability model</strong> &mdash; a real, statistically significant finding (a permutation-test p-value of 0.0042 on its strongest result), frozen as a scorer, but deliberately kept to a display badge only, with an explicit note not to let it touch rank or score until it's been checked against a full real season.</span></li>
+        <li><span class="tag parked">Parked</span><span class="desc"><strong>Seven other validated research signals</strong> &mdash; floor/ceiling ranges, a market-mispricing detector, an age-curve edge score &mdash; each backtested, each found too narrow or too weak to promote past the research pipeline.</span></li>
+      </ul>
+    </section>
+
+    <section id="engineering">
+      <p class="section-kicker">Engineering &amp; data</p>
+      <h2>The unglamorous half of a good model is the pipeline under it</h2>
+      <p>Nothing above works without a real data foundation underneath it, and that foundation is genuinely heterogeneous &mdash; four different kinds of source, each with its own shape, its own update cadence, and its own join key, none of which agree with each other by default. Building the pipeline meant reconciling all of it into one trustworthy player table before a single model ever ran.</p>
+
+      <div class="datalake">
+        <div class="dl-layer">
+          <h4>Raw sources</h4>
+          <p class="dl-sub">ingested independently, on their own schedule</p>
+          <div class="dl-group">
+            <p class="dl-group-label">NFL play-by-play &amp; league history &mdash; nflverse</p>
+            <div class="dl-chips"><span class="dl-chip">Play-by-play</span><span class="dl-chip">Snap counts</span><span class="dl-chip">Injuries</span><span class="dl-chip">Draft picks</span><span class="dl-chip">Rosters</span><span class="dl-chip">Route participation</span><span class="dl-chip">Team stats</span></div>
+          </div>
+          <div class="dl-group">
+            <p class="dl-group-label">College production &amp; athletic testing</p>
+            <div class="dl-chips"><span class="dl-chip">College team offense</span><span class="dl-chip">Combine measurables</span><span class="dl-chip">College season stats</span></div>
+          </div>
+          <div class="dl-group">
+            <p class="dl-group-label">Market &amp; consensus</p>
+            <div class="dl-chips"><span class="dl-chip">DraftKings</span><span class="dl-chip">FanDuel</span><span class="dl-chip">Pinnacle</span><span class="dl-chip">WinWithOdds</span><span class="dl-chip">Underdog ADP</span><span class="dl-chip">Juicebox ADP</span><span class="dl-chip">FantasyPros</span></div>
+          </div>
+          <div class="dl-group">
+            <p class="dl-group-label">Live draft state</p>
+            <div class="dl-chips"><span class="dl-chip">Sleeper API &mdash; picks, player IDs, headshots</span></div>
+          </div>
+          <div class="dl-group">
+            <p class="dl-group-label">News &amp; camp reports</p>
+            <div class="dl-chips"><span class="dl-chip">Daily automated sweep &mdash; injury reports, camp buzz, suspension news</span><span class="dl-chip">Scoped to top-150 ADP</span></div>
+          </div>
+        </div>
+
+        <div class="dl-arrow"><span class="glyph">&darr;</span><span class="caption">engineered into features &amp; backtested against 14,000+ player-seasons</span></div>
+
+        <div class="dl-layer research">
+          <h4>Research &amp; validation</h4>
+          <p class="dl-sub">the sandbox &mdash; nothing here is trusted until it's proven</p>
+          <div class="dl-chips"><span class="dl-chip">Snap-share trend</span><span class="dl-chip">Route participation persistence</span><span class="dl-chip">Offense environment</span><span class="dl-chip">VOR tier curve</span><span class="dl-chip">Breakout Score v1</span><span class="dl-chip">Championship equity backtest</span><span class="dl-chip">+ 19 more validation scripts</span></div>
+        </div>
+
+        <div class="dl-arrow"><span class="glyph">&darr;</span><span class="caption">what survives validation gets written to a versioned table</span></div>
+
+        <div class="dl-layer production">
+          <h4>Production tables</h4>
+          <p class="dl-sub">the trusted boundary the live app actually reads</p>
+          <div class="dl-chips"><span class="dl-chip">master_players</span><span class="dl-chip">qb/rb/wr/te_archetypes</span><span class="dl-chip">risk_variables</span><span class="dl-chip">model_projections</span><span class="dl-chip">rookie_projections</span><span class="dl-chip">team_schedule_risk</span><span class="dl-chip">sportsbook_vs_adp</span><span class="dl-chip">breakout_tags</span></div>
+        </div>
+
+        <div class="dl-arrow"><span class="glyph">&darr;</span><span class="caption">read live, every session</span></div>
+
+        <div class="dl-layer">
+          <h4>Live application</h4>
+          <p class="dl-sub"><code>draftkit</code> scoring engine &middot; the rankings board &middot; the draft-day assistant</p>
+        </div>
+      </div>
+
+      <p>Most of that stack moves in batches &mdash; pulled, engineered, and backtested before anything reaches production. Real-world news doesn't wait for a batch cycle: a daily automated sweep searches injury reports, camp buzz, and suspension news for that same top-150-ADP pool, classifies each finding by <em>mechanism</em> (does it only touch a risk score, or would it move real projection points) and by <em>confidence</em> (multiple named outlets, versus one insider report needing corroboration), and routes it accordingly &mdash; bypassing the research pipeline entirely and landing in production the same day.</p>
+      <p>That merge step is where the real bugs live. Reconciling eight sources on whichever join key each one actually supported surfaced a genuine player-identity collision affecting 588 historical rows sharing an ID with a completely different player, and a 13.8% name-collision rate on abbreviated player names that needed its own cross-reference table to fix properly rather than a one-off patch.</p>
+      <p>A live news-override pipeline routes real-world updates &mdash; injuries, depth-chart shifts, suspensions &mdash; into the production layer through a two-lane review process: low-risk changes auto-apply, anything that would move a player's rank waits for a human, and every applied change is logged. Building it surfaced its own bug: a missing value was evaluating as truthy in a guard clause, so six real edits silently kept serving stale data with no visible error before the logic was rewritten to branch explicitly on every real case.</p>
+      <p>And because a slow tool doesn't get used: profiling a full board rebuild found a single per-player lookup being rebuilt from scratch on every one of 3,900-plus calls. Caching it, plus removing one duplicated computation, cut cold-load time by roughly half.</p>
+    </section>
+
+    <section id="product">
+      <p class="section-kicker">Product &amp; deployment</p>
+      <h2>Built, shipped, and documented for someone else to pick up</h2>
+      <p>The rankings interface went through a full rebuild &mdash; a real dark design system, position and risk badges, expandable player cards with a live scoring breakdown, and an in-app editor for the same news-override pipeline described above, so a correction takes one click instead of a code change. It's deployed live, reading directly from the same pipeline and models described on this page, not a curated demo dataset.</p>
+      <p>Because a 30-module system is hard for anyone else to onboard into by reading source files cold, the last piece of this project was a documentation layer built for that specific problem: an interactive dependency map where clicking any one piece &mdash; a data source, a model, a UI component &mdash; highlights exactly what feeds it and what it feeds, so a new contributor can trace the whole system's logic without reading a line of code first.</p>
+    </section>
+
+    <section id="roadmap">
+      <p class="section-kicker">What's next</p>
+      <h2>What I'd build next</h2>
+      <p><strong>Know your leaguemates.</strong> The opponent model currently only reasons about the draft in progress &mdash; what a team has picked so far this session, and whether their remaining roster slots look hungry or full. It has no memory of what that same owner did last year, or the year before that. The natural next step is giving it one: mining a league's own multi-season draft history to learn real, persistent tendencies &mdash; an owner who reaches for running backs every year regardless of value on the board, one who never touches a tight end before round 10, one who reliably stacks a quarterback with his own receiver. That's a behavioral signal ADP can't see, and it slots directly into the same needs-aware multiplier the survival model already uses &mdash; replacing a generic assumption about what a hungry roster slot does with a learned one about what <em>this specific person</em> actually does when that slot opens up.</p>
+      <p><strong>Week-to-week rankings, then an honest scorecard.</strong> Everything on this page is a preseason, redraft-only view &mdash; the system answers one question, who should I draft before a single game is played, and stops there. The next step is carrying the same valuation engine through the season itself, re-ranking week to week as usage, matchups, and role changes actually play out. That in-season data is also what makes a genuine accountability check possible: the model already flags where its own valuation disagrees with the market, but it's never closed the loop on which side was actually right. Next year's plan is to pull every player it ranked meaningfully higher or lower than consensus ADP and grade its own calibration against what really happened &mdash; the same honesty standard the research pipeline already holds every other signal to, applied publicly to the one number people actually look at every week.</p>
+      <p><strong>A shorter list:</strong> a proper side-by-side player comparison view &mdash; an earlier version existed and was cut during a cleanup pass for being under-maintained, and it's worth rebuilding fresh on the current design system rather than restoring as-is &mdash; plus a pass of smaller UI refinements that the design system now makes easy to justify.</p>
+      <ul class="findings">
+        <li><span class="tag planned">Planned</span><span class="desc"><strong>League-history opponent modeling</strong> &mdash; learn real per-owner drafting tendencies across past seasons instead of only the draft in progress.</span></li>
+        <li><span class="tag planned">Planned</span><span class="desc"><strong>Week-to-week rankings</strong> &mdash; carry the same engine through the season, re-ranking as usage and matchups play out.</span></li>
+        <li><span class="tag planned">Planned</span><span class="desc"><strong>Market-call scorecard</strong> &mdash; grade every meaningful ADP disagreement against what actually happened, published, not just claimed.</span></li>
+        <li><span class="tag planned">Planned</span><span class="desc"><strong>Player compare view</strong> &mdash; a rebuilt, side-by-side comparison tool on the current design system.</span></li>
+        <li><span class="tag planned">Planned</span><span class="desc"><strong>UI polish pass</strong> &mdash; smaller refinements across the rankings board and Draft Command Center.</span></li>
+      </ul>
+    </section>
+
+    <hr class="div">
+    <footer>
+      Python &middot; Streamlit &middot; pandas &middot; scikit-learn &middot; nflverse &middot; Sleeper API<br>
+      <a href="https://guaranteedplay.streamlit.app/">guaranteedplay.streamlit.app</a> &middot;
+      <a href="https://github.com/Cklutch/guaranteed-play">github.com/Cklutch/guaranteed-play</a>
+    </footer>
+  </main>
+</div>

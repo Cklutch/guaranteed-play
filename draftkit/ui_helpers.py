@@ -22,6 +22,7 @@ TOOL_PAGES = {
     "Rankings Board": "Home.py",
     "Draft Assistant": "pages/1_Draft_Mode.py",
     "News Queue": "pages/2_News_Queue.py",
+    "Trade Calculator": "pages/3_Trade_Calculator.py",
 }
 
 

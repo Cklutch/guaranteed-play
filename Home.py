@@ -1966,6 +1966,54 @@ if _dads_available:
 else:
     score_mode = "standard"
 
+# Board mode: preseason (the draft board) vs in-season (Week N), which blends
+# real weekly production from Sleeper into the preseason projection and re-runs
+# the SAME Base Value engine so the in-season board stays position-fair. The
+# preseason board is left fully intact -- this is a view swap, not a rebuild.
+# Cached separately (network fetch) so it doesn't re-pull every rerun.
+@st.cache_data(show_spinner=False, ttl=1800)
+def in_season_state():
+    from draftkit import in_season as _isn
+
+    return _isn.get_state()
+
+
+@st.cache_data(show_spinner="Loading in-season data...", ttl=1800, max_entries=2)
+def _inseason_board(_version, scoring="half_ppr"):
+    from draftkit import in_season as _isn
+
+    isb = _isn.build_in_season_board(_rankings(_version), scoring=scoring)
+    keep = [
+        "player_name", "base_value_score", "is_projection",
+        "value_over_replacement_points", "games_played", "actual_ppg",
+        "blended_ppg", "ros_points",
+    ]
+    cols = [c for c in keep if c in isb.columns]
+    out = isb[cols].rename(
+        columns={"base_value_score": "is_score",
+                 "value_over_replacement_points": "is_vor"}
+    ).drop_duplicates("player_name")
+    return out, dict(isb.attrs.get("in_season_meta", {}))
+
+
+try:
+    _wk = in_season_state().get("week", 0)
+except Exception:
+    _wk = 0
+_inseason_label = f"In-season (Week {_wk})" if _wk else "In-season"
+BOARD_MODES = {"Preseason": "preseason", _inseason_label: "inseason"}
+_board_label = st.selectbox(
+    "Board", list(BOARD_MODES.keys()), key="board_mode_select",
+)
+board_mode = BOARD_MODES[_board_label]
+if board_mode == "inseason":
+    st.caption(
+        f"Week {_wk or '?'}: real weekly scoring from Sleeper blended with the "
+        "preseason projection (the blend leans on actuals as more games are "
+        "played), then re-scored through the same position-aware Base Value "
+        "engine as the draft board. ADP/market signal is still preseason."
+    )
+
 _stamps = [
     ("VEGAS", _freshness_stamp("data/processed/sportsbook_vs_adp_comparison.csv")),
     ("EXPERT CONSENSUS", _freshness_stamp("data/processed/master_players.csv")),
@@ -2163,6 +2211,23 @@ if score_mode == "dads" and "dads_final_score" in board.columns:
     # (_adp_rank, the cards, the export) goes through board["adp"].
     if "dads_adp" in board.columns:
         board["adp"] = pd.to_numeric(board["dads_adp"], errors="coerce")
+    board = board.sort_values(
+        "final_score", ascending=False, na_position="last", kind="stable"
+    ).reset_index(drop=True)
+
+# In-season board swap: same mechanism as Dad's above, but the swapped-in
+# score is the position-aware in-season Base Value (real weekly production
+# blended with the preseason projection). Everything downstream -- Rank,
+# tiers, grades, re-sorts -- re-derives off final_score, so the whole board
+# becomes the Week-N view. The extra actual/blended columns ride along for
+# display. Falls back safely to preseason values if the Sleeper fetch is empty.
+if board_mode == "inseason":
+    _is_cols, _is_meta = _inseason_board(_scoring_version())
+    board = board.merge(_is_cols, on="player_name", how="left")
+    board["final_score"] = pd.to_numeric(board["is_score"], errors="coerce")
+    board["projection_points"] = pd.to_numeric(board["is_projection"], errors="coerce")
+    if "is_vor" in board.columns:
+        board["value_over_replacement_points"] = pd.to_numeric(board["is_vor"], errors="coerce")
     board = board.sort_values(
         "final_score", ascending=False, na_position="last", kind="stable"
     ).reset_index(drop=True)
